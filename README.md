@@ -1,6 +1,6 @@
 # WhatsApp Clone
 
-This project is a web application that functions just like the regular WhatsApp - **CHATTERBOX. It allows users to send and receive messages in real time, mimicking the core features and interface of WhatsApp.
+This project is a web application that functions just like the regular WhatsApp and FaceBook - **CHATTERBOX. It allows users add and remove friends, to send and receive messages in real time, mimicking the core features and interface of WhatsApp and Facebook.
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
@@ -18,7 +18,7 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3007) with your browser to see the result.
+Open [http://localhost:3007](http://localhost:3007) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
