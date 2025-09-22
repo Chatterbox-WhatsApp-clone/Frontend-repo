@@ -1,0 +1,40 @@
+"use client";
+import "./globals.css";
+import Navbar from "./components/Navbar";
+import Sidebar from "./components/Sidebar";
+import MobileNavbar from "./components/MobileNavbar";
+import { useAuthenticatedStore } from "@/zustand";
+import {
+	QueryClient,
+	QueryClientProvider,
+	useQuery,
+} from "@tanstack/react-query";
+import React, { useEffect } from "react";
+import FetchUser from "./FetchUser";
+
+export default function RootLayout({ children }) {
+	const queryClient = new QueryClient();
+	const { token, userId, authenticated } = useAuthenticatedStore();
+
+	return (
+		<QueryClientProvider client={queryClient}>
+			<FetchUser />
+			<html lang="en">
+				<body className="h-screen w-full overflow-hidden">
+					{authenticated ? (
+						<div className="flex flex-col h-screen">
+							<Navbar />
+							<MobileNavbar />
+							<div className="flex h-full">
+								<Sidebar />
+								<main className="flex-1 h-full">{children}</main>
+							</div>
+						</div>
+					) : (
+						<main className="h-screen">{children}</main>
+					)}
+				</body>
+			</html>
+		</QueryClientProvider>
+	);
+}

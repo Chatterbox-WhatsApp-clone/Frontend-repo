@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+:root {
+  --main-color: #8f45b7;
+  --background: #ffffff;
+  --foreground: #000000;
+}
+
+.or {
+  position: relative;
+  padding: 0 10px;
+}
+
+.or::before,
+.or::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 60%;
+  height: 1px;
+  background-color: rgb(155, 155, 155);
+}
+
+.or::before {
+  left: 0;
+  transform: translate(-110%, -50%);
+}
+
+.or::after {
+  right: 0;
+  transform: translate(110%, -50%);
+}
+
+.password {
+  display: none;
+}
+
+.password:active {
+  display: block;
+}
+
+.navigation {
+  background-color: #d4d5d6;
+  /* background-color: #bfc0c1; */
+  height: 30px;
+  width: 100%;
+  border-radius: 7px;
+  position: relative;
+}
+
+.navigation::before {
+  content: '';
+  width: 2px;
+  border-radius: 6px;
+  height: 60%;
+  background: #3a0657;
+}
+
+.input {
+  display: block;
+}
+
+.messages {
+  top: 0;
+  right: 0;
+  position: fixed;
+  height: 100dvh;
+  width: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  z-index: 90;
+}
+
+@media screen and (min-width: 768px) {
+  .messages {
+    grid-column: 2;
+    position: relative;
+    height: calc(100vh - 48px);
+    overflow-y: auto;
+    scrollbar-width: none;
+    scroll-behavior: smooth;
+  }
+}
+
+.rainbow-hover {
+    transform-style: preserve-3d;
+    transform: scale(var(--s, 1)) perspective(600px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    perspective: 600px;
+    transition: transform 0.1s;
+}
+
+.rainbow-hover:active {
+    transition: 0.3s;
+    transform: scale(0.93);
+}
