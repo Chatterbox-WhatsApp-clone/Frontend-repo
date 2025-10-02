@@ -14,6 +14,12 @@ const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 const TopSidebar = () => {
 	const pathname = usePathname();
 	const { clicked, setClicked } = useClickedStore();
+	const friends =
+		pathname.startsWith("/friends") ||
+		pathname.startsWith("/friends/request") ||
+		pathname.startsWith("/friends/online") ||
+		pathname.startsWith("/friends/all");
+
 	return (
 		<div className="flex flex-col justify-start items-start w-full">
 			<div
@@ -24,9 +30,9 @@ const TopSidebar = () => {
 
 			<div className="flex flex-col justify-start items-start space-y-7 mt-8 w-full">
 				<Link
-					href={"/dashboard/chats"}
+					href={"/"}
 					className={`${
-						pathname === "/dashboard/chats" ? "navigation w-full" : "w-full"
+						pathname === "/" ? "navigation w-full" : "w-full"
 					} flex justify-start items-center `}>
 					<LuMessageCircleMore className="text-[18px] text-black ml-[6px]" />
 					<span
@@ -40,7 +46,7 @@ const TopSidebar = () => {
 				<Link
 					href={"/friends"}
 					className={`${
-						pathname === "/friends" ? "navigation w-full" : "w-full"
+						friends ? "navigation w-full" : "w-full"
 					} flex justify-start items-center `}>
 					<MdOutlineGroupAdd className="text-xl text-black ml-2" />
 					<span

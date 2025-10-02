@@ -32,7 +32,7 @@ const Sidebar = () => {
 				</div>
 			)}
 			<div
-				className={`flex flex-col items-center justify-between w-full h-full`}>
+				className={`flex flex-col items-center justify-between w-full h-full pb-10`}>
 				<TopSidebar />
 				<BottomSidebar />
 			</div>

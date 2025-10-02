@@ -1,30 +1,39 @@
 "use client";
-import React, { useState } from "react";
-import { useAuthenticatedStore, useRequestedId } from "@/zustand";
+import React, { use, useState } from "react";
+import {
+	useAuthenticatedStore,
+	useFriendsStore,
+	useRemovedStore,
+} from "@/zustand";
+import { PulseLoader } from "react-spinners";
 
-const RemoveFriendButton = ({ removed, setRemoved }) => {
-	const endpoint = process.env.NEXT_PUBLIC_REJECT_FRIEND_REQUEST;
+const RemoveFriendButton = ({ user }) => {
 	const { token } = useAuthenticatedStore();
 	const [loading, setLoading] = useState(false);
-	const { userRequestedId } = useRequestedId();
+	const [status, setStatus] = useState("Remove");
+	const endpoint = process.env.NEXT_PUBLIC_TEMPREMOVE_FRIEND.replace(
+		"{friendId}",
+		String(user._id)
+	);
+	const { setRemoved } = useRemovedStore();
+	const { getLocalStatus } = useFriendsStore();
+	const userStatus = getLocalStatus(user._id) === "not sent"
 
 	const removeFriend = async (e) => {
 		e.preventDefault();
-		if (removed || loading) return;
+		if (loading) return;
 		setLoading(true);
 
 		try {
 			const res = await fetch(endpoint, {
-				method: "POST",
+				method: "DELETE",
 				headers: {
-					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify({ requestId: userRequestedId }),
 			});
-
 			if (res.ok) {
 				setRemoved(true);
+				setStatus("Removed");
 			} else {
 				console.error("Failed to remove friend");
 			}
@@ -36,16 +45,16 @@ const RemoveFriendButton = ({ removed, setRemoved }) => {
 	};
 
 	return (
-		<button
-			onClick={removeFriend}
-			disabled={loading}
-			className={`sm:mt-1 w-full h-7 rounded-md text-sm font-medium ${
-				removed
-					? "bg-gray-200 text-gray-500 cursor-default"
-					: "bg-gray-300 text-black hover:bg-gray-400"
-			}`}>
-			{loading ? "Removing..." : removed ? "Removed" : "Remove"}
-		</button>
+		<>
+			{userStatus && (
+				<button
+					onClick={removeFriend}
+					disabled={loading}
+					className={`sm:mt-1 w-full h-7 rounded-md text-sm font-medium bg-gray-300 text-black hover:bg-gray-400 cursor-pointer`}>
+					{loading ? <PulseLoader size={3} /> : status}
+				</button>
+			)}
+		</>
 	);
 };
 

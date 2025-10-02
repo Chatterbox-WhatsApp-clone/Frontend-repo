@@ -11,14 +11,19 @@ import { Nunito, Poppins } from "next/font/google";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 const MobileNavbar = () => {
 	const pathname = usePathname();
-	const isChatActive = pathname === "/dashboard/chats";
+	const isChatActive = pathname === "/";
+	const friends =
+		pathname.includes("/friends") ||
+		pathname.includes("/friends/request") ||
+		pathname.includes("/friends/online") ||
+		pathname.includes("/friends/all");
 
 	return (
-		<nav className="fixed z-50 bottom-0 left-0 right-0 flex flex-row justify-evenly w-full items-center md:hidden bg-white h-16 shadow-[6px_0_8px_-2px_rgba(0,0,0,0.2)]">
+		<nav className="fixed z-50 bottom-0 left-0 right-0 flex flex-row justify-evenly w-full items-center md:hidden bg-white h-16 shadow-[6px_0_8px_-2px_rgba(0,0,0,0.2)] rounded-t-2xl">
 			<div className="flex flex-row justify-evenly items-center w-full">
 				{/* Chats */}
 				<Link
-					href="/dashboard/chats"
+					href="/"
 					className="flex flex-col items-center space-y-1">
 					<div
 						className={`w-8 h-7 flex justify-center items-center ${
@@ -28,7 +33,7 @@ const MobileNavbar = () => {
 					</div>
 
 					<span
-						className={`text-[12px] mt-[2px] font-semibold ${
+						className={`text-[12px] mt-[2px] ${
 							isChatActive ? "font-bold text-black" : "text-black"
 						} ${poppins.className}`}>
 						Chats
@@ -41,7 +46,7 @@ const MobileNavbar = () => {
 				<Link href="/friends" className="flex flex-col items-center space-y-1">
 					<div
 						className={`w-8 h-7 flex justify-center items-center ${
-							pathname === "/friends" ? "bg-[#7e5497] rounded-lg " : ""
+							friends ? "bg-[#7e5497] rounded-lg " : ""
 						}`}>
 						<MdOutlineGroupAdd
 							className={`text-[20px]
@@ -50,7 +55,7 @@ const MobileNavbar = () => {
 					</div>
 					<span
 						className={`text-[12px] mt-[2px]  ${
-							pathname === "/friends" ? "font-bold text-black" : "text-black"
+							friends ? "font-bold text-black" : "text-black"
 						} ${poppins.className}`}>
 						{" "}
 						Friends{" "}

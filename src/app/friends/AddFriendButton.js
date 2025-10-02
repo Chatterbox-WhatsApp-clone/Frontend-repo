@@ -1,19 +1,40 @@
 "use client";
-import React, { useState } from "react";
-import { useAuthenticatedStore, useRequestedId } from "@/zustand";
+import React, { useEffect, useState } from "react";
+import {
+	useAuthenticatedStore,
+	useRequestedId,
+	useFriendsStore,
+} from "@/zustand";
+import { PulseLoader } from "react-spinners";
+import { useQueryClient } from "@tanstack/react-query";
 
-const AddFriendButton = ({ removed }) => {
+const AddFriendButton = ({ user }) => {
 	const endpoint = process.env.NEXT_PUBLIC_SEND_FRIEND_REQUEST;
-	const { token } = useAuthenticatedStore();
-	const [sent, setSent] = useState(false);
-	const [loading, setLoading] = useState(false);
-	const { userRequestedId } = useRequestedId();
+	const rejectEndpoint = process.env.NEXT_PUBLIC_CANCEL_FRIEND_REQUEST;
+	const queryClient = useQueryClient();
 
-	const sendRequest = async (e) => {
-		e.preventDefault();
-		if (sent || loading) return;
+	const { token } = useAuthenticatedStore();
+	const { setUserRequestedId } = useRequestedId();
+
+	const {
+		addSentRequest,
+		removeSentRequest,
+		addRemovedFriend,
+		setLocalStatus,
+		getLocalStatus,
+	} = useFriendsStore();
+
+	const [loading, setLoading] = useState(false);
+	// setting local status to the user's status
+	const status = getLocalStatus(user._id);
+	const userStatus = status === "not sent";
+	// setting local status to the user's status
+
+	// Send friend request
+	const sendRequest = async () => {
 		setLoading(true);
-        console.log(userRequestedId)
+		setUserRequestedId(user._id);
+
 		try {
 			const res = await fetch(endpoint, {
 				method: "POST",
@@ -21,13 +42,12 @@ const AddFriendButton = ({ removed }) => {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify({
-					receiverId: userRequestedId,
-				}),
+				body: JSON.stringify({ receiverId: user._id }),
 			});
 
 			if (res.ok) {
-				setSent(true);
+				addSentRequest(user._id);
+				setLocalStatus(user._id, "pending");
 			} else {
 				console.error("Failed to send request");
 			}
@@ -38,24 +58,55 @@ const AddFriendButton = ({ removed }) => {
 		}
 	};
 
+	// Cancel request
+	const removeFriend = async () => {
+		if (loading) return;
+		setLoading(true);
+		setUserRequestedId(user._id);
+
+		try {
+			const res = await fetch(rejectEndpoint, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({ receiverId: user._id }),
+			});
+
+			if (res.ok) {
+				setLocalStatus(user._id, "not sent");
+				removeSentRequest(user._id);
+				addRemovedFriend(user._id);
+			} else {
+				console.error("Failed to cancel friend request");
+			}
+		} catch (err) {
+			console.error("Error removing friend:", err);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	return (
-		<button
-			onClick={sendRequest}
-			disabled={sent || removed}
-			className={`sm:mt-1 w-full h-7 rounded-md text-sm transition ${
-				removed
-					? "bg-gray-300 text-gray-500 cursor-default"
-					: sent
-					? "bg-gray-300 text-gray-700 cursor-default"
-					: "bg-[#ddc2ed] text-[#741ca4] hover:bg-[#d4b8e7]"
-			}`}>
-			{removed ? "Removed" : sent ? "Sent" : "Add Friend"}
-		</button>
+		<>
+			{userStatus ? (
+				<button
+					onClick={sendRequest}
+					disabled={loading}
+					className="sm:mt-1 w-full h-7 rounded-md text-sm bg-[#ddc2ed] text-[#741ca4] hover:bg-[#d4b8e7] cursor-pointer">
+					{loading ? <PulseLoader size={3} /> : "Add Friend"}
+				</button>
+			) : (
+				<button
+					onClick={removeFriend}
+					disabled={loading}
+					className="sm:mt-1 w-full h-7 rounded-md text-sm bg-gray-300 text-gray-500 cursor-pointer">
+					{loading ? <PulseLoader size={3} /> : "Cancel Request"}
+				</button>
+			)}
+		</>
 	);
 };
 
 export default AddFriendButton;
-
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGMxYjVmYzc3NzMyNTJjNDNiMjA0NzIiLCJpYXQiOjE3NTc1MjU1MDB9.QZ7dvYGd3Q5kiPbH_Rf4iW28AiZUnitJfpPHV283hic"
-
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGMxYzJmMDJkN2U1YTExM2Q1NjQ0OTEiLCJpYXQiOjE3NTc1Mjg4MTd9.AXuHVLvZ6O-3XrnPBmo2wo2nSHUy4yyuw2FFtCQ5byQ

@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Nunito, Poppins } from "next/font/google";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
-import Unread from "../dashboard/chats/Unread";
-import Favourites from "../dashboard/chats/Favourites";
-import Starred from "../dashboard/chats/Starred";
-import AllChats from "../dashboard/chats/AllChats";
+import Unread from "../chats/Unread";
+import Favourites from "../chats/Favourites";
+import Starred from "../chats/Starred";
+import AllChats from "../chats/AllChats";
 
 const MobileChatsNavigation = () => {
 	const pathname = usePathname();

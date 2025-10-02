@@ -1,5 +1,5 @@
 "use client";
-import "./globals.css";
+import "./global.css";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
 import MobileNavbar from "./components/MobileNavbar";
@@ -14,7 +14,7 @@ import FetchUser from "./FetchUser";
 
 export default function RootLayout({ children }) {
 	const queryClient = new QueryClient();
-	const { token, userId, authenticated } = useAuthenticatedStore();
+	const {  authenticated } = useAuthenticatedStore();
 
 	return (
 		<QueryClientProvider client={queryClient}>

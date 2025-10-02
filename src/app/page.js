@@ -2,20 +2,19 @@
 import React, { useEffect, useState } from "react";
 import { useAuthenticatedStore } from "@/zustand";
 import { useRouter } from "next/navigation";
-import Spinner from "@/Spinner";
+import Image from "next/image";
+import Chats from "./chats/page";
 
 export default function Home() {
 	const { authenticated } = useAuthenticatedStore();
 	const router = useRouter();
 	const [ready, setReady] = useState(false);
 
-	useEffect(() => {
-		// only run redirect once when auth state is known
-		if (authenticated === undefined) return; // prevent running before Zustand hydrates
+	// once redirect finishes, render nothing
 
+	useEffect(() => {
 		const redirect = async () => {
 			if (authenticated) {
-				await router.replace("/dashboard/chats");
 			} else {
 				await router.replace("/welcome");
 			}
@@ -23,13 +22,23 @@ export default function Home() {
 		};
 
 		redirect();
+		setReady(true);
 	}, [authenticated, router]);
 
-	// while waiting, show spinner
 	if (!ready) {
-		return <Spinner />;
+		return (
+			<div className="relative flex justify-center items-center flex-col gap-5 mx-auto bg-white w-full h-full">
+				<Image
+					src={"/assets/images/chatterbox-logo.png"}
+					alt="Logo"
+					width={100}
+					height={100}
+					className="h-10 w-10 object-cover"
+				/>
+				<div className="loader"></div>
+			</div>
+		);
 	}
 
-	// once redirect finishes, render nothing
-	return null;
+	return authenticated ? <Chats /> : null;
 }

@@ -11,8 +11,8 @@ export const useAuthenticatedStore = create((set) => ({
 	},
 	token:
 		typeof window !== "undefined"
-			? JSON.parse(localStorage.getItem("token") || false)
-			: false,
+			? JSON.parse(localStorage.getItem("token") || "null")
+			: null,
 	setToken: (value) => {
 		localStorage.setItem("token", JSON.stringify(value));
 		set({ token: value });
@@ -34,4 +34,47 @@ export const useUpdateUserStore = create((set) => ({
 export const useRequestedId = create((set) => ({
 	userRequestedId: null,
 	setUserRequestedId: (value) => set({ userRequestedId: value }),
+}));
+
+export const useFriendsStore = create((set, get) => ({
+	sentRequests: [], // list of user IDs with pending friend requests
+	removedFriends: [], // list of user IDs removed/cancelled
+
+	localStatus: {},
+	setLocalStatus: (userId, value) =>
+		set((state) => ({
+			localStatus: { ...state.localStatus, [userId]: value },
+		})),
+	// Add to sentRequests
+	addSentRequest: (userId) =>
+		set((state) => ({
+			sentRequests: [...state.sentRequests, userId],
+		})),
+	getLocalStatus: (userId) => get().localStatus[userId] || "not sent",
+
+	// Remove from sentRequests (e.g. cancelled request)
+	removeSentRequest: (userId) =>
+		set((state) => ({
+			sentRequests: state.sentRequests.filter((id) => id !== userId),
+		})),
+
+	// Add to removedFriends
+	addRemovedFriend: (userId) =>
+		set((state) => ({
+			removedFriends: [...state.removedFriends, userId],
+		})),
+
+	// Remove from removedFriends if needed
+	removeRemovedFriend: (userId) =>
+		set((state) => ({
+			removedFriends: state.removedFriends.filter((id) => id !== userId),
+		})),
+}));
+
+export const useRemovedStore = create((set) => ({
+	removed: null,
+	setRemoved: (value) => set({ removed: value }),
+
+	accepted: null,
+	setAccepted: (value) => set({ accepted: value }),
 }));
