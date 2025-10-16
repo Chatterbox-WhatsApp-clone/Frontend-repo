@@ -77,7 +77,7 @@ const Page = () => {
 		}
 	};
 
-	const endpoint = process.env.AUTH_REGISTRATION_ENDPOINT;
+	const endpoint = process.env.NEXT_PUBLIC_AUTH_REGISTRATION_ENDPOINT;
 
 	const sendUserDetailsToBackend = async (e) => {
 		e.preventDefault();
