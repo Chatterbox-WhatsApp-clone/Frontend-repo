@@ -26,8 +26,8 @@ const Page = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [touched, setTouched] = useState(false);
 
-	const forgotEndpoint = process.env.NEXT_PUBLIC_FORGOT_PASSWORD_ENDPOINT;
-	const resetEndpoint = process.env.NEXT_PUBLIC_RESET_PASSWORD_ENDPOINT;
+	const forgotEndpoint = process.env.FORGOT_PASSWORD_ENDPOINT;
+	const resetEndpoint = process.env.RESET_PASSWORD_ENDPOINT;
 
 	const checkEmail = () => {
 		if (email.trim() === "") {
