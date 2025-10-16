@@ -1,22 +1,21 @@
-import { initializeApp } from "firebase/app";
+// utils/firebaseClient.js
+import { initializeApp, getApps } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
-// Firebase configuration from environment variables
-const firebaseConfig = {
-	apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-	authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-	projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-	projectNumber: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_NUMBER,
-};
+let auth, provider;
 
-// Initialize Firebase
-let app;
 if (typeof window !== "undefined") {
-	app = initializeApp(firebaseConfig);
+	// Initialize Firebase only once
+	if (!getApps().length) {
+		const app = initializeApp({
+			apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+			authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+			projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+			projectNumber: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_NUMBER,
+		});
+		auth = getAuth(app);
+		provider = new GoogleAuthProvider();
+	}
 }
-
-// Export auth and provider for use in components
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
 export { auth, provider };
