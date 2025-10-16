@@ -6,7 +6,8 @@ const nunito = Nunito({
 	weight: ["400", "500", "700", "1000", "900"],
 });
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { useState } from "react";
 import { useAuthenticatedStore } from "@/zustand";
 import { useRouter } from "next/navigation";

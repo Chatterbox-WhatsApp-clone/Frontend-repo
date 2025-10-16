@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { signInButton } from "@/GoogleSignIn";
+import { signInButton } from "@/utils/GoogleSignIn";
 import { useAuthenticatedStore } from "@/zustand";
 
 const GoogleLogIn = () => {
