@@ -10,6 +10,7 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
+let app;
 if (typeof window !== "undefined") {
 	app = initializeApp(firebaseConfig);
 }
