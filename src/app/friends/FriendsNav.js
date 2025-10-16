@@ -50,7 +50,7 @@ const FriendsNav = () => {
 			</p>
 
 			<FriendsNavigation />
-			<nav className="hidden md:flex flex-row gap-3 md:flex-col w-full mt-5">
+			<nav className="hidden md:flex flex-row space-y-3 md:flex-col w-full mt-5">
 				{navItems.map((navLink) => (
 					<Link
 						key={navLink.path}

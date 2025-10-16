@@ -51,7 +51,7 @@ export default function Home() {
 
 						<div className="space-y-2 mt-3">
 							<p className="text-center text-sm text-gray-300">
-								Tap "Agree & Continue" <br /> to accept the Terms of Service
+								Tap Agree & Continue <br /> to accept the Terms of Service
 							</p>
 							<button
 								className="bg-white text-center mt-3 w-54 h-9 rounded-3xl text-[#3a0657] cursor-pointer font-extrabold"

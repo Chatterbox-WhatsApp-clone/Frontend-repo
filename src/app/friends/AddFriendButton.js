@@ -1,17 +1,15 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
 	useAuthenticatedStore,
 	useRequestedId,
 	useFriendsStore,
 } from "@/zustand";
 import { PulseLoader } from "react-spinners";
-import { useQueryClient } from "@tanstack/react-query";
 
-const AddFriendButton = ({ user }) => {
+const AddFriendButton = ({ user, friend }) => {
 	const endpoint = process.env.NEXT_PUBLIC_SEND_FRIEND_REQUEST;
 	const rejectEndpoint = process.env.NEXT_PUBLIC_CANCEL_FRIEND_REQUEST;
-	const queryClient = useQueryClient();
 
 	const { token } = useAuthenticatedStore();
 	const { setUserRequestedId } = useRequestedId();
@@ -25,15 +23,17 @@ const AddFriendButton = ({ user }) => {
 	} = useFriendsStore();
 
 	const [loading, setLoading] = useState(false);
-	// setting local status to the user's status
-	const status = getLocalStatus(user._id);
+
+	// Determine the actual ID to use
+	const actualId = user?._id || friend;
+
+	const status = getLocalStatus(actualId);
 	const userStatus = status === "not sent";
-	// setting local status to the user's status
 
 	// Send friend request
 	const sendRequest = async () => {
 		setLoading(true);
-		setUserRequestedId(user._id);
+		setUserRequestedId(actualId);
 
 		try {
 			const res = await fetch(endpoint, {
@@ -42,14 +42,14 @@ const AddFriendButton = ({ user }) => {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify({ receiverId: user._id }),
+				body: JSON.stringify({ receiverId: actualId }),
 			});
 
 			if (res.ok) {
-				addSentRequest(user._id);
-				setLocalStatus(user._id, "pending");
+				addSentRequest(actualId);
+				setLocalStatus(actualId, "pending");
 			} else {
-				console.error("Failed to send request");
+				console.error("Failed to send request", );
 			}
 		} catch (err) {
 			console.error("Error sending request:", err);
@@ -62,7 +62,7 @@ const AddFriendButton = ({ user }) => {
 	const removeFriend = async () => {
 		if (loading) return;
 		setLoading(true);
-		setUserRequestedId(user._id);
+		setUserRequestedId(actualId);
 
 		try {
 			const res = await fetch(rejectEndpoint, {
@@ -71,13 +71,13 @@ const AddFriendButton = ({ user }) => {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
-				body: JSON.stringify({ receiverId: user._id }),
+				body: JSON.stringify({ receiverId: actualId }),
 			});
 
 			if (res.ok) {
-				setLocalStatus(user._id, "not sent");
-				removeSentRequest(user._id);
-				addRemovedFriend(user._id);
+				setLocalStatus(actualId, "not sent");
+				removeSentRequest(actualId);
+				addRemovedFriend(actualId);
 			} else {
 				console.error("Failed to cancel friend request");
 			}

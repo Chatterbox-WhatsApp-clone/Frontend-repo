@@ -23,7 +23,7 @@ const TopSidebar = () => {
 	return (
 		<div className="flex flex-col justify-start items-start w-full">
 			<div
-				className="bg-transparent hover:bg-gray-200 py-[10px] rounded-md mt-5 flex justify-center items-center cursor-pointer px-2"
+				className="bg-transparent hover:bg-gray-200 py-[10px] rounded-md mt-2 flex justify-center items-center cursor-pointer px-2"
 				onClick={() => setClicked(!clicked)}>
 				<RxHamburgerMenu className="text-lg text-black " />
 			</div>

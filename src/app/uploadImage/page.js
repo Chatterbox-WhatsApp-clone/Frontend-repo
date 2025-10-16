@@ -71,7 +71,7 @@ const Page = () => {
 				setSuccess(false);
 				setTimeout(() => setStatus(""), 10000);
 			} else {
-				console.log(data);
+				
 				setStatus(data.message || "Profile photo successfully uploaded");
 				setSuccess(true);
 				setTimeout(() => setStatus(""), 10000);

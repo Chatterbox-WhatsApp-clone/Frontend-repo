@@ -78,3 +78,13 @@ export const useRemovedStore = create((set) => ({
 	accepted: null,
 	setAccepted: (value) => set({ accepted: value }),
 }));
+
+export const useUserProfile = create((set) => ({
+	activeUser: null,
+	setActiveUser: (value) => set({ activeUser: value }),
+}));
+
+export const useUserData = create((set) => ({
+	user: null,
+	setUser: (value) => set({ user: value }),
+}));

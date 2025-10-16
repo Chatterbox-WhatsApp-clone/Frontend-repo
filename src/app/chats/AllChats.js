@@ -33,10 +33,12 @@ const AllChats = () => {
 				<div className="flex flex-col justify-center items-center gap-3 relative mt-32">
 					<p
 						className={`${poppins.className}  text-wrap text-center text-sm font-mono`}>
-						You don’t have any friends yet. Go to the Friends page and connect
-						to make some friends!
+						You haven't sent or received any messages. Your list of messages
+						will appear here.
 					</p>
-					<button onClick={((e) => router.push('/friends'))} className="rainbow-hover bg-[#7e5497] h-10 px-5 flex flex-row items-center justify-center rounded-2xl text-white cursor-pointer">
+					<button
+						onClick={(e) => router.push("/friends")}
+						className="rainbow-hover bg-[#7e5497] h-10 px-5 flex flex-row items-center justify-center rounded-2xl text-white cursor-pointer">
 						<span className={`text-sm text-center ${poppins.className}`}>
 							Go to Friends Page
 						</span>
@@ -46,7 +48,7 @@ const AllChats = () => {
 			) : (
 				<div className="flex flex-col h-full justify-center items-center">
 					{data?.data?.map((chat) => (
-						<p>Hello</p>
+						<p key={chat._id}>Hello</p>
 					))}
 				</div>
 			)}

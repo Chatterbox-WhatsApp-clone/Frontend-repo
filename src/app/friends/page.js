@@ -2,9 +2,9 @@
 import React, { lazy, Suspense } from "react";
 import FriendsNav from "./FriendsNav";
 const AllFriends = lazy(() => import("./AllFriends"));
-const page = () => {
+const Page = () => {
 	return (
-		<div className="bg-gray-100 h-screen w-full flex-col flex md:flex-row items-center justify-start px-1 sm:px-3">
+		<div className="bg-gray-50 h-full w-full flex-col flex md:flex-row items-center justify-start ">
 			<FriendsNav />
 			<Suspense fallback={null}>
 				<AllFriends />
@@ -13,4 +13,4 @@ const page = () => {
 	);
 };
 
-export default page;
+export default Page;

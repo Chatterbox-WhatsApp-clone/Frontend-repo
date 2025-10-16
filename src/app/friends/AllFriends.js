@@ -39,7 +39,7 @@ const AllFriends = () => {
 			refetch();
 			setRemoved(false);
 		}
-	}, [removed]);
+	}, [removed, refetch, setRemoved]);
 	// refetch users
 
 	return (

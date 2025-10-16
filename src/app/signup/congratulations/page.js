@@ -1,12 +1,11 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { Poppins } from "next/font/google";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 import { useRouter } from "next/navigation";
 import { useAuthenticatedStore } from "@/zustand";
-import { useQuery } from "@tanstack/react-query";
-const page = () => {
+const Page = () => {
 	const { setAuthenticated } = useAuthenticatedStore();
 	const router = useRouter();
 	function toHome() {
@@ -31,4 +30,4 @@ const page = () => {
 	);
 };
 
-export default page;
+export default Page;

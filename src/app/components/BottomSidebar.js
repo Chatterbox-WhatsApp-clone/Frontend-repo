@@ -50,7 +50,7 @@ const BottomSidebar = () => {
 
 	return (
 		<>
-			<div className="flex flex-col justify-start items-start w-full">
+			<div className="flex flex-col justify-start items-start w-full h-fit ">
 				<div className="flex flex-col justify-start items-start space-y-7 w-full border-b border-gray-200">
 					<Link
 						href={"/dashboard/lockchats"}

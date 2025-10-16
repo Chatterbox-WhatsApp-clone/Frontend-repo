@@ -39,7 +39,7 @@ const FilterChats = ({
 	return (
 		<div className=" hidden md:block">
 			<IoFilterOutline
-				className="filter-icon text-xl cursor-pointer"
+				className="filter-icon text-xl cursor-pointer mr-1"
 				onClick={() => setShowFilter((prev) => !prev)}
 			/>
 

@@ -19,7 +19,7 @@ import AllChats from "./AllChats";
 import PageWrapper from "./PageWrapper";
 import Messages from "./Messages";
 
-const page = () => {
+const Page = () => {
 	const { setClicked } = useClickedStore();
 	const [input, setInput] = useState("");
 	const [touched, setTouched] = useState(false);
@@ -61,10 +61,10 @@ const page = () => {
 
 	return (
 		<>
-			<div className="w-full grid grid-cols-1 md:grid-cols-[280px_1fr] bg-gray-50 rounded-tl-2xl h-full py-1 px-2">
+			<div className="w-full h-full grid grid-cols-1 md:grid-cols-[280px_1fr] bg-gray-50 rounded-tl-2xl  px-2 ">
 				<PageWrapper>
 					{/* top of the chats page */}
-					<div className="w-full h-10 md:h-20 ">
+					<div className="w-full h-10 md:h-20 md:pt-2">
 						<div className="flex flex-row justify-between items-center">
 							<h1
 								onClick={(e) => setClicked(true)}
@@ -153,4 +153,4 @@ const page = () => {
 	);
 };
 
-export default page;
+export default Page;

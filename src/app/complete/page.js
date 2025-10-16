@@ -28,7 +28,7 @@ const Page = () => {
 		router.push("/");
 	}
 	function toUploadImagePage() {
-		router.push("/verification");
+		router.push("verification");
 	}
 	// for routing
 
@@ -85,7 +85,7 @@ const Page = () => {
 			const data = await res.json();
 
 			if (!res.ok) {
-				setStatus(data.message || "Error creating profile");
+				setStatus(data.message || "Phone Number is already in use");
 				setSuccess(false);
 				setTimeout(() => setStatus(""), 10000);
 				throw new Error(data.message);

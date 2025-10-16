@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Nunito, Poppins } from "next/font/google";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { useAuthenticatedStore } from "@/zustand";
+import { useAuthenticatedStore, useUserProfile } from "@/zustand";
 
 const nunito = Nunito({
 	subsets: ["latin"],
@@ -16,14 +16,14 @@ const poppins = Poppins({
 });
 import { IoIosArrowForward } from "react-icons/io";
 import { useRouter } from "next/navigation";
-import { BiDotsHorizontalRounded } from "react-icons/bi";
-import FriendOptions from "./FriendOptions";
+
 
 const MyFriends = () => {
 	const { token } = useAuthenticatedStore();
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 	const endpoint = process.env.NEXT_PUBLIC_ACCEPTED_FIRENDS;
 	const router = useRouter();
+	const { activeUser, setActiveUser } = useUserProfile();
 
 	const fetchfriends = async () => {
 		const res = await fetch(endpoint, {
@@ -40,22 +40,17 @@ const MyFriends = () => {
 		cacheTime: 50000,
 	});
 
-	const [isOpen, setIsOpen] = useState(false);
-
-	const openModal = () => setIsOpen(!isOpen);
-	const closeModal = () => setIsOpen(false);
-
 	return (
 		<>
 			<div
-				className="w-full h-full overflow-y-auto flex flex-col gap-2 py-2"
+				className="w-full h-full flex flex-col gap-2 py-2 overflow-y-auto"
 				style={{ scrollbarWidth: "none" }}>
-				{data?.friends.length === 0 ? (
+				{data?.friends?.length === 0 ? (
 					<div className="flex items-center justify-center mt-36 w-full">
-						<div className="flex flex-col justify-center items-center gap-3">
+						<div className="flex flex-col justify-center items-center gap-2">
 							<p
 								className={`${poppins.className} text-wrap text-center text-sm font-mono`}>
-								You don't have any friend (s)
+								You don&apos; t have any friend(s)
 							</p>
 							<button
 								onClick={() => router.push("/friends")}
@@ -81,33 +76,35 @@ const MyFriends = () => {
 
 							return (
 								<div
-									className="h-[60px] w-full flex justify-between items-center flex-row"
+									className={`h-[70px] w-full py-1 ${
+										activeUser?._id === friend._id
+											? "bg-gray-200"
+											: "bg-transparent"
+									} hover:bg-gray-200 px-1 cursor-pointer`}
 									key={friend._id}>
-									<div className="flex justify-center items-center flex-row space-x-4">
-										<div className="h-[60px] w-[60px] flex-shrink-0">
-											<Image
-												src={profilePicture}
-												width={70}
-												height={70}
-												alt="friend profile picture"
-												className="w-full h-full rounded-full object-cover"
-											/>
+									<div className="h-[60px] w-full flex justify-between items-center flex-row relative cursor-pointer">
+										<div
+											className="flex justify-center items-center flex-row space-x-4 md:space-x-2 lg:space-x-4"
+											onClick={() => {
+												setActiveUser(friend);
+											}}>
+											<div className="h-[60px] w-[60px] flex-shrink-0">
+												<Image
+													src={profilePicture}
+													width={70}
+													height={70}
+													alt="friend profile picture"
+													className="w-full h-full rounded-full object-cover"
+												/>
+											</div>
+
+											<div className="flex flex-col justify-center items-start w-full gap-1">
+												<p
+													className={`${poppins.className} font-medium text-sm`}>
+													{friend.username}
+												</p>
+											</div>
 										</div>
-
-										<div className="flex flex-col justify-center items-start w-full gap-1">
-											<p className={`${poppins.className} font-medium text-sm`}>
-												{friend.fullName}
-											</p>
-										</div>
-									</div>
-
-									<div className="relative inline-block">
-										<BiDotsHorizontalRounded
-											className=" text-gray-800 text-2xl relative inline-block cursor-pointer"
-											onClick={openModal}
-										/>
-
-										{isOpen && <FriendOptions friend={friend} />}
 									</div>
 								</div>
 							);

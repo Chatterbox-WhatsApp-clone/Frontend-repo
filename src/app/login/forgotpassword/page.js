@@ -159,7 +159,7 @@ const Page = () => {
 								Forgot Password
 							</h1>
 							<p className={`text-white text-sm mt-1 ${poppins.className}`}>
-								No worries, we'll send reset instructions to your email
+								No worries, we&apos;ll send reset instructions to your email
 							</p>
 
 							<form className="w-full mt-4 space-y-3">
@@ -243,7 +243,7 @@ const Page = () => {
 							<p
 								className={`text-white mt-5 text-sm ${poppins.className}`}
 								onClick={sendResetEmail}>
-								Didn’t receive the email?{" "}
+								Didn&apos;’t receive the email?{" "}
 								<span className="font-bold underline cursor-pointer">
 									{" "}
 									Click to Resend

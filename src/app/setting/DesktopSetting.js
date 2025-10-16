@@ -3,23 +3,23 @@ import React, { useState, forwardRef, useEffect } from "react";
 import { Nunito, Poppins } from "next/font/google";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import { useAuthenticatedStore, useUpdateUserStore } from "@/zustand";
-import Spinner from "@/Spinner";
-import { IoKeyOutline } from "react-icons/io5";
-import { createPortal } from "react-dom";
 import {
-	MdOutlineEmail,
-	MdOutlineDeleteOutline,
-	MdOutlinePrivacyTip,
-} from "react-icons/md";
-import { IoIosPhonePortrait } from "react-icons/io";
+	useAuthenticatedStore,
+	useUpdateUserStore,
+	useUserData,
+} from "@/zustand";
+import Spinner from "@/Spinner";
+import { createPortal } from "react-dom";
+import { MdOutlinePrivacyTip } from "react-icons/md";
 import { GoPencil } from "react-icons/go";
-import { CiCircleCheck } from "react-icons/ci";
-import EditEmail from "../components/EditEmail";
 import EditImage from "../components/EditImage";
-import EditPhone from "../components/EditPhone";
 import DeleteAccount from "./DeleteAccount";
+import EmailSection from "./EmailSection";
+import AccountSection from "./AccountSection";
+import PhoneSection from "./PhoneSection";
 import Security from "./Security";
+import EditStatus from "./EditStatus";
+import BackgroundImage from "./BackgroundImage";
 const nunito = Nunito({
 	subsets: ["latin"],
 	weight: ["400", "500", "700", "1000", "900"],
@@ -30,10 +30,10 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 	const userEndpoint = process.env.NEXT_PUBLIC_GET_USER_ENDPOINT;
 	const [linkCopied, setLinkCopied] = useState(false);
 	const [openEditImage, setOpenEditImage] = useState(false);
-	const [openEditPhone, setOpenEditPhone] = useState(false);
-	const [openEditEmail, setOpenEditEmail] = useState(false);
 	const { userUpdated, setUserUpdated } = useUpdateUserStore();
+	const [editStatus, setOpenEditStatus] = useState(false);
 
+	// fetch user info
 	const fetchUserInfo = async () => {
 		try {
 			const res = await fetch(userEndpoint, {
@@ -53,18 +53,25 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 		cacheTime: 300000,
 	});
 
+	// fetch user info
+
+	// reftech once userIsUpdated
 	useEffect(() => {
 		if (userUpdated) {
 			refetch();
 			setUserUpdated(false);
 		}
-	}, [userUpdated]);
+	}, [userUpdated, refetch, setUserUpdated]);
+	// reftech once userIsUpdated
 
+	// url for image
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 	const profilePicture = data?.data?.profilePicture
 		? `${backendBase}${data.data.profilePicture}`
 		: "/assets/images/userImage.jpg";
+	// url for image
 
+	// function to copy link
 	const handleCopyLink = async () => {
 		try {
 			await navigator.clipboard.writeText("https://yourapp.com/invite");
@@ -74,7 +81,9 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 			console.error("Failed to copy:", err);
 		}
 	};
+	// function to copy link
 
+	// handle outside click to close settings modal
 	useEffect(() => {
 		function handleClickOutside(e) {
 			if (ref && ref.current && !ref.current.contains(e.target)) {
@@ -87,12 +96,21 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 			document.removeEventListener("click", handleClickOutside);
 		};
 	}, [ref, setShowDesktopSetting]);
+	// handle outside click to close settings modal
 
+	// set Data to become the user in zustand
+	const { setUser } = useUserData();
+	useEffect(() => {
+		setUser(data);
+	}, [data, setUser]);
+	// set Data to the User's
+
+	// Add background image tommorrow
 	return createPortal(
 		<>
 			<div ref={ref}>
 				<div
-					className="fixed bottom-8 left-5 z-[999] w-[500px] bg-white rounded-xl shadow-2xl overflow-y-auto max-h-[80vh] p-5"
+					className="hidden md:block fixed bottom-8 left-5 z-[999] w-[500px] bg-white rounded-xl shadow-2xl overflow-y-auto max-h-[80vh] p-5"
 					style={{ scrollbarWidth: "none" }}>
 					<div className="border-b border-gray-300 pb-3">
 						<h1 className={`${nunito.className} font-bold text-2xl`}>
@@ -117,9 +135,12 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 					) : (
 						<>
 							{/* Profile Section */}
-							<div className="mt-4 w-full flex items-center justify-between">
-								<div className="flex items-center space-x-4">
-									<div className="w-20 h-20 relative group">
+							<BackgroundImage />
+							<div
+								className="-mt-6 w-full flex items-center justify-start border-b border-gray-300 pb-5"
+								key={data?._id}>
+								<div className="flex flex-col justify-start items-start space-y-5 w-full">
+									<div className="min-w-[100px] min-h-[100px] relative group border-2 border-[#3a0657] rounded-full">
 										{/* User Image */}
 										<Image
 											src={profilePicture}
@@ -146,102 +167,41 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 										</div>
 									</div>
 
-									<div className="flex flex-col space-y-1">
-										<h1 className={`${nunito.className} text-xl truncate`}>
-											{data?.data?.username}
+									<div className="w-full flex flex-1 flex-col space-y-1 ">
+										<h1
+											className={`${nunito.className} text-lg truncate font-semibold`}>
+											Name: {""}
+											<span className="font-normal">
+												{data?.data?.username}
+											</span>
 										</h1>
-										<p className={`${poppins.className} text-sm truncate`}>
-											{data?.data?.status}
+										<p
+											className={`${poppins.className} text-sm truncate font-semibold`}>
+											Status: {""}{" "}
+											<span className="font-normal ">{data?.data?.status}</span>
+											<GoPencil
+												className="inline-flex ml-2 text-[13px] -mt-1 text-[#3a0657]"
+												onClick={() => setOpenEditStatus(!editStatus)}
+											/>
 										</p>
-										<p className={`${poppins.className} text-sm truncate`}>
-											Total Friends: {data?.data?.totalContacts}
+										{editStatus && (
+											<EditStatus setOpenEditStatus={setOpenEditStatus} />
+										)}
+										<p
+											className={`${poppins.className} text-sm truncate font-semibold`}>
+											Date Joined: {""}
+											<span className="font-normal">
+												{data?.data?.dateJoined}
+											</span>
 										</p>
 									</div>
 								</div>
 							</div>
+							<AccountSection data={data} />
 
-							{/* Account Section */}
-							<div className="mt-6 border-b border-gray-300 pb-5">
-								<h1
-									className={`${nunito.className} text-lg font-semibold flex flex-row gap-3 items-center`}>
-									<IoKeyOutline /> Account
-								</h1>
-								<p
-									className={`text-gray-600 text-[12px] ${poppins.className} mt-2`}>
-									Last seen and Online
-								</p>
-								<p className={`truncate text-[15px] mt-1 ${poppins.className}`}>
-									Everyone
-								</p>
-								<p
-									className={`text-gray-600 mt-4 text-[12px] ${poppins.className}`}>
-									Profile Photo
-								</p>
-								<p className={`text-[15px] truncate ${poppins.className}`}>
-									Everyone
-								</p>
-							</div>
+							<EmailSection data={data} />
 
-							{/* Email Section */}
-							<div className="mt-5 border-b border-gray-300 pb-5">
-								<h1
-									className={`${nunito.className} text-base font-semibold flex flex-row gap-3 items-center`}>
-									<MdOutlineEmail className="text-xl" /> Email
-								</h1>
-								<p
-									className={`text-gray-800 text-[14px] mt-1 ${poppins.className}`}>
-									Email helps you access your account. It isn't visible to
-									others.
-								</p>
-								<p
-									className={`text-gray-600 mt-3 text-[12px] ${poppins.className}`}>
-									Email
-								</p>
-								<p
-									className={`text-[15px] truncate flex flex-row gap-5 w-full justify-start items-center cursor-pointer z-50 font-bold ${poppins.className}`}
-									onClick={(e) => setOpenEditEmail(!openEditEmail)}>
-									{data?.data?.email} <GoPencil />
-								</p>
-								{openEditEmail && (
-									<EditEmail setOpenEditEmail={setOpenEditEmail} />
-								)}
-								<p
-									className={`mt-1 text-[#3a0657] flex flex-row gap-1 items-center font-bold text-[13px] ${poppins.className}`}>
-									<CiCircleCheck
-										className="text-base font-bold"
-										strokeWidth={1}
-									/>{" "}
-									Verified
-								</p>
-							</div>
-
-							{/* Phone Section */}
-							<div className="mt-5 border-b border-gray-300 pb-5">
-								<h1
-									className={`${nunito.className} text-base font-semibold flex flex-row gap-2 items-center`}>
-									<IoIosPhonePortrait className="text-2xl" /> Phone Number
-								</h1>
-								<p
-									className={`text-gray-600 mt-3 text-[12px] ${poppins.className}`}>
-									Phone
-								</p>
-								<p
-									className={`text-[15px] truncate flex flex-row gap-5 w/full justify-start items-center cursor-pointer z-50 font-bold ${poppins.className}`}
-									onClick={(e) => setOpenEditPhone(!openEditPhone)}>
-									{data?.data?.phoneNumber} <GoPencil />
-								</p>
-								{openEditPhone && (
-									<EditPhone setOpenEditPhone={setOpenEditPhone} />
-								)}
-								<p
-									className={`mt-1 text-[#3a0657] flex flex-row gap-1 items-center font-bold text-[13px] ${poppins.className}`}>
-									<CiCircleCheck
-										className="text-base font-bold"
-										strokeWidth={1}
-									/>{" "}
-									Verified
-								</p>
-							</div>
+							<PhoneSection data={data} />
 
 							{/* Privacy Section */}
 							<div className="mt-5 border-b border-gray-300 pb-5">

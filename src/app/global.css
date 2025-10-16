@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-
 .or {
   position: relative;
   padding: 0 10px;
@@ -56,38 +55,21 @@
 }
 
 .messages {
-  top: 0;
-  right: 0;
-  position: fixed;
-  height: 100vh;
-  width: 100%;
-  overflow-y: auto;
   scrollbar-width: none;
   scroll-behavior: smooth;
-  z-index: 90; 
-}
-
-@media screen and (min-width: 768px) {
-  .messages {
-    grid-column: 2;
-    position: relative;
-    height: calc(100vh - 48px);
-    overflow-y: auto;
-    scrollbar-width: none;
-    scroll-behavior: smooth;
-  }
+  z-index: 90;
 }
 
 .rainbow-hover {
-    transform-style: preserve-3d;
-    transform: scale(var(--s, 1)) perspective(600px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-    perspective: 600px;
-    transition: transform 0.1s;
+  transform-style: preserve-3d;
+  transform: scale(var(--s, 1)) perspective(600px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  perspective: 600px;
+  transition: transform 0.1s;
 }
 
 .rainbow-hover:active {
-    transition: 0.3s;
-    transform: scale(0.93);
+  transition: 0.3s;
+  transform: scale(0.93);
 }
 
 /* From Uiverse.io by satyamchaudharydev */
@@ -125,4 +107,22 @@
     right: 0;
     left: unset;
   }
+}
+
+.hello {
+  position: i
+}
+
+.userTab {
+  position: relative;
+}
+.userTab::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  left: 0px;
+  background-color: #3a0657;
+  width: 100%;
+  height: 3px;
+  border-radius: 3px;
 }

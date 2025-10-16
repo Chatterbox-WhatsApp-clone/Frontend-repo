@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import GoogleLogIn from "./GoogleLogIn";
 import Image from "next/image";
 
-const page = () => {
+const Page = () => {
 	const [success, setSuccess] = useState(true);
 	const [showPassword, setShowPassord] = useState(false);
 	const [status, setStatus] = useState("");
@@ -177,7 +177,7 @@ const page = () => {
 						<p className="or text-white mt-5 font-bold">or Login with</p>
 						<GoogleLogIn />
 						<p className="text-white mt-10" onClick={backToSignUpPage}>
-							Don't have an account?{" "}
+							Don&apos;'t have an account?{" "}
 							<span className="font-bold cursor-pointer underline">
 								Sign Up
 							</span>
@@ -189,4 +189,4 @@ const page = () => {
 	);
 };
 
-export default page;
+export default Page;

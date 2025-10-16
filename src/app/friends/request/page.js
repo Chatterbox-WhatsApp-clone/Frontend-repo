@@ -13,7 +13,7 @@ const FriendsRequest = lazy(() => import("./FriendsRequest"));
 const SentRequest = lazy(() => import("./SentRequest"));
 import { useRouter } from "next/navigation";
 
-const page = () => {
+const Page = () => {
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 	const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -31,9 +31,9 @@ const page = () => {
 
 	return (
 		<>
-			<div className="bg-gray-100 h-full md:h-screen w-full flex-col flex md:flex-row items-center justify-center px-1 sm:px-2">
-				<div className="w-full h-auto md:h-full md:w-[230px] lg:w-[300px] md:border-r md:border-gray-300 md:shadow-[3px_0_4px_-1px_rgba(0,0,0,0.1)] shadow-gray-200 px-1 sm:px-2 py-2 sm:py-4">
-					<div className="flex flex-row justify-between ">
+			<div className="bg-gray-100 h-full w-full flex-col flex md:flex-row items-center justify-center px-1 sm:px-2">
+				<div className="w-full h-auto md:h-full md:w-[230px] lg:w-[300px] md:border-r md:border-gray-300 md:shadow-[3px_0_4px_-1px_rgba(0,0,0,0.1)] shadow-gray-200 px-1 sm:px-2 py-2 sm:py-3">
+					<div className="flex flex-row justify-between">
 						<button
 							onClick={() => router.back()}
 							className="flex items-center gap-1 p-1 rounded bg-gray-300 hover:bg-gray-400">
@@ -41,7 +41,7 @@ const page = () => {
 							<span className={`text-xs ${poppins.className}`}> Back</span>
 						</button>
 
-						<div className="block md:hidden bg-gray-300 h-7 w-7 rounded-full flex justify-center items-center">
+						<div className="md:hidden bg-gray-300 h-7 w-7 rounded-full flex justify-center items-center">
 							<BiDotsVerticalRounded
 								className=" text-gray-800 text-xl"
 								onClick={onOpen}
@@ -49,18 +49,18 @@ const page = () => {
 						</div>
 					</div>
 
-					<h1 className={`text-xl font-bold mt-5 ${nunito.className}`}>
+					<h1 className={`text-xl font-bold mt-3 ${nunito.className}`}>
 						Friend Requests
 					</h1>
 					<p
-						className={`text-sm ${poppins.className}  pb-3 border-b border-gray-300`}>
+						className={`text-sm ${poppins.className} pb-3 border-b border-gray-300`}>
 						Incoming friend requests
 					</p>
 
 					{isOpen && (
 						<div className="fixed inset-0 bg-black/70 z-[90]" onClick={onClose}>
 							<div className="fixed bottom-0 h-36 w-full bg-gray-100 rounded-t-2xl z-[99] shadow-lg  transform transition-transform duration-300 ease-in-out px-3 py-3">
-								<div className="block ml-auto bg-gray-300 h-6 w-6 rounded-full flex justify-center items-center">
+								<div className="ml-auto bg-gray-300 h-6 w-6 rounded-full flex justify-center items-center">
 									<FaTimes
 										className=" text-gray-800 text-lg"
 										onClick={onClose}
@@ -86,11 +86,12 @@ const page = () => {
 					</p>
 
 					<button
-						className="text-sent hidden md:flex text-white text-sm mt-1 bg-[#3a0657] py-1 rounded-md px-3 cursor-pointer"
+						className="text-sent hidden md:flex text-white text-sm mt-1 bg-[#7e5497] py-1 rounded-md px-3 cursor-pointer"
 						onClick={modalOnOpen}>
 						View sent requests
 					</button>
 				</div>
+				
 
 				<Suspense fallback={null}>
 					<FriendsRequest />
@@ -106,4 +107,4 @@ const page = () => {
 	);
 };
 
-export default page;
+export default Page;

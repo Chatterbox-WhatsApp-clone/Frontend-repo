@@ -39,13 +39,13 @@ const FriendsRequest = () => {
 		cacheTime: 300000,
 	});
 	return (
-		<div className="flex-1 w-full h-full md:h-screen flex flex-col items-center justify-center">
+		<div className="flex-1 w-full h-full  flex flex-col items-center justify-center">
 			{data?.requests?.length === 0 ? (
 				<div className="flex items-center justify-center sm:mt-0 w-full">
 					<div className="flex flex-col justify-center items-center gap-3">
 						<p
 							className={`${poppins.className} text-wrap text-center text-sm font-mono`}>
-							You don't have any incoming friend requests
+							You don&apos;t have any incoming friend requests
 						</p>
 						<button
 							onClick={() => router.push("/friends")}

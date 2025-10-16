@@ -27,7 +27,7 @@ export default function Home() {
 
 	if (!ready) {
 		return (
-			<div className="relative flex justify-center items-center flex-col gap-5 mx-auto bg-white w-full h-full">
+			<div className="flex justify-center items-center flex-col gap-5 mx-auto bg-white w-full h-full">
 				<Image
 					src={"/assets/images/chatterbox-logo.png"}
 					alt="Logo"

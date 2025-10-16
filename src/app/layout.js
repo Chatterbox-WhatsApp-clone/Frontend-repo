@@ -9,12 +9,27 @@ import {
 	QueryClientProvider,
 	useQuery,
 } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import FetchUser from "./FetchUser";
+import { useRouter } from "next/navigation";
 
 export default function RootLayout({ children }) {
 	const queryClient = new QueryClient();
-	const {  authenticated } = useAuthenticatedStore();
+	const { authenticated } = useAuthenticatedStore();
+	const [ready, setReady] = useState(false);
+	const router = useRouter();
+
+	useEffect(() => {
+		const redirect = async () => {
+			if (authenticated) {
+			} else {
+			}
+			setReady(true);
+		};
+
+		redirect();
+		setReady(true);
+	}, [authenticated, router]);
 
 	return (
 		<QueryClientProvider client={queryClient}>
@@ -23,8 +38,12 @@ export default function RootLayout({ children }) {
 				<body className="h-screen w-full overflow-hidden">
 					{authenticated ? (
 						<div className="flex flex-col h-screen">
-							<Navbar />
-							<MobileNavbar />
+							{ready && (
+								<>
+									<Navbar />
+									<MobileNavbar />
+								</>
+							)}
 							<div className="flex h-full">
 								<Sidebar />
 								<main className="flex-1 h-full">{children}</main>

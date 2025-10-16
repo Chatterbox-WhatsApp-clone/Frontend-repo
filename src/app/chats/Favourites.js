@@ -1,4 +1,5 @@
 import React from "react";
+import { FaArrowLeft } from "react-icons/fa";
 
 const Favourites = () => {
 	const [clicked, setClicked] = useState(true);

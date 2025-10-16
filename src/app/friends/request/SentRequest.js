@@ -47,7 +47,7 @@ const SentRequest = ({ modalOnClose }) => {
 				style={{ scrollbarWidth: "none", scrollBehavior: "smooth" }}>
 				{/* Close button */}
 				<div className="px-2 py-2 ">
-					<div className="block bg-gray-300 h-5 w-5 rounded-full flex justify-center items-center ml-auto">
+					<div className="bg-gray-300 h-5 w-5 rounded-full flex justify-center items-center ml-auto">
 						<FaTimes className="text-sm " onClick={modalOnClose} />
 					</div>
 
@@ -58,8 +58,8 @@ const SentRequest = ({ modalOnClose }) => {
 								<div className="flex flex-col justify-center items-center ">
 									<p
 										className={`${poppins.className} text-wrap text-center text-sm font-mono`}>
-										You haven't sent any friends yet. Go to the Friends page and
-										connect to make some friends!
+										You haven&apos;t sent any friend request yet. Your recent
+										sent requests will appear here.
 									</p>
 								</div>
 							</div>
