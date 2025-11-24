@@ -49,22 +49,22 @@ const Page = () => {
 	const renderChats = () => {
 		switch (activeTab) {
 			case "Unread":
-				return <Unread />;
+				return <Unread searchQuery={input} setActiveTab={setActiveTab} />;
 			case "Favorites":
-				return <Favourites />;
+				return <Favourites searchQuery={input} setActiveTab={setActiveTab} />;
 			case "Starred":
-				return <Starred />;
+				return <Starred setActiveTab={setActiveTab} />;
 			default:
-				return <AllChats />;
+				return <AllChats searchQuery={input} />;
 		}
 	};
 
 	return (
 		<>
-			<div className="w-full h-full grid grid-cols-1 md:grid-cols-[280px_1fr] bg-gray-50 rounded-tl-2xl  px-2 ">
+			<div className="w-full h-full flex flex-col md:flex-row bg-gray-50 rounded-tl-2xl px-2 ">
 				<PageWrapper>
 					{/* top of the chats page */}
-					<div className="w-full h-10 md:h-20 md:pt-2">
+					<div className=" h-10 md:h-20 md:pt-2 w-full">
 						<div className="flex flex-row justify-between items-center">
 							<h1
 								onClick={(e) => setClicked(true)}
@@ -97,7 +97,7 @@ const Page = () => {
 								placeholder="Search or start a new chat"
 								value={input}
 								onChange={(e) => setInput(e.target.value)}
-								className={`input py-1 rounded-md border text-sm px-4 text-center w-full border-b-3 border-b-[#8f45b7] focus:outline-none`}
+								className={`input py-1 rounded-full border text-sm px-4 text-center w-full border-b-3 border-b-[#8f45b7] focus:outline-none`}
 								onClick={(e) => setTouched(true)}
 							/>
 							<GoSearch className="text-black text-[13px] absolute left-0 top-0 translate-y-1/2 ml-2 mt-[2px] z-50 md:hidden" />
@@ -118,11 +118,10 @@ const Page = () => {
 							{chatTabs.map((chatTab) => (
 								<button
 									onClick={(e) => setActiveTab(chatTab)}
-									className={`h-6 w-full flex justify-center items-center rounded-full px-2 ${
-										activeTab === chatTab
+									className={`h-6 w-full flex justify-center items-center rounded-full px-2 ${activeTab === chatTab
 											? "bg-[#c2b6ca] border border-gray-400"
 											: "border border-gray-400"
-									}`}
+										}`}
 									key={chatTab}>
 									<span className={`text-[12px] ${poppins.className}`}>
 										{chatTab}
@@ -134,10 +133,11 @@ const Page = () => {
 					{/* for chats naviagation*/}
 
 					{/* rendering components */}
-					<div className="mt-3 w-full px-1">{renderChats()}</div>
+					<div className="mt-3 w-full overflow-y-auto">{renderChats()}</div>
 					{/* rendering components */}
 				</PageWrapper>
 				<Messages />
+
 			</div>
 
 			{showMobileInput && (

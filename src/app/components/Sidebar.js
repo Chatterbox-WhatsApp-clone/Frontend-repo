@@ -12,7 +12,7 @@ const Sidebar = () => {
 	const { clicked } = useClickedStore();
 
 	return (
-		<aside className="hidden h-full z-50 md:flex flex-col items-start w-12">
+		<aside className="hidden h-full z-50 md:flex flex-col items-start w-12 ">
 			{/* Expanded Sidebar */}
 			<div
 				className={`${
@@ -46,7 +46,7 @@ const Sidebar = () => {
 			</div>
 
 			{/* Collapsed Sidebar (always visible icons) */}
-			<div className="flex flex-col items-center justify-between h-full w-full px-1 bg-gray-200 ">
+			<div className="flex flex-col items-center justify-between h-full w-full px-1 bg-gray-200 shrink-0">
 				<TopSidebar />
 				<BottomSidebar />
 			</div>

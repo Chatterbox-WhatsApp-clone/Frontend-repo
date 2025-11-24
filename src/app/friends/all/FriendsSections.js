@@ -14,12 +14,12 @@ const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 const FriendsSections = () => {
 	const { activeUser } = useUserProfile();
-	const [activeTab, setActiveTab] = useState("all"); // default: "all"
+	const [activeTab, setActiveTab] = useState("all");
 
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 
 	return (
-		<div className="flex flex-col gap-2 bg-white w-full h-auto py-2 px-2 rounded-md">
+		<div className="flex flex-col gap-2 bg-white h-auto w-full py-2 px-2 rounded-md">
 			{/* Tabs */}
 			<div className="flex space-x-10">
 				<button
@@ -45,39 +45,40 @@ const FriendsSections = () => {
 			{/* Friends Grid */}
 			{activeTab === "all" && (
 				<>
-					{!activeUser?.friends?.nonMutualFriends?.length ? (
-						<p className="text-gray-800 text-lg font-semibold flex justify-center items-center w-full h-full mt-[5%] relative">
-							You already share all friends in
-							common.
+					{activeUser?.nonMutualFriends?.length === 0 ? (
+						<p className="text-gray-800 text-base text-center font-semibold flex justify-center items-center w-full mt-5">
+							Looks like you already have all the same friends!
 						</p>
 					) : (
-						<div className="grid grid-cols lg:grid-cols-2 gap-1 md:gap-2 place-items-center">
-							{activeTab === "all" &&
-								activeUser?.friends?.nonMutualFriends?.map((friend) => {
-									const profilePicture = friend?.profilePicture
-										? `${backendBase}${friend.profilePicture}`
-										: "/assets/images/userImage.jpg";
+						<div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-3">
+							{activeUser?.nonMutualFriends?.map((friend) => {
+								const profilePicture = friend?.profilePicture
+									? `${backendBase}${friend.profilePicture}`
+									: "/assets/images/userImage.jpg";
 
-									return (
-										<div
-											className="w-full flex flex-row justify-between items-center"
-											key={friend._id}>
-											<div className="flex flex-row space-x-2 md:space-x-3 justify-start items-center w-full">
-												<Image
-													src={profilePicture}
-													width={100}
-													height={100}
-													alt="Profile Picture"
-													className="w-[100px] h-[100px] rounded-lg"
-												/>
-												<p className={`text-base ${poppins.className}`}>
-													{friend.username}
-												</p>
-											</div>
+								return (
+									<div
+										className="w-full flex flex-row justify-between items-center p-2 "
+										key={friend._id}>
+										<div className="flex items-center space-x-3">
+											<Image
+												src={profilePicture}
+												width={100}
+												height={100}
+												alt="Profile Picture"
+												className="rounded-lg"
+											/>
+											<p
+												className={`text-base font-semibold ${poppins.className}`}>
+												{friend.username}
+											</p>
+										</div>
+										<div className="w-[40%]">
 											<AddFriendButton friend={friend._id} />
 										</div>
-									);
-								})}
+									</div>
+								);
+							})}
 						</div>
 					)}
 				</>
@@ -89,3 +90,4 @@ const FriendsSections = () => {
 };
 
 export default FriendsSections;
+

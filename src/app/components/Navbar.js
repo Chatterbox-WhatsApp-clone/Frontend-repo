@@ -10,7 +10,7 @@ const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 const Navbar = () => {
 	return (
-		<nav className="h-10 w-full bg-gray-200 flex flex-col px-4">
+		<nav className="h-9 shrink-0 w-full bg-gray-200 flex flex-col px-4">
 			<div className="flex flex-row gap-2 items-center mt-1">
 				<Image
 					src={"/assets/images/chatterbox-logo.png"}

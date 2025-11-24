@@ -44,7 +44,7 @@ export default function RootLayout({ children }) {
 									<MobileNavbar />
 								</>
 							)}
-							<div className="flex h-full">
+							<div className="flex h-full min-h-0">
 								<Sidebar />
 								<main className="flex-1 h-full">{children}</main>
 							</div>

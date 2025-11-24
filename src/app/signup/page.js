@@ -132,7 +132,7 @@ const Page = () => {
 				</div>
 			)}
 
-			<div className="min-h-screen w-full bg-gradient-to-b from-[#9b67b3] from-5% to-[#3a0657] flex flex-col px-1">
+			<div className="min-h-screen w-full bg-gradient-to-b from-[#9b67b3] from-5% to-[#3a0657] flex flex-col px-1 justify-center items-center">
 				<div className="flex flex-row gap-1 items-center">
 					<Image
 						src={"/assets/images/chatterbox-logo.png"}
@@ -241,7 +241,7 @@ const Page = () => {
 							onClick={sendUserDetailsToBackend}
 							className={`text-center bg-white h-10 rounded-3xl mt-3 w-80 mx-2 gap-2 font-bold cursor-pointer ${poppins.className}`}
 							type="submit">
-							Register
+							Create Account
 						</button>
 					</form>
 

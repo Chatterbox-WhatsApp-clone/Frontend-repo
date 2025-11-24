@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, forwardRef, useEffect } from "react";
+import React, { useState, forwardRef, useEffect, useRef } from "react";
 import { Nunito, Poppins } from "next/font/google";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
@@ -11,8 +11,6 @@ import {
 import Spinner from "@/Spinner";
 import { createPortal } from "react-dom";
 import { MdOutlinePrivacyTip } from "react-icons/md";
-import { GoPencil } from "react-icons/go";
-import EditImage from "../components/EditImage";
 import DeleteAccount from "./DeleteAccount";
 import EmailSection from "./EmailSection";
 import AccountSection from "./AccountSection";
@@ -20,16 +18,19 @@ import PhoneSection from "./PhoneSection";
 import Security from "./Security";
 import EditStatus from "./EditStatus";
 import BackgroundImage from "./BackgroundImage";
+import ImageSettingsSection from "./ImageSettingsSection";
+import { GoPencil } from "react-icons/go";
+
 const nunito = Nunito({
 	subsets: ["latin"],
 	weight: ["400", "500", "700", "1000", "900"],
 });
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
+
 const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 	const { token } = useAuthenticatedStore();
 	const userEndpoint = process.env.NEXT_PUBLIC_GET_USER_ENDPOINT;
 	const [linkCopied, setLinkCopied] = useState(false);
-	const [openEditImage, setOpenEditImage] = useState(false);
 	const { userUpdated, setUserUpdated } = useUpdateUserStore();
 	const [editStatus, setOpenEditStatus] = useState(false);
 
@@ -53,25 +54,33 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 		cacheTime: 300000,
 	});
 
-	// fetch user info
-
-	// reftech once userIsUpdated
+	// refetch on userUpdated
 	useEffect(() => {
 		if (userUpdated) {
 			refetch();
 			setUserUpdated(false);
 		}
 	}, [userUpdated, refetch, setUserUpdated]);
-	// reftech once userIsUpdated
 
-	// url for image
+	
+	// handle outside click for settings modal
+	useEffect(() => {
+		const handleClickOutside = (e) => {
+			if (ref?.current && !ref.current.contains(e.target)) {
+				setShowDesktopSetting(false);
+			}
+		};
+		document.addEventListener("click", handleClickOutside);
+		return () => document.removeEventListener("click", handleClickOutside);
+	}, [ref, setShowDesktopSetting]);
+
+	// profile picture URL
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 	const profilePicture = data?.data?.profilePicture
 		? `${backendBase}${data.data.profilePicture}`
 		: "/assets/images/userImage.jpg";
-	// url for image
 
-	// function to copy link
+	// handle invite copy
 	const handleCopyLink = async () => {
 		try {
 			await navigator.clipboard.writeText("https://yourapp.com/invite");
@@ -81,31 +90,7 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 			console.error("Failed to copy:", err);
 		}
 	};
-	// function to copy link
 
-	// handle outside click to close settings modal
-	useEffect(() => {
-		function handleClickOutside(e) {
-			if (ref && ref.current && !ref.current.contains(e.target)) {
-				setShowDesktopSetting(false);
-			}
-		}
-
-		document.addEventListener("click", handleClickOutside);
-		return () => {
-			document.removeEventListener("click", handleClickOutside);
-		};
-	}, [ref, setShowDesktopSetting]);
-	// handle outside click to close settings modal
-
-	// set Data to become the user in zustand
-	const { setUser } = useUserData();
-	useEffect(() => {
-		setUser(data);
-	}, [data, setUser]);
-	// set Data to the User's
-
-	// Add background image tommorrow
 	return createPortal(
 		<>
 			<div ref={ref}>
@@ -117,6 +102,7 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 							Settings
 						</h1>
 					</div>
+
 					{isLoading ? (
 						<div>
 							<Spinner />
@@ -139,46 +125,20 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 							<div
 								className="-mt-6 w-full flex items-center justify-start border-b border-gray-300 pb-5"
 								key={data?._id}>
-								<div className="flex flex-col justify-start items-start space-y-5 w-full">
-									<div className="min-w-[100px] min-h-[100px] relative group border-2 border-[#3a0657] rounded-full">
-										{/* User Image */}
-										<Image
-											src={profilePicture}
-											alt="User image"
-											fill
-											className="object-cover rounded-full"
-											sizes="80px"
-										/>
-
-										{/* Overlay + Icon (shows on hover) */}
-										<div
-											className="
-											absolute inset-0 
-											bg-black/60 
-											rounded-full 
-											flex items-center justify-center
-											opacity-0 group-hover:opacity-100
-											transition-opacity duration-300
-											">
-											<GoPencil
-												className="text-white text-xl cursor-pointer"
-												onClick={(e) => setOpenEditImage(!openEditImage)}
-											/>
-										</div>
-									</div>
-
-									<div className="w-full flex flex-1 flex-col space-y-1 ">
+								<div className="flex flex-col justify-start items-start space-y-5 w-full ">
+									<ImageSettingsSection profilePicture={profilePicture} />
+									<div className="w-full flex flex-1 flex-col space-y-1">
 										<h1
 											className={`${nunito.className} text-lg truncate font-semibold`}>
-											Name: {""}
+											Name:{" "}
 											<span className="font-normal">
 												{data?.data?.username}
 											</span>
 										</h1>
 										<p
 											className={`${poppins.className} text-sm truncate font-semibold`}>
-											Status: {""}{" "}
-											<span className="font-normal ">{data?.data?.status}</span>
+											Status:{" "}
+											<span className="font-normal">{data?.data?.status}</span>
 											<GoPencil
 												className="inline-flex ml-2 text-[13px] -mt-1 text-[#3a0657]"
 												onClick={() => setOpenEditStatus(!editStatus)}
@@ -189,7 +149,7 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 										)}
 										<p
 											className={`${poppins.className} text-sm truncate font-semibold`}>
-											Date Joined: {""}
+											Date Joined:{" "}
 											<span className="font-normal">
 												{data?.data?.dateJoined}
 											</span>
@@ -197,10 +157,10 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 									</div>
 								</div>
 							</div>
+
+							{/* Account Sections */}
 							<AccountSection data={data} />
-
 							<EmailSection data={data} />
-
 							<PhoneSection data={data} />
 
 							{/* Privacy Section */}
@@ -213,6 +173,7 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 									Blocked Friends: {data?.data?.totalBlocked}
 								</p>
 							</div>
+
 							<Security />
 
 							{/* Invite Friend */}
@@ -232,13 +193,9 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 						</>
 					)}
 				</div>
-				{openEditImage && (
-					<EditImage
-						profilePicture={profilePicture}
-						setOpenEditImage={setOpenEditImage}
-					/>
-				)}
 			</div>
+
+			{/* EditImage modal rendered at top layer via portal */}
 		</>,
 		document.body
 	);

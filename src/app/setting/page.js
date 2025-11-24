@@ -3,18 +3,22 @@ import React, { useState, useEffect } from "react";
 import { Nunito, Poppins } from "next/font/google";
 import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
-import { useAuthenticatedStore, useUpdateUserStore, useUserData } from "@/zustand";
+import {
+	useAuthenticatedStore,
+	useUpdateUserStore,
+	useUserData,
+} from "@/zustand";
 import Spinner from "@/Spinner";
 import { GoPencil } from "react-icons/go";
 import { MdOutlinePrivacyTip } from "react-icons/md";
 import Security from "./Security";
 import EditStatus from "./EditStatus";
-import EditImage from "../components/EditImage";
 import AccountSection from "./AccountSection";
 import EmailSection from "./EmailSection";
 import PhoneSection from "./PhoneSection";
 import DeleteAccount from "./DeleteAccount";
 import BackgroundImage from "./BackgroundImage";
+import ImageSettingsSection from "./ImageSettingsSection";
 
 const nunito = Nunito({
 	subsets: ["latin"],
@@ -28,8 +32,10 @@ const Page = () => {
 	const userEndpoint = process.env.NEXT_PUBLIC_GET_USER_ENDPOINT;
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 
+	// show image.
+
 	const [linkCopied, setLinkCopied] = useState(false);
-	const [openEditImage, setOpenEditImage] = useState(false);
+
 	const [editStatus, setOpenEditStatus] = useState(false);
 
 	// fetch user info
@@ -81,13 +87,6 @@ const Page = () => {
 	};
 	// function to copy link
 
-	// set Data to become the user in zustand
-	const { setUser } = useUserData();
-	useEffect(() => {
-		setUser(data);
-	}, [data, setUser]);
-	// set Data to the User's
-
 	if (isLoading)
 		return (
 			<div className="flex flex-col items-center justify-center h-full">
@@ -108,88 +107,74 @@ const Page = () => {
 		);
 
 	return (
-		<div className="block md:hidden w-full h-full bg-gray-50  pb-20 overflow-y-auto">
-			{/* Profile Section */}
-			<BackgroundImage />
-			<div className="px-2">
-				<div className="-mt-6 flex flex-col justify-start items-start space-y-5 border-b border-gray-300 pb-5">
-					<div className="min-w-[100px] min-h-[100px] relative group border-2 border-[#3a0657]">
-						<Image
-							src={profilePicture}
-							alt="User image"
-							fill
-							className="object-cover rounded-full"
-							sizes="100px"
-						/>
-						<div className="absolute inset-0 bg-black/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-							<GoPencil
-								className="text-white text-xl cursor-pointer"
-								onClick={() => setOpenEditImage(true)}
-							/>
+		<>
+			<div className="block md:hidden w-full h-full bg-gray-50 pb-20 overflow-y-auto">
+				{/* Profile Section */}
+				<BackgroundImage />
+				<div className="px-2">
+					<div className="-mt-6 flex flex-col justify-start items-start space-y-5 border-b border-gray-300 pb-5">
+						<ImageSettingsSection profilePicture={profilePicture} />
+						<div className="flex flex-col space-y-1 w-full">
+							<h1
+								className={`${nunito.className} text-lg font-semibold truncate`}>
+								Name:{" "}
+								<span className="font-normal">{data?.data?.username}</span>
+							</h1>
+							<p
+								className={`${poppins.className} text-sm truncate font-semibold`}>
+								Status:{" "}
+								<span className="font-normal">{data?.data?.status}</span>{" "}
+								<GoPencil
+									className="inline-flex ml-2 text-[13px] -mt-1 text-[#3a0657]"
+									onClick={() => setOpenEditStatus(!editStatus)}
+								/>
+							</p>
+							{editStatus && (
+								<EditStatus setOpenEditStatus={setOpenEditStatus} />
+							)}
+							<p
+								className={`${poppins.className} text-sm truncate font-semibold`}>
+								Date Joined:{" "}
+								<span className="font-normal">{data?.data?.dateJoined}</span>
+							</p>
 						</div>
 					</div>
-					<div className="flex flex-col space-y-1 w-full">
+
+					{/* Account, Email, Phone Sections */}
+					<AccountSection data={data} />
+					<EmailSection data={data} />
+					<PhoneSection data={data} />
+
+					{/* Privacy Section */}
+					<div className="mt-5 border-b border-gray-300 pb-5">
 						<h1
-							className={`${nunito.className} text-lg font-semibold truncate`}>
-							Name: <span className="font-normal">{data?.data?.username}</span>
+							className={`${nunito.className} text-base font-semibold flex flex-row gap-3 items-center`}>
+							<MdOutlinePrivacyTip className="text-xl" /> Privacy
 						</h1>
-						<p
-							className={`${poppins.className} text-sm truncate font-semibold`}>
-							Status: <span className="font-normal">{data?.data?.status}</span>{" "}
-							<GoPencil
-								className="inline-flex ml-2 text-[13px] -mt-1 text-[#3a0657]"
-								onClick={() => setOpenEditStatus(!editStatus)}
-							/>
-						</p>
-						{editStatus && <EditStatus setOpenEditStatus={setOpenEditStatus} />}
-						<p
-							className={`${poppins.className} text-sm truncate font-semibold`}>
-							Date Joined:{" "}
-							<span className="font-normal">{data?.data?.dateJoined}</span>
+						<p className={`${poppins.className} mt-2 text-[15px]`}>
+							Blocked Friends: {data?.data?.totalBlocked}
 						</p>
 					</div>
+
+					<Security />
+
+					{/* Invite Friend */}
+					<div className="mt-5 border-b border-gray-300 pb-5 flex items-center justify-between">
+						<p className={`${poppins.className} text-[15px]`}>
+							Invite a friend
+						</p>
+						<button
+							onClick={handleCopyLink}
+							className="text-[#3a0657] font-bold cursor-pointer underline">
+							{linkCopied ? "Link Copied!" : "Copy Link"}
+						</button>
+					</div>
+
+					{/* Delete Account */}
+					<DeleteAccount />
 				</div>
-
-				{/* Account, Email, Phone Sections */}
-				<AccountSection data={data} />
-				<EmailSection data={data} />
-				<PhoneSection data={data} />
-
-				{/* Privacy Section */}
-				<div className="mt-5 border-b border-gray-300 pb-5">
-					<h1
-						className={`${nunito.className} text-base font-semibold flex flex-row gap-3 items-center`}>
-						<MdOutlinePrivacyTip className="text-xl" /> Privacy
-					</h1>
-					<p className={`${poppins.className} mt-2 text-[15px]`}>
-						Blocked Friends: {data?.data?.totalBlocked}
-					</p>
-				</div>
-
-				<Security />
-
-				{/* Invite Friend */}
-				<div className="mt-5 border-b border-gray-300 pb-5 flex items-center justify-between">
-					<p className={`${poppins.className} text-[15px]`}>Invite a friend</p>
-					<button
-						onClick={handleCopyLink}
-						className="text-[#3a0657] font-bold cursor-pointer underline">
-						{linkCopied ? "Link Copied!" : "Copy Link"}
-					</button>
-				</div>
-
-				{/* Delete Account */}
-				<DeleteAccount />
-
-				{/* Edit Image Modal */}
-				{openEditImage && (
-					<EditImage
-						profilePicture={profilePicture}
-						setOpenEditImage={setOpenEditImage}
-					/>
-				)}
 			</div>
-		</div>
+		</>
 	);
 };
 

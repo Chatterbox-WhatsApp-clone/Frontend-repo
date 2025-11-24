@@ -137,7 +137,7 @@ const Page = () => {
 				</div>
 			)}
 
-			<div className="h-screen w-full bg-gradient-to-b from-[#9b67b3] to-[#3a0657] flex flex-col  px-3">
+			<div className="h-screen w-full bg-gradient-to-b from-[#9b67b3] to-[#3a0657] flex flex-col justify-center items-center  px-3">
 				<div className="flex flex-row justify-start mr-auto gap-1 items-center">
 					<Image
 						src={"/assets/images/chatterbox-logo.png"}
@@ -181,7 +181,7 @@ const Page = () => {
 							<p
 								className="text-white mt-5 flex items-center gap-1 underline cursor-pointer text-sm"
 								onClick={() => router.push("/login")}>
-								<FaArrowLeft className="text-sm mt-[4px]" /> Back to Log in
+								<FaArrowLeft className="text-sm mt-[2px]" /> Back to Log in
 							</p>
 						</main>
 					) : (

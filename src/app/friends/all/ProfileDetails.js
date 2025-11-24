@@ -13,7 +13,7 @@ const ProfileDetails = ({ activeTab, setActiveTab }) => {
 
 	return (
 		<>
-			<div className="w-full px-3 mt-4 h-10 flex justify-between items-center gap-4 relative ">
+			<div className="w-full px-3 mt-4 h-10 flex justify-between items-center gap-4">
 				<div className="flex gap-4 ">
 					<button
 						onClick={() => setActiveTab("about")}

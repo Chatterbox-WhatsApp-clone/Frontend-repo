@@ -24,6 +24,9 @@ export const useAuthenticatedStore = create((set) => ({
 export const useClickedStore = create((set) => ({
 	clicked: false,
 	setClicked: (value) => set({ clicked: value }),
+
+	openMessage: false,
+	setOpenMessage: (value) => set({ openMessage: value }),
 }));
 
 export const useUpdateUserStore = create((set) => ({
@@ -82,9 +85,43 @@ export const useRemovedStore = create((set) => ({
 export const useUserProfile = create((set) => ({
 	activeUser: null,
 	setActiveUser: (value) => set({ activeUser: value }),
+
+	chatId: null,
+	setChatId: (value) => set({ chatId: value }),
+
+	activeChat: null,
+	setActiveChat: (value) => set({ activeChat: value }),
+
+	activeMessage: '',
+	setActiveMessage: (value) => set({ activeMessage: value }),
+
+	myMessage: null,
+	setMyMessage: (value) => set({ myMessage: value }),
+
+	messageId: null,
+	setMessageId: (value) => set({ messageId: value }),
+
+	isEditing: false,
+	setIsEditing: (value) => set({ isEditing: value }),
 }));
 
 export const useUserData = create((set) => ({
 	user: null,
 	setUser: (value) => set({ user: value }),
+}));
+
+export const useMessagesStore = create((set) => ({
+	messageStatus: "",
+	setMessageStatus: (value) => set({ messageStatus: value }),
+	messages: [], // sent messages
+	setMessages: (message) =>
+		set((state) => ({
+			messages: [...state.messages, message],
+		})),
+
+	recievedMessages: [], // received messages
+	setRecievedMessages: (message) =>
+		set((state) => ({
+			recievedMessages: [...state.recievedMessages, message],
+		})),
 }));

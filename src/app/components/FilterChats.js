@@ -70,7 +70,7 @@ const FilterChats = ({
 				</button>
 
 				<button
-					onClick={(e) => setActiveTab("Favourites")}
+					onClick={(e) => setActiveTab("Starred")}
 					className={`flex items-center text-gray-700 hover:text-black gap-3 py-1 ${
 						activeTab === "Starred"
 							? " bg-white w-full rounded-lg px-2"

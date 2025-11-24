@@ -47,27 +47,11 @@ const CancelFriend = ({ request }) => {
 		cancelMutation.mutate();
 	};
 
-	const timeAgo = (dateString) => {
-		const now = new Date();
-		const past = new Date(dateString);
-		const diffMs = now - past;
-
-		const seconds = Math.floor(diffMs / 1000);
-		const minutes = Math.floor(seconds / 60);
-		const hours = Math.floor(minutes / 60);
-		const days = Math.floor(hours / 24);
-
-		if (seconds < 60) return `${seconds}s ago`;
-		if (minutes < 60) return `${minutes}m ago`;
-		if (hours < 24) return `${hours}h ago`;
-		return `${days}d ago`;
-	};
-
 	const accepted = request.status === "accepted";
 
 	return (
 		<div className="flex flex-col w-full">
-			{/* <p className="text-xs text-gray-600 text-end"> {timeAgo(request.createdAt)} </p> */}
+		
 			{accepted ? (
 				<button
 					disabled={accepted}

@@ -8,8 +8,7 @@ import { useClickedStore } from "@/zustand";
 import { Nunito, Poppins } from "next/font/google";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { useAuthenticatedStore } from "@/zustand";
-import Spinner from "@/Spinner";
+import { useAuthenticatedStore, useUserData } from "@/zustand";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 const DesktopSetting = lazy(() => import("../setting/DesktopSetting"));
@@ -48,9 +47,18 @@ const BottomSidebar = () => {
 		? `${backendBase}${data.data.profilePicture}`
 		: "/assets/images/userImage.jpg";
 
+	// set Data to become the user in zustand
+	const { setUserId } = useAuthenticatedStore();
+	const { setUser } = useUserData();
+	useEffect(() => {
+		setUser(data);
+		setUserId(data?.data?._id);
+	}, [data, setUserId, setUser]);
+	// set Data to the User's
+
 	return (
 		<>
-			<div className="flex flex-col justify-start items-start w-full h-fit ">
+			<div className="flex flex-col justify-start items-start w-full h-fit">
 				<div className="flex flex-col justify-start items-start space-y-7 w-full border-b border-gray-200">
 					<Link
 						href={"/dashboard/lockchats"}

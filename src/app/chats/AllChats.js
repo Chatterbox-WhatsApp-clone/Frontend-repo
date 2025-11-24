@@ -1,15 +1,23 @@
 "use client";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Poppins } from "next/font/google";
 import { useRouter } from "next/navigation";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 // import { useState, useEffect } from "react";
-import { useAuthenticatedStore } from "@/zustand";
+import {
+	useAuthenticatedStore,
+	useUserProfile,
+	useClickedStore,
+} from "@/zustand";
 import { IoIosArrowForward } from "react-icons/io";
+import Image from "next/image";
 const AllChats = () => {
 	const { token } = useAuthenticatedStore();
-	const router = useRouter()
+	const router = useRouter();
+	const { activeChat, setActiveChat, setChatId } = useUserProfile();
+	const { setOpenMessage } = useClickedStore();
+	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 	// fetch online users
 	const onlineEndpoint = process.env.NEXT_PUBLIC_GET_USER_CHATS_ENDPOINT;
 	const fetchUsers = async () => {
@@ -46,10 +54,88 @@ const AllChats = () => {
 					</button>
 				</div>
 			) : (
-				<div className="flex flex-col h-full justify-center items-center">
-					{data?.data?.map((chat) => (
-						<p key={chat._id}>Hello</p>
-					))}
+				<div className="flex flex-col h-full justify-center items-center w-full mt-1 px-1">
+					{data?.data?.map((chat) => {
+						const profilePicture = chat?.user?.profilePicture
+							? `${backendBase}${chat?.user?.profilePicture}`
+							: "/assets/images/friendImage.jpg";
+
+						return (
+							<div
+								className={`h-[70px] w-full py-1 shrink-0 cursor-pointer ${
+									activeChat?.chatId === chat?.chatId
+										? "bg-gray-200"
+										: "bg-transparent"
+								} hover:bg-gray-200 px-1 cursor-pointer`}
+								key={chat?.chatId}
+								onClick={() => {
+									setOpenMessage(true);
+									setActiveChat(chat);
+									setChatId(chat?.chatId);
+									
+								}}>
+								<div className="h-[60px] w-full flex justify-between items-center flex-row  cursor-pointer">
+									<div className="flex justify-center items-center flex-row space-x-4 md:space-x-2 lg:space-x-3 w-full">
+										<div className="h-[60px] w-[60px] flex-shrink-0 relative">
+											<Image
+												src={profilePicture}
+												width={70}
+												height={70}
+												alt="profilePicture"
+												className="w-full h-full rounded-full object-cover"
+											/>
+											{chat?.unreadCount > 0 && (
+												<div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+													{chat.unreadCount > 99 ? "99+" : chat.unreadCount}
+												</div>
+											)}
+										</div>
+
+										<div className="flex flex-col justify-center items-start w-full gap-1">
+											<div className="flex flex-row justify-between items-center w-full">
+												<p
+													className={`${poppins.className} font-medium text-[13.5px]`}>
+													{chat?.user?.username?.length > 15
+														? chat?.user?.username.slice(0, 15) + "..."
+														: chat?.user?.username}
+												</p>
+												<p className="text-[10px] text-normal">
+													{(() => {
+														const date = new Date(chat?.lastMessageTime);
+														const now = new Date();
+														const diffInMs = now - date;
+														const diffInHours = diffInMs / (1000 * 60 * 60);
+
+														if (diffInHours < 24) {
+															return date.toLocaleTimeString([], {
+																hour: "2-digit",
+																minute: "2-digit",
+															});
+														} else if (diffInHours < 48) {
+															return "Yesterday";
+														} else {
+															return date.toLocaleDateString([], {
+																day: "2-digit",
+																month: "2-digit",
+																year: "numeric",
+															});
+														}
+													})()}
+												</p>
+											</div>
+
+											<p
+												className={`${poppins.className} text-gray-700 text-[12px]`}>
+												{chat?.lastMessage?.content?.text?.length > 30
+													? chat.lastMessage.content.text.slice(0, 30) + "..."
+													: chat?.lastMessage?.content?.text}
+											</p>
+										</div>
+									</div>
+								</div>
+							</div>
+						);
+					})}
 				</div>
 			)}
 		</div>

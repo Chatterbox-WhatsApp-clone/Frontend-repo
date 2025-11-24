@@ -114,7 +114,7 @@ const Page = () => {
 					{status}
 				</div>
 			)}
-			<div className="h-screen w-full bg-gradient-to-b from-[#9b67b3] from-5% to-[#3a0657] flex flex-col ">
+			<div className="h-screen w-full bg-gradient-to-b from-[#9b67b3] from-5% to-[#3a0657] flex flex-col justify-center items-center">
 				<div className="flex flex-row justify-start mr-auto gap-1 items-center">
 					<Image
 						src={"/assets/images/chatterbox-logo.png"}

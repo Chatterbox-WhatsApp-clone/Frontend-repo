@@ -1,9 +1,13 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Nunito, Poppins } from "next/font/google";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { useAuthenticatedStore, useUserProfile } from "@/zustand";
+import {
+	useAuthenticatedStore,
+	useUserProfile,
+	useUpdateUserStore,
+} from "@/zustand";
 
 const nunito = Nunito({
 	subsets: ["latin"],
@@ -17,28 +21,32 @@ const poppins = Poppins({
 import { IoIosArrowForward } from "react-icons/io";
 import { useRouter } from "next/navigation";
 
-
 const MyFriends = () => {
 	const { token } = useAuthenticatedStore();
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
-	const endpoint = process.env.NEXT_PUBLIC_ACCEPTED_FIRENDS;
 	const router = useRouter();
 	const { activeUser, setActiveUser } = useUserProfile();
+	const { userUpdated } = useUpdateUserStore();
 
 	const fetchfriends = async () => {
-		const res = await fetch(endpoint, {
+		const res = await fetch(process.env.NEXT_PUBLIC_ACCEPTED_FIRENDS, {
 			method: "GET",
 			headers: { Authorization: `Bearer ${token}` },
 		});
 		return res.json();
 	};
-
-	const { data } = useQuery({
+	const { data, refetch } = useQuery({
 		queryKey: ["all-friends"],
 		queryFn: fetchfriends,
 		staleTime: 10000,
 		cacheTime: 50000,
 	});
+
+	useEffect(() => {
+		if (userUpdated) {
+			refetch();
+		}
+	}, [userUpdated, refetch]);
 
 	return (
 		<>
@@ -82,13 +90,13 @@ const MyFriends = () => {
 											: "bg-transparent"
 									} hover:bg-gray-200 px-1 cursor-pointer`}
 									key={friend._id}>
-									<div className="h-[60px] w-full flex justify-between items-center flex-row relative cursor-pointer">
-										<div
-											className="flex justify-center items-center flex-row space-x-4 md:space-x-2 lg:space-x-4"
-											onClick={() => {
-												setActiveUser(friend);
-											}}>
-											<div className="h-[60px] w-[60px] flex-shrink-0">
+									<div
+										className="h-[60px] w-full flex justify-between items-center flex-row  cursor-pointer"
+										onClick={() => {
+											setActiveUser(friend);
+										}}>
+										<div className="flex justify-center items-center flex-row space-x-4 md:space-x-2 lg:space-x-4">
+											<div className="h-[60px] w-[60px] flex-shrink-0 ">
 												<Image
 													src={profilePicture}
 													width={70}
@@ -96,6 +104,7 @@ const MyFriends = () => {
 													alt="friend profile picture"
 													className="w-full h-full rounded-full object-cover"
 												/>
+												
 											</div>
 
 											<div className="flex flex-col justify-center items-start w-full gap-1">

@@ -6,6 +6,7 @@ import {
 	useFriendsStore,
 } from "@/zustand";
 import { PulseLoader } from "react-spinners";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AddFriendButton = ({ user, friend }) => {
 	const endpoint = process.env.NEXT_PUBLIC_SEND_FRIEND_REQUEST;
@@ -31,6 +32,7 @@ const AddFriendButton = ({ user, friend }) => {
 	const userStatus = status === "not sent";
 
 	// Send friend request
+	const queryClient = useQueryClient();
 	const sendRequest = async () => {
 		setLoading(true);
 		setUserRequestedId(actualId);
@@ -48,8 +50,11 @@ const AddFriendButton = ({ user, friend }) => {
 			if (res.ok) {
 				addSentRequest(actualId);
 				setLocalStatus(actualId, "pending");
+				setTimeout(async () => {
+					await queryClient.invalidateQueries(["all-friends"]);
+				}, 5000);
 			} else {
-				console.error("Failed to send request", );
+				console.error("Failed to send request");
 			}
 		} catch (err) {
 			console.error("Error sending request:", err);
@@ -94,7 +99,7 @@ const AddFriendButton = ({ user, friend }) => {
 				<button
 					onClick={sendRequest}
 					disabled={loading}
-					className="sm:mt-1 w-full h-7 rounded-md text-sm bg-[#ddc2ed] text-[#741ca4] hover:bg-[#d4b8e7] cursor-pointer">
+					className="sm:mt-1 w-full h-7 rounded-md text-sm bg-[#460668] text-white hover:bg-[#8c17da] cursor-pointer">
 					{loading ? <PulseLoader size={3} /> : "Add Friend"}
 				</button>
 			) : (

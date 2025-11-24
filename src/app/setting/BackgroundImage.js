@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
 	useAuthenticatedStore,
 	useUpdateUserStore,
@@ -7,6 +7,7 @@ import {
 } from "@/zustand";
 import { GoPencil } from "react-icons/go";
 import Image from "next/image";
+import ShowImages from "@/utils/ShowImages";
 
 const BackgroundImage = () => {
 	const [success, setSuccess] = useState(false);
@@ -55,6 +56,11 @@ const BackgroundImage = () => {
 		? `${backendBase}${user.data.backgroundImage}`
 		: "/assets/images/userImage.jpg";
 	// url for image
+
+	// show image.
+	const [showImage, setShowImage] = useState(false);
+	const [currentImage, setCurrentImage] = useState("");
+
 	return (
 		<>
 			{status && (
@@ -69,13 +75,18 @@ const BackgroundImage = () => {
 			{/* ✅ Background section */}
 			<div
 				key={user?._id}
-				className="h-64 w-full md:rounded-t-lg bg-gray-200 relative mt-[2px] shrink-0">
+				className="h-64 w-full md:rounded-t-lg bg-gray-200 relative shrink-0">
 				<Image
 					src={userBackgroundImage}
 					alt="image"
 					fill
 					className="object-cover object-center size-96 shrink-0"
+					sizes="100"
 					priority
+					onClick={() => {
+						setShowImage(true);
+						setCurrentImage(userBackgroundImage);
+					}}
 				/>
 				<div className="absolute bottom-1 right-2 flex items-center gap-2 z-10">
 					<label
@@ -92,6 +103,14 @@ const BackgroundImage = () => {
 					/>
 				</div>
 			</div>
+
+			{showImage && (
+				<ShowImages
+					image={currentImage}
+					setShowImage={setShowImage}
+					showImage={showImage}
+				/>
+			)}
 		</>
 	);
 };

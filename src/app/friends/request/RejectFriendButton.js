@@ -49,7 +49,7 @@ const RejectFriendButton = ({ request }) => {
 				<button
 					onClick={sendRequest}
 					disabled={loading}
-					className="sm:mt-1 w-full h-7 rounded-md text-sm bg-gray-300  cursor-pointer w-full">
+					className="sm:mt-1 w-full h-7 rounded-md text-sm bg-gray-300  cursor-pointer ">
 					{loading ? <PulseLoader size={3} /> : status}
 				</button>
 			)}

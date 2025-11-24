@@ -1,8 +1,9 @@
 // socket.js
 import { io } from "socket.io-client";
 
-const URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5000";
+const URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:5001";
 
 export const socket = io(URL, {
-	autoConnect: false, 
+	withCredentials: true,
+	transports: ["websocket"],
 });
