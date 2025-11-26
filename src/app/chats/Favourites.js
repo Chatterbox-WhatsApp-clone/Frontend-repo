@@ -10,12 +10,11 @@ import {
 } from "@/zustand";
 import { IoIosArrowForward } from "react-icons/io";
 import Image from "next/image";
-import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+import { MdFavorite } from "react-icons/md";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
-const Favourites = ({ searchQuery = "", setActiveTab }) => {
+const Favourites = ({ setActiveTab }) => {
 	const { token } = useAuthenticatedStore();
-	const router = useRouter();
 	const { activeUser, setActiveUser } = useUserProfile();
 	const { setOpenMessage } = useClickedStore();
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
@@ -30,30 +29,28 @@ const Favourites = ({ searchQuery = "", setActiveTab }) => {
 	};
 
 	const { data } = useQuery({
-		queryKey: ["users-favorites"],
+		queryKey: ["favorites"],
 		queryFn: fetchUsers,
 		staleTime: 100000,
 		cacheTime: 300000,
 	});
 
 	return (
-		<div className="h-full relative flex flex-col justify-start items-center overflow-y-auto w-full">
+		<div className="h-full relative flex flex-col justify-start items-center overflow-y-auto w-full ">
 			<div className="w-full hidden md:flex flex-row items-center justify-start gap-2 p-2 border-b border-gray-200">
 				<IoIosArrowForward
 					className="text-xl cursor-pointer rotate-180"
 					onClick={() => setActiveTab("All")}
 				/>
-				<h2 className={`${poppins.className} font-bold text-lg`}>
-					Favorites
-				</h2>
+				<h2 className={`${poppins.className} font-bold text-lg`}>Favorites</h2>
 			</div>
 			{data?.data?.length === 0 ? (
-				<div className="flex flex-col justify-center items-center gap-3 relative mt-32 md:mt-1/2 ">
+				<div className="flex flex-col justify-center items-center gap-3 relative mt-32 md:mt-44">
 					<p
 						className={`${poppins.className}  text-wrap text-center text-sm font-mono`}>
-						You have no favorite chats. Mark chats as favorites to see them here.
+						You have no favorite chats. Mark chats as favorites to see them
+						here.
 					</p>
-					
 				</div>
 			) : (
 				<div className="flex flex-col h-full justify-start items-center w-full mt-1 px-1">
@@ -64,11 +61,12 @@ const Favourites = ({ searchQuery = "", setActiveTab }) => {
 
 						return (
 							<div
-								className={`h-[70px] w-full py-1 shrink-0 cursor-pointer ${activeUser?.chatId === chat?.chatId
+								key={chat?.chatId}
+								className={`h-[70px] w-full py-1 shrink-0 cursor-pointer ${
+									activeUser?.chatId === chat?.chatId
 										? "bg-gray-200"
 										: "bg-transparent"
-									} hover:bg-gray-200 px-1 cursor-pointer`}
-								key={chat?.chatId}
+								} hover:bg-gray-200 px-1 cursor-pointer`}
 								onClick={() => {
 									setActiveUser(chat);
 									setOpenMessage(true);
@@ -90,20 +88,20 @@ const Favourites = ({ searchQuery = "", setActiveTab }) => {
 												<p
 													className={`${poppins.className} font-medium text-[13.5px]`}>
 													{chat?.user?.username?.length > 15
-														? chat?.user?.username.slice(0, 15) + "..."
+														? chat?.user?.username.slice(0, 15) +
+														  "..."
 														: chat?.user?.username}
 												</p>
 												<div className="flex items-center gap-2">
-													<MdFavorite
-														className="text-red-500 text-lg"
-													/>
+													<MdFavorite className="text-[#7304af] text-lg" />
 													<p className="text-[10px] text-normal">
 														{(() => {
-															const date = new Date(chat?.lastMessageTime);
+															const date = new Date(
+																chat?.lastMessage.createdAt
+															);
 															const now = new Date();
 															const diffInMs = now - date;
-															const diffInHours =
-																diffInMs / (1000 * 60 * 60);
+															const diffInHours = diffInMs / (1000 * 60 * 60);
 
 															if (diffInHours < 24) {
 																return date.toLocaleTimeString([], {
@@ -127,8 +125,7 @@ const Favourites = ({ searchQuery = "", setActiveTab }) => {
 											<p
 												className={`${poppins.className} text-gray-700 text-[12px]`}>
 												{chat?.lastMessage?.content?.text?.length > 30
-													? chat.lastMessage.content.text.slice(0, 30) +
-													"..."
+													? chat.lastMessage?.content?.text.slice(0, 30) + "..."
 													: chat?.lastMessage?.content?.text}
 											</p>
 										</div>

@@ -92,7 +92,7 @@ export const useUserProfile = create((set) => ({
 	activeChat: null,
 	setActiveChat: (value) => set({ activeChat: value }),
 
-	activeMessage: '',
+	activeMessage: "",
 	setActiveMessage: (value) => set({ activeMessage: value }),
 
 	myMessage: null,
@@ -103,6 +103,9 @@ export const useUserProfile = create((set) => ({
 
 	isEditing: false,
 	setIsEditing: (value) => set({ isEditing: value }),
+
+	isFavourites: null,
+	setIsFavourites: (value) => set({ isFavourites: value }),
 }));
 
 export const useUserData = create((set) => ({

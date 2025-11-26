@@ -80,8 +80,8 @@ const ChatsBottom = () => {
 	};
 
 	return (
-		<div className="fixed bottom-[1px] md:bottom-0 w-full flex flex-row items-end justify-center px-2 pb-2 bg-transparent bg-opacity-70 backdrop-blur-md md:bg-white pt-1">
-			<div className="w-full max-w-[95%] min-h-[44px] bg-white rounded-[22px] flex items-end px-2 py-[5px] border border-gray-200">
+		<div className="fixed bottom-[1px] md:bottom-0 w-full flex flex-row items-end justify-center pb-1 md:pb-0 md:pt-0 bg-transparent bg-opacity-70 backdrop-blur-md md:bg-white pt-1">
+			<div className="w-full max-w-[95%] md:max-w-full min-h-[44px] bg-white rounded-[22px] md:rounded-none flex items-end px-2 py-[5px] border border-gray-200">
 				{/* Image Upload Button */}
 				<div className="h-[34px] w-[34px] flex justify-center items-center shrink-0 cursor-pointer rounded-full hover:bg-gray-200 transition-colors mr-1 ">
 					<IoMdImage
@@ -93,9 +93,9 @@ const ChatsBottom = () => {
 						id="imageInput"
 						accept="image/*"
 						className="hidden"
-						onChange={(e) => {
+						// onChange={(e) => {
 
-						}}
+						// }}
 					/>
 				</div>
 
@@ -104,7 +104,7 @@ const ChatsBottom = () => {
 					onSubmit={(e) => e.preventDefault()}
 					className="w-full overflow-hidden flex items-center">
 					<textarea
-						value={input}
+						value={isEditing ? activeMessage : input}
 						onChange={(e) => setInput(e.target.value)}
 						placeholder={isEditing ? "Edit message..." : "Message..."}
 						className={`w-full outline-none text-[15px] placeholder-gray-500 bg-transparent caret-black resize-none overflow-y-auto ${nunito.className}`}

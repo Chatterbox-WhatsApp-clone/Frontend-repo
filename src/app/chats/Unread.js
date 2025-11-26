@@ -48,7 +48,7 @@ const Unread = ({ searchQuery = "", setActiveTab }) => {
 				</h2>
 			</div>
 			{data?.data?.length === 0 ? (
-				<div className="flex flex-col justify-center items-center gap-3 relative mt-32 md:mt-1/2 ">
+				<div className="flex flex-col justify-center items-center gap-3 relative mt-32 md:mt-44">
 					<p
 						className={`${poppins.className}  text-wrap text-center text-sm font-mono`}>
 						You have no unread messages. All caught up!

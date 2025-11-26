@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Poppins } from "next/font/google";
 import { useRouter } from "next/navigation";
@@ -15,7 +15,8 @@ import Image from "next/image";
 const AllChats = () => {
 	const { token } = useAuthenticatedStore();
 	const router = useRouter();
-	const { activeChat, setActiveChat, setChatId } = useUserProfile();
+	const { activeChat, setActiveChat, setChatId, setIsFavourites } =
+		useUserProfile();
 	const { setOpenMessage } = useClickedStore();
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 	// fetch online users
@@ -72,7 +73,7 @@ const AllChats = () => {
 									setOpenMessage(true);
 									setActiveChat(chat);
 									setChatId(chat?.chatId);
-									
+									setIsFavourites(chat?.isFavourite);
 								}}>
 								<div className="h-[60px] w-full flex justify-between items-center flex-row  cursor-pointer">
 									<div className="flex justify-center items-center flex-row space-x-4 md:space-x-2 lg:space-x-3 w-full">
@@ -99,33 +100,44 @@ const AllChats = () => {
 														? chat?.user?.username.slice(0, 15) + "..."
 														: chat?.user?.username}
 												</p>
-												<p className="text-[10px] text-normal">
-													{(() => {
-														const date = new Date(chat?.lastMessageTime);
-														const now = new Date();
-														const diffInMs = now - date;
-														const diffInHours = diffInMs / (1000 * 60 * 60);
+												<div className="flex flex-col space-y-1">
+													<p className="text-[10.5px] text-normal">
+														{(() => {
+															const date = new Date(chat?.lastMessageTime);
+															const now = new Date();
+															const diffInMs = now - date;
+															const diffInHours = diffInMs / (1000 * 60 * 60);
 
-														if (diffInHours < 24) {
-															return date.toLocaleTimeString([], {
-																hour: "2-digit",
-																minute: "2-digit",
-															});
-														} else if (diffInHours < 48) {
-															return "Yesterday";
-														} else {
-															return date.toLocaleDateString([], {
-																day: "2-digit",
-																month: "2-digit",
-																year: "numeric",
-															});
-														}
-													})()}
-												</p>
+															if (diffInHours < 24) {
+																return date.toLocaleTimeString([], {
+																	hour: "2-digit",
+																	minute: "2-digit",
+																});
+															} else if (diffInHours < 48) {
+																return "Yesterday";
+															} else {
+																return date.toLocaleDateString([], {
+																	day: "2-digit",
+																	month: "2-digit",
+																	year: "numeric",
+																});
+															}
+														})()}
+													</p>
+													{chat?.unreadCount > 1 && (
+														<span className="w-[14px] h-[14px] rounded-full bg-[#7304af] text-[11px] font-bold text-white flex justify-center items-center ml-auto">
+															{chat?.unreadCount}
+														</span>
+													)}
+												</div>
 											</div>
 
 											<p
-												className={`${poppins.className} text-gray-700 text-[12px]`}>
+												className={`${
+													poppins.className
+												} text-gray-700 text-[12px] ${
+													chat?.unreadCount > 1 ? "-mt-2" : ""
+												}`}>
 												{chat?.lastMessage?.content?.text?.length > 30
 													? chat.lastMessage.content.text.slice(0, 30) + "..."
 													: chat?.lastMessage?.content?.text}

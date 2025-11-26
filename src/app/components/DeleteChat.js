@@ -11,7 +11,6 @@ import Modal from "@/app/components/Modal";
 const DeleteChat = ({ setDeleteChat }) => {
 	const { activeUser, setActiveUser, chatId } = useUserProfile();
 	const { setUserUpdated } = useUpdateUserStore();
-	const userId = activeUser?._id;
 	const { token } = useAuthenticatedStore();
 	const [loading, setLoading] = useState(false);
 	const [status, setStatus] = useState("");

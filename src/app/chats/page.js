@@ -45,12 +45,12 @@ const Page = () => {
 
 	// for chat navigations
 	const [activeTab, setActiveTab] = useState("All");
-	const chatTabs = ["All", "Unread", "Favorites", "Starred"];
+	const chatTabs = ["All", "Unread", "Favourites", "Starred"];
 	const renderChats = () => {
 		switch (activeTab) {
 			case "Unread":
 				return <Unread searchQuery={input} setActiveTab={setActiveTab} />;
-			case "Favorites":
+			case "Favourites":
 				return <Favourites searchQuery={input} setActiveTab={setActiveTab} />;
 			case "Starred":
 				return <Starred setActiveTab={setActiveTab} />;

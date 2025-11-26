@@ -14,7 +14,7 @@ import { IoIosArrowForward } from "react-icons/io";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 const Starred = ({ setActiveTab }) => {
-	const { token } = useAuthenticatedStore();
+	const { token, userId } = useAuthenticatedStore();
 	const { setActiveUser } = useUserProfile();
 	const { setOpenMessage } = useClickedStore();
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
@@ -47,7 +47,7 @@ const Starred = ({ setActiveTab }) => {
 				</h2>
 			</div>
 			{data?.data?.length === 0 ? (
-				<div className="flex flex-col justify-center items-center gap-3 relative mt-32 md:mt-1/2 ">
+				<div className="flex flex-col justify-center items-center gap-3 relative mt-32 md:mt-44 ">
 					<p
 						className={`${poppins.className}  text-wrap text-center text-sm font-mono`}>
 						You have no starred messages. Star messages to see them here.
@@ -56,11 +56,27 @@ const Starred = ({ setActiveTab }) => {
 			) : (
 				<div className="flex flex-col h-full justify-start items-center w-full mt-1 px-1">
 					{data?.data?.map((chat) => {
-						const sender = chat?.sender || chat?.user;
+						// For favorites endpoint, chat.user is the other person
+						let sender = chat?.user || chat?.sender;
+						let type = chat?.type || (chat?.image ? "image" : "text");
+						let content = chat?.content || chat?.message || "";
+						let createdAt = chat?.createdAt || chat?.lastMessageTime;
+
+						// Handle Favorite Chats structure (has lastMessage)
+						if (chat.lastMessage) {
+							const msg = chat.lastMessage;
+							type = msg.type;
+							createdAt = msg.createdAt;
+
+							// Content
+							if (type === "text") {
+								content = msg.content?.text || "";
+							} else if (msg.content?.media) {
+								content = msg.content.media.filename || "Media";
+							}
+						}
+
 						const username = sender?.username || sender?.phone || "Unknown";
-						const type = chat?.type || (chat?.image ? "image" : "text");
-						const content = chat?.content || chat?.message || "";
-						const createdAt = chat?.createdAt || chat?.lastMessageTime;
 
 						// Determine content type label
 						let typeLabel = "Text";
