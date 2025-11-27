@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { MdOutlineKeyboardVoice } from "react-icons/md";
-import { IoMdSend, IoMdImage, IoMdClose, IoMdCheckmark } from "react-icons/io";
+import { IoMdSend, IoMdImage, IoMdClose, IoMdCheckmark, IoMdVideocam } from "react-icons/io";
 import { Nunito } from "next/font/google";
 import {
 	useAuthenticatedStore,
@@ -17,6 +17,11 @@ const nunito = Nunito({
 
 const ChatsBottom = () => {
 	const [input, setInput] = useState("");
+	const [selectedFile, setSelectedFile] = useState(null);
+	const [previewUrl, setPreviewUrl] = useState(null);
+	const [fileType, setFileType] = useState(null); // 'image' or 'video'
+	const [uploading, setUploading] = useState(false);
+
 	const { userId, token } = useAuthenticatedStore();
 	const { activeUser, isEditing, setIsEditing, activeMessage, setActiveMessage } = useUserProfile();
 
@@ -37,17 +42,94 @@ const ChatsBottom = () => {
 	const chatId = activeUser?.chatId || generateChatId(userId, activeUser?._id);
 
 	// send message function
-	const handleSend = () => {
-		const content = input;
-		if (!input.trim() || !userId || !activeUser?._id) return;
+	const handleFileSelect = (e, type) => {
+		const file = e.target.files[0];
+		if (!file) return;
 
-		socket.emit("send_message", {
-			chatId,
-			content,
-			type: "text",
-			receiverId: activeUser?._id,
-		});
-		setInput("");
+		if (previewUrl) URL.revokeObjectURL(previewUrl);
+		setSelectedFile(file);
+		setFileType(type);
+		setPreviewUrl(URL.createObjectURL(file));
+	};
+
+	const clearFile = () => {
+		setSelectedFile(null);
+		setFileType(null);
+		if (previewUrl) URL.revokeObjectURL(previewUrl);
+		setPreviewUrl(null);
+		const imgInput = document.getElementById("imageInput");
+		const vidInput = document.getElementById("videoInput");
+		if (imgInput) imgInput.value = "";
+		if (vidInput) vidInput.value = "";
+	};
+
+	// send message function
+	const handleSend = async () => {
+		if ((!input.trim() && !selectedFile) || !userId || !activeUser?._id) return;
+
+		// 1. Handle Media Upload (Always HTTP)
+		if (selectedFile) {
+			setUploading(true);
+			try {
+				const formData = new FormData();
+				formData.append(fileType, selectedFile);
+
+				let endpoint = fileType === 'image'
+					? process.env.NEXT_PUBLIC_UPLOAD_IMAGE
+					: process.env.NEXT_PUBLIC_UPLOAD_VIDEO;
+
+				endpoint = endpoint.replace("{chatId}", chatId);
+
+				const res = await fetch(endpoint, {
+					method: "POST",
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+					body: formData,
+				});
+
+				if (!res.ok) throw new Error("Upload failed");
+
+				clearFile();
+			} catch (err) {
+				console.error("Media upload error", err);
+			} finally {
+				setUploading(false);
+			}
+		}
+
+		// 2. Handle Text Message
+		if (input.trim()) {
+			const isActive = activeUser?.isActive;
+
+			if (isActive) {
+				socket.emit("send_message", {
+					chatId,
+					content: input,
+					type: "text",
+					receiverId: activeUser?._id,
+				});
+			} else {
+				try {
+					const endpoint = process.env.NEXT_PUBLIC_POST_MESSAGES.replace("{chatId}", chatId);
+					await fetch(endpoint, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${token}`,
+						},
+						body: JSON.stringify({
+							type: "text",
+							content: { text: input }
+						}),
+					});
+				} catch (err) {
+					console.error("Text send error", err);
+				}
+			}
+			setInput("");
+			socket.emit("typing_stop", { chatId });
+		}
 	};
 
 	const handleEditSubmit = async () => {
@@ -81,7 +163,26 @@ const ChatsBottom = () => {
 
 	return (
 		<div className="fixed bottom-[1px] md:bottom-0 w-full flex flex-row items-end justify-center pb-1 md:pb-0 md:pt-0 bg-transparent bg-opacity-70 backdrop-blur-md md:bg-white pt-1">
-			<div className="w-full max-w-[95%] md:max-w-full min-h-[44px] bg-white rounded-[22px] md:rounded-none flex items-end px-2 py-[5px] border border-gray-200">
+			{/* Preview Area */}
+			{previewUrl && (
+				<div className="absolute bottom-14 left-0 w-full bg-white p-2 border-t border-gray-200 flex flex-col gap-2 z-10">
+					<div className="relative w-fit">
+						{fileType === 'image' ? (
+							<img src={previewUrl} alt="Preview" className="h-32 w-auto rounded-md object-cover" />
+						) : (
+							<video src={previewUrl} className="h-32 w-auto rounded-md" controls />
+						)}
+						<button
+							onClick={clearFile}
+							className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 shadow-md"
+						>
+							<IoMdClose size={12} />
+						</button>
+					</div>
+				</div>
+			)}
+
+			<div className="w-full max-w-[95%] md:max-w-full min-h-[44px] bg-white rounded-[22px] md:rounded-none flex items-end px-2 py-[5px] border border-gray-200 relative">
 				{/* Image Upload Button */}
 				<div className="h-[34px] w-[34px] flex justify-center items-center shrink-0 cursor-pointer rounded-full hover:bg-gray-200 transition-colors mr-1 ">
 					<IoMdImage
@@ -93,9 +194,22 @@ const ChatsBottom = () => {
 						id="imageInput"
 						accept="image/*"
 						className="hidden"
-						// onChange={(e) => {
+						onChange={(e) => handleFileSelect(e, 'image')}
+					/>
+				</div>
 
-						// }}
+				{/* Video Upload Button */}
+				<div className="h-[34px] w-[34px] flex justify-center items-center shrink-0 cursor-pointer rounded-full hover:bg-gray-200 transition-colors mr-1 ">
+					<IoMdVideocam
+						className="text-xl text-gray-600 mt-[7px]"
+						onClick={() => document.getElementById("videoInput").click()}
+					/>
+					<input
+						type="file"
+						id="videoInput"
+						accept="video/*"
+						className="hidden"
+						onChange={(e) => handleFileSelect(e, 'video')}
 					/>
 				</div>
 

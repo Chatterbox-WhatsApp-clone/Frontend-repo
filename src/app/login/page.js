@@ -82,7 +82,7 @@ const Page = () => {
 			if (!res.ok) {
 				setStatus(
 					data.message ||
-						"Login failed. Please check your email and password and try again."
+					"Login failed. Please check your email and password and try again."
 				);
 				setSuccess(false);
 				setTimeout(() => setStatus(""), 10000);
@@ -108,14 +108,13 @@ const Page = () => {
 		<>
 			{status && (
 				<div
-					className={`top-2 right-0 left-0 fixed inset-0 text-center text-white h-10 flex justify-center items-center w-full sm:w-[310px] z-50 text-base mx-auto ${
-						!success ? "bg-red-600" : "bg-green-600 px-3 py-3 rounded-md"
-					}`}>
+					className={`top-2 right-0 left-0 fixed inset-0 text-center text-white h-10 flex justify-center items-center w-full sm:w-[310px] z-50 text-base mx-auto ${!success ? "bg-red-600" : "bg-green-600 px-3 py-3 rounded-md"
+						}`}>
 					{status}
 				</div>
 			)}
-			<div className="h-screen w-full bg-gradient-to-b from-[#9b67b3] from-5% to-[#3a0657] flex flex-col justify-center items-center">
-				<div className="flex flex-row justify-start mr-auto gap-1 items-center">
+			<div className="h-screen w-full bg-gradient-to-b from-[#9b67b3] from-5% to-[#3a0657] flex flex-col justify-center items-center relative">
+				<div className="absolute top-4 left-4 flex flex-row gap-1 items-center">
 					<Image
 						src={"/assets/images/chatterbox-logo.png"}
 						className="w-7 h-7 object-cover ml-2 mt-1"

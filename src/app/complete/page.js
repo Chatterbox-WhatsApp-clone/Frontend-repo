@@ -111,15 +111,14 @@ const Page = () => {
 		<>
 			{status && (
 				<div
-					className={`top-0 right-0 left-0 fixed inset-0 text-center text-white h-10 flex justify-center items-center w-full sm:w-[310px] z-50 text-base mx-auto ${
-						!success ? "bg-red-600" : "bg-green-600 px-3 py-3 rounded-md"
-					}`}>
+					className={`top-0 right-0 left-0 fixed inset-0 text-center text-white h-10 flex justify-center items-center w-full sm:w-[310px] z-50 text-base mx-auto ${!success ? "bg-red-600" : "bg-green-600 px-3 py-3 rounded-md"
+						}`}>
 					{status}
 				</div>
 			)}
 
-			<div className="h-screen w-full bg-gradient-to-b from-[#9b67b3] from-5% to-[#3a0657] flex flex-col px-1">
-				<div className="flex flex-row gap-1 items-center">
+			<div className="h-screen w-full bg-gradient-to-b from-[#9b67b3] from-5% to-[#3a0657] flex flex-col px-1 relative">
+				<div className="absolute top-4 left-4 flex flex-row gap-1 items-center">
 					<Image
 						src={"/assets/images/chatterbox-logo.png"}
 						className="w-7 h-7 object-cover ml-2 mt-1"
@@ -174,11 +173,10 @@ const Page = () => {
 								/>
 
 								<span
-									className={` absolute top-2/4 -translate-y-1/2 right-3 text-[18px] ${
-										confirmPassword === password
+									className={` absolute top-2/4 -translate-y-1/2 right-3 text-[18px] ${confirmPassword === password
 											? "text-green-500"
 											: "text-red-500"
-									}`}>
+										}`}>
 									{touched &&
 										confirmPassword.length > 0 &&
 										(confirmPassword === password ? (

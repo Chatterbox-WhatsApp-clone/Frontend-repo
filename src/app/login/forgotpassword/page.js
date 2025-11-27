@@ -130,15 +130,14 @@ const Page = () => {
 		<>
 			{status && (
 				<div
-					className={`fixed top-4 inset-x-0 mx-auto text-center text-white py-2 px-4 rounded-md w-fit z-50 ${
-						success ? "bg-green-600" : "bg-red-600"
-					}`}>
+					className={`fixed top-4 inset-x-0 mx-auto text-center text-white py-2 px-4 rounded-md w-fit z-50 ${success ? "bg-green-600" : "bg-red-600"
+						}`}>
 					{status}
 				</div>
 			)}
 
-			<div className="h-screen w-full bg-gradient-to-b from-[#9b67b3] to-[#3a0657] flex flex-col justify-center items-center  px-3">
-				<div className="flex flex-row justify-start mr-auto gap-1 items-center">
+			<div className="h-screen w-full bg-gradient-to-b from-[#9b67b3] to-[#3a0657] flex flex-col justify-center items-center px-3 relative">
+				<div className="absolute top-4 left-4 flex flex-row gap-1 items-center">
 					<Image
 						src={"/assets/images/chatterbox-logo.png"}
 						className="w-7 h-7 object-cover ml-2 mt-1"
@@ -195,7 +194,7 @@ const Page = () => {
 							<p
 								className={`text-white text-center text-sm mt-1 ${poppins.className}`}>
 								Enter the 6-digit code sent to{" "}
-								 your email 
+								your email
 							</p>
 
 							<form className="w-full mt-4 space-y-3">
