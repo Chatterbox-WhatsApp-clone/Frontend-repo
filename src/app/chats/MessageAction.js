@@ -101,7 +101,7 @@ const MessageActions = ({ setOpenMessageMenu, fetchMessages }) => {
 		}
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, []);
+	}, [setOpenMessageMenu]);
 
 	return (
 		<>

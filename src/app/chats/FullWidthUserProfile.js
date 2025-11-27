@@ -3,20 +3,16 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import Spinner from "@/Spinner";
-import { useFetchUserChats } from "@/utils/FetchUserChats";
+import { useFetchUserChats } from "@/hooks/useFetchUserChats";
 import {
 	useAuthenticatedStore,
 	useUserProfile,
 	useClickedStore,
 } from "@/zustand";
 import { useQuery } from "@tanstack/react-query";
-import { Poppins, Nunito } from "next/font/google";
+import { Nunito } from "next/font/google";
 import MessageActions from "./MessageAction";
 
-const poppins = Poppins({
-	subsets: ["latin"],
-	weight: ["400", "500", "700", "900"],
-});
 const nunito = Nunito({
 	subsets: ["latin"],
 	weight: ["400", "500", "700", "1000", "900"],
@@ -24,25 +20,23 @@ const nunito = Nunito({
 
 const FullWidthUserProfile = () => {
 	const { token, userId } = useAuthenticatedStore();
-	const { chatId, setActiveMessage, setMyMessage, setMessagedId } = useUserProfile();
+	const { chatId, setActiveMessage, setMyMessage, setMessagedId } =
+		useUserProfile();
 	const { openMessage } = useClickedStore();
 	const [openMessageMenu, setOpenMessageMenu] = useState(false);
 
-	const loadChats = async () => {
-		try {
-			if (openMessage) {
-				return await useFetchUserChats({ token, chatId });
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	};
+	
+	const fetchChats = useFetchUserChats({ token, chatId });
 
 	const { data, isLoading, isError } = useQuery({
-		queryKey: ["chat_messages"],
-		queryFn: loadChats,
+		queryKey: ["chat_messages", chatId],
+		queryFn: async () => {
+			if (!openMessage) return [];
+			return await fetchChats();
+		},
 		staleTime: 300000,
 		cacheTime: 500000,
+		enabled: !!openMessage,
 	});
 
 	return (
@@ -74,36 +68,36 @@ const FullWidthUserProfile = () => {
 							const isMe = chat?.sender?._id === userId;
 							const message = chat?.content?.text;
 							const createdAt = chat?.createdAt;
-							const status = chat?.status; // "sent", "delivered", "read"
+							const status = chat?.status;
 
 							return (
 								<div
 									key={chat?._id}
-									className={`flex ${isMe ? "justify-end" : "justify-start"
-										} mt-[2px] relative cursor-pointer`}
+									className={`flex ${
+										isMe ? "justify-end" : "justify-start"
+									} mt-[2px] relative cursor-pointer`}
 									onClick={() => {
-										setOpenMessageMenu(true)
-										setActiveMessage(chat)
+										setOpenMessageMenu(true);
+										setActiveMessage(chat);
 										setMessagedId(chat?._id);
 									}}>
 									<div
-										className={`py-[3px] flex space-y-1 px-2 rounded-lg break-words w-auto max-w-[65%] shadow-2xl ${isMe ? "bg-[#7304af] text-white" : "bg-white text-black"
-											}`} onClick={() => setMyMessage(isMe)}>
-										{/* Message text */}
+										className={`py-[3px] flex space-y-1 px-2 rounded-lg break-words w-auto max-w-[65%] shadow-2xl ${
+											isMe ? "bg-[#7304af] text-white" : "bg-white text-black"
+										}`}
+										onClick={() => setMyMessage(isMe)}>
 										<p className={`text-sm text-start ${nunito.className}`}>
 											{message}
 										</p>
 
-										{/* Timestamp, status, and star */}
 										<div className="flex justify-end items-end space-x-1 mt-[1px] text-[9px] ml-4 shrink-0">
-											{/* Star Icon */}
 											{chat?.starredBy?.includes(userId) && (
 												<FaStar
-													className={`text-[10px] mb-[2px] cursor-pointer ${isMe ? "text-white" : "text-[#7304af]"
-														}`}
+													className={`text-[10px] mb-[2px] cursor-pointer ${
+														isMe ? "text-white" : "text-[#7304af]"
+													}`}
 													onClick={(e) => {
 														e.stopPropagation();
-														// Handle Unstar
 														fetch(process.env.NEXT_PUBLIC_UNSTAR_MESSAGE, {
 															method: "POST",
 															headers: {
@@ -111,22 +105,15 @@ const FullWidthUserProfile = () => {
 																Authorization: `Bearer ${token}`,
 															},
 															body: JSON.stringify({ messageId: chat._id }),
-														})
-															.then(res => {
-																if (res.ok) {
-																	// Optionally refresh or update local state
-																	// For now, rely on react-query invalidation or socket if available
-																	// Or just let the user know
-																}
-															})
-															.catch(err => console.error(err));
+														}).catch((err) => console.error(err));
 													}}
 												/>
 											)}
 
 											<p
-												className={`${isMe ? "text-gray-300" : "text-gray-500"
-													} font-semibold`}>
+												className={`${
+													isMe ? "text-gray-300" : "text-gray-500"
+												} font-semibold`}>
 												{new Date(createdAt).toLocaleTimeString([], {
 													hour: "2-digit",
 													minute: "2-digit",
@@ -154,6 +141,7 @@ const FullWidthUserProfile = () => {
 					</div>
 				)}
 			</div>
+
 			{openMessageMenu && (
 				<MessageActions setOpenMessageMenu={setOpenMessageMenu} />
 			)}

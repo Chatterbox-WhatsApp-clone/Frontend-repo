@@ -13,6 +13,8 @@ const nunito = Nunito({
 	subsets: ["latin"],
 	weight: ["400", "500", "700", "1000", "900"],
 });
+import { useFetchUserChats } from "@/hooks/useFetchUserChats";
+import Spinner from "@/Spinner";
 
 const ChatDetails = () => {
 	// useEffect connect to the web socket
@@ -29,44 +31,16 @@ const ChatDetails = () => {
 		? `${backendBase}/api/messages`
 		: "/api/messages";
 
-	// Fetch messages when chat is opened
-	useEffect(() => {
-		if (!chatId || !token || !activeUser) return;
-
-		const fetchMessages = async () => {
-			try {
-				const res = await fetch(`${messagesEndpoint}/${chatId}`, {
-					method: "GET",
-					headers: { Authorization: `Bearer ${token}` },
-				});
-				if (res.ok) {
-					const data = await res.json();
-					// Reset messages and set fetched messages
-					if (data.success && data.data) {
-						// Clear existing messages and set new ones
-						useMessagesStore.setState({ messages: data.data || [] });
-					}
-				}
-			} catch (error) {
-				console.error("Error fetching messages:", error);
-			}
-		};
-
-		fetchMessages();
-	}, [chatId, token, activeUser, messagesEndpoint]);
-
 	useEffect(() => {
 		if (!socket || !chatId) return;
 
 		socket.on("message_sent", (data) => {
 			setMessageStatus("sent");
 			setMessages(data?.message);
-		
 		});
 
 		socket.on("message_delivered", ({ messageId }) => {
 			setMessageStatus("delivered");
-			
 		});
 
 		socket.on("new_message", (data) => {
@@ -88,60 +62,93 @@ const ChatDetails = () => {
 			socket.off("message_read");
 			socket.off("user_typing");
 		};
-	}, [socket, chatId]);
+	}, [chatId, setMessages, setMessageStatus, typing]);
+
+	const fetchChats = useFetchUserChats({ token, chatId });
+
+	const loadChats = async () => {
+		try {
+			if (openMessage) {
+				return await fetchChats();
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const { data, isLoading, isError } = useQuery({
+		queryKey: ["chat_messages"],
+		queryFn: loadChats,
+		staleTime: 300000,
+		cacheTime: 500000,
+	});
+
+	useEffect(() => {
+		if (data?.data) {
+			setMessages(data?.data);
+		}
+	});
 
 	return (
 		<>
 			<div className="px-3 w-full flex flex-col gap-1 overflow-y-auto mt-2">
-				{messages?.map((msg) => {
-					return (
-						<div
-							className={`flex ${
-								msg.sender._id === userId ? "justify-end" : "justify-start"
-							}  mt-[2px]`}
-							key={`${msg._id}`}>
+				{isLoading ? (
+					<div className="absolute inset-0 bg-white bg-opacity-80 flex flex-col items-center justify-center z-50">
+						<Spinner className="w-12 h-12 animate-spin text-blue-500 mb-4" />
+						<p className="text-gray-700 text-lg font-medium">
+							Loading chats...
+						</p>
+					</div>
+				) : (
+					messages?.map((msg) => {
+						return (
 							<div
-								className={`py-[3px] flex space-y-1 px-2 rounded-lg break-words w-auto md:max-w-[65%] shadow-2xl ${
-									msg.sender._id === userId
-										? "bg-[#7304af] text-white"
-										: "bg-white text-black"
-								}
+								className={`flex ${
+									msg.sender._id === userId ? "justify-end" : "justify-start"
+								}  mt-[2px]`}
+								key={`${msg._id}`}>
+								<div
+									className={`py-[3px] flex space-y-1 px-2 rounded-lg break-words w-auto md:max-w-[65%] shadow-2xl ${
+										msg.sender._id === userId
+											? "bg-[#7304af] text-white"
+											: "bg-white text-black"
+									}
 								`}>
-								<p className={`text-sm text-start ${nunito.className}`}>
-									{msg.content?.text}
-								</p>
-
-								<div className="flex justify-end items-end space-x-1 mt-[1px] text-[9px] ml-4 shrink-0">
-									<p
-										className={`${
-											msg.sender._id === userId
-												? "text-gray-300"
-												: "text-gray-500"
-										}font-semibold`}>
-										{new Date(msg.createdAt).toLocaleTimeString([], {
-											hour: "2-digit",
-											minute: "2-digit",
-										})}
+									<p className={`text-sm text-start ${nunito.className}`}>
+										{msg.content?.text}
 									</p>
-									{msg.sender._id === userId && (
-										<div>
-											{messageStatus === "sent" && (
-												<p className="text-gray-300">✓</p>
-											)}
-											{messageStatus === "delivered" && (
-												<p className="text-gray-300">✓✓</p>
-											)}
-											{messageStatus === "read" && (
-												<p className="text-white">✓✓</p>
-											)}
-										</div>
-									)}
+
+									<div className="flex justify-end items-end space-x-1 mt-[1px] text-[9px] ml-4 shrink-0">
+										<p
+											className={`${
+												msg.sender._id === userId
+													? "text-gray-300"
+													: "text-gray-500"
+											}font-semibold`}>
+											{new Date(msg.createdAt).toLocaleTimeString([], {
+												hour: "2-digit",
+												minute: "2-digit",
+											})}
+										</p>
+										{msg.sender._id === userId && (
+											<div>
+												{messageStatus === "sent" && (
+													<p className="text-gray-300">✓</p>
+												)}
+												{messageStatus === "delivered" && (
+													<p className="text-gray-300">✓✓</p>
+												)}
+												{messageStatus === "read" && (
+													<p className="text-white">✓✓</p>
+												)}
+											</div>
+										)}
+									</div>
 								</div>
 							</div>
-						</div>
-					);
-				})}
-
+						);
+					})
+				)}
 				{/* Typing animation */}
 				{typing && (
 					<div className="flex items-center justify-start gap-2 mt-1 fixed bottom-14 left-2">

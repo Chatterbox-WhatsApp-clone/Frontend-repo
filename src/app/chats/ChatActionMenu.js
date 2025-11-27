@@ -171,7 +171,7 @@ const ChatActionMenu = ({ setActionMenu }) => {
 		}
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => document.removeEventListener("mousedown", handleClickOutside);
-	}, []);
+	}, [setActionMenu]);
 
 	return (
 		<>

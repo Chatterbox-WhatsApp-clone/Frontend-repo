@@ -1,5 +1,7 @@
 import { useState } from "react";
-const DailingPad = ({ phoneNumber, onNumberChange, onCall, onBack }) => {
+import { IoArrowBack, IoBackspaceOutline } from "react-icons/io5";
+import { FiPhone } from "react-icons/fi";
+const DailingPad = ({ onNumberChange, onCall, onBack }) => {
 	const [showDialingPad, setShowDialingPad] = useState(false);
 	const [phoneNumber, setPhoneNumber] = useState("");
 	const dialPadNumbers = [

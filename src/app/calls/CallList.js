@@ -9,6 +9,8 @@ import {
 } from "@/zustand";
 import { useQuery } from "@tanstack/react-query";
 import { Poppins, Nunito } from "next/font/google";
+import {LiaTimesSolid} from "react-icons/lia";
+import Image from 'next/image'
 
 const nunito = Nunito({
 	subsets: ["latin"],
@@ -102,7 +104,7 @@ const CallList = () => {
 								key={call._id}
 								className="w-full flex flex-row items-center p-3 bg-gray-100 rounded-md shadow">
 								{/* User Picture */}
-								<img
+								<Image
 									src={call.user?.profilePic}
 									alt="profile"
 									className="w-12 h-12 rounded-full object-cover"
