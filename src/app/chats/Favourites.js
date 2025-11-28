@@ -57,7 +57,7 @@ const Favourites = ({ setActiveTab }) => {
 					{data?.data?.map((chat) => {
 						const profilePicture = chat?.user?.profilePicture
 							? `${backendBase}${chat?.user?.profilePicture}`
-							: "/assets/images/friendImage.jpg";
+							:    "/assets/images/friendImage.jpg";
 
 						return (
 							<div
