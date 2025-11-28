@@ -12,6 +12,8 @@ if (typeof window !== "undefined") {
 			authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
 			projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
 			projectNumber: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_NUMBER,
+			messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDERID,
+			appId: process.env.NEXT_PUBLIC_APPID,
 		});
 		auth = getAuth(app);
 		provider = new GoogleAuthProvider();
