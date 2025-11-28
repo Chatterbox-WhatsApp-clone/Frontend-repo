@@ -8,8 +8,8 @@ if (typeof window !== "undefined") {
 	// Initialize Firebase only once
 	if (!getApps().length) {
 		const app = initializeApp({
-			apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-			authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+			apiKey: process.env.FIREBASE_API_KEY,
+			authDomain: process.env.FIREBASE_AUTH_DOMAIN,
 			projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
 			projectNumber: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_NUMBER,
 			messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDERID,
