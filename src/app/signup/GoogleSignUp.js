@@ -10,12 +10,13 @@ const GoogleSignUp = () => {
 	const router = useRouter();
 
 	// user info
-
+	const password = "abc123";
+	const phoneNumber = "+12377773233";
 
 	const [status, setStatus] = useState("");
 	const [success, setSuccess] = useState(true);
 
-	const endpoint = process.env.NEXT_PUBLIC_GOOGLE_LOGIN_ENDPOINT;
+	const endpoint = process.env.NEXT_PUBLIC_AUTH_REGISTRATION_ENDPOINT;
 
 	function toUploadImagePage() {
 		router.push("/complete");
@@ -34,6 +35,8 @@ const GoogleSignUp = () => {
 				body: JSON.stringify({
 					username: user.displayName,
 					email: user.email,
+					password: password,
+					phoneNumber: phoneNumber,
 				}),
 			});
 
