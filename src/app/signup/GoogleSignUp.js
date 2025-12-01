@@ -10,13 +10,12 @@ const GoogleSignUp = () => {
 	const router = useRouter();
 
 	// user info
-	const password = "abc123";
-	const phoneNumber = "+12377773233";
+
 
 	const [status, setStatus] = useState("");
 	const [success, setSuccess] = useState(true);
 
-	const endpoint = process.env.NEXT_PUBLIC_AUTH_REGISTRATION_ENDPOINT;
+	const endpoint = process.env.NEXT_PUBLIC_GOOGLE_LOGIN_ENDPOINT;
 
 	function toUploadImagePage() {
 		router.push("/complete");
@@ -35,8 +34,6 @@ const GoogleSignUp = () => {
 				body: JSON.stringify({
 					username: user.displayName,
 					email: user.email,
-					password: password,
-					phoneNumber: phoneNumber,
 				}),
 			});
 
@@ -48,10 +45,10 @@ const GoogleSignUp = () => {
 				toSignUpPage();
 				throw new Error(data?.message);
 			} else {
-				setStatus(data?.message || "User registered successfully");
+				setStatus("Account successfully created");
 				setSuccess(true);
 				setTimeout(() => setStatus(""), 10000);
-				
+
 				setToken(data?.data?.token);
 				setTimeout(() => {
 					toUploadImagePage();
@@ -93,9 +90,8 @@ const GoogleSignUp = () => {
 		<>
 			{status && (
 				<div
-					className={`top-0 right-0 left-0 fixed inset-0 text-center text-white h-10 flex justify-center items-center w-full sm:w-[310px] z-50 text-base mx-auto  ${
-						success ? "bg-green-600 px-3 py-3 rounded-md" : "bg-red-600"
-					}`}>
+					className={`top-0 right-0 left-0 fixed inset-0 text-center text-white h-10 flex justify-center items-center w-full sm:w-[310px] z-50 text-base mx-auto  ${success ? "bg-green-600 px-3 py-3 rounded-md" : "bg-red-600"
+						}`}>
 					{status}
 				</div>
 			)}

@@ -103,7 +103,7 @@ const Page = () => {
 				setTimeout(() => setStatus(""), 10000);
 				throw new Error(data.message);
 			} else {
-				setStatus(data.message || "User registered successfully");
+				setStatus("Account successfully created");
 				setSuccess(true);
 				setTimeout(() => setStatus(""), 10000);
 				setToken(data?.data?.token);
