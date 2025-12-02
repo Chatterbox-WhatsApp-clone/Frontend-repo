@@ -56,7 +56,7 @@ const AllFriends = () => {
 						<SearchedUsers input={input} />
 					</Suspense>
 				) : (
-					<div className="flex flex-col gap-2 sm:grid sm:grid-cols-3 mt-3 md:mt-0 lg:grid-cols-4 sm:gap-2 py-2 px-1 md:px-1">
+					<div className="flex flex-col gap-2 sm:grid sm:grid-cols-3 mt-5 md:mt-12 lg:grid-cols-4 sm:gap-2 py-2 px-1 md:px-1">
 						{data?.data?.map((user) => {
 							const profilePicture = user?.profilePicture
 								? `${backendBase}${user.profilePicture}`

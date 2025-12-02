@@ -90,7 +90,7 @@ const Page = () => {
 				setTimeout(() => setStatus(""), 10000);
 				throw new Error(data.message);
 			} else {
-				setStatus(data.message || "Profile Completed");
+				setStatus("Profile Updated");
 				setSuccess(true);
 				setTimeout(() => setStatus(""), 10000);
 				setTimeout(() => {
@@ -135,7 +135,7 @@ const Page = () => {
 					<main className="bg-white/10 backdrop-blur-md h-auto w-full sm:w-auto sm:px-10 flex flex-col justify-center items-center mx-auto mt-3 px-3 py-4 shadow-lg border border-white/20 rounded-md">
 						<h1
 							className={`flex items-center gap-2 font-bold text-xl sm:text-2xl mt-5 text-gray-200 ${nunito.className}`}>
-							Complete Your Profile .
+							Update Your Profile .
 						</h1>
 
 						<form

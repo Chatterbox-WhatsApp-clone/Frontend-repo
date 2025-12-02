@@ -187,7 +187,7 @@ const Page = () => {
 							</p>
 							<button
 								onClick={sendVerificationCode}
-								className={`bg-white text-black h-10 rounded-3xl mt-5 w-full font-bold  ${poppins.className}`}>
+								className={`bg-white text-black h-10 rounded-3xl mt-5 w-full font-bold cursor-pointer ${poppins.className}`}>
 								Click to verify Email
 							</button>
 							<p
@@ -201,7 +201,7 @@ const Page = () => {
 							<p
 								className="text-white mt-5 flex items-center gap-1 underline cursor-pointer text-sm"
 								onClick={() => router.push("/signup")}>
-								<FaArrowLeft className="text-sm mt-[4px]" /> Back to Signup page
+								 Back to Signup page
 							</p>
 						</main>
 					) : (
