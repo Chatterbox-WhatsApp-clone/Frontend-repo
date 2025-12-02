@@ -12,3 +12,7 @@ export const useFetchUserChats = async ({ token, chatId }) => {
 		console.log("Error fetching data", error);
 	}
 };
+
+export const useFetchChats = (token, chatId) => {
+	return useFetchUserChats({ token, chatId });
+};

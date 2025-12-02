@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
 import Spinner from "@/Spinner";
-import { useFetchUserChats } from "@/hooks/useFetchUserChats";
 import {
 	useAuthenticatedStore,
 	useUserProfile,
@@ -24,11 +23,27 @@ const FullWidthUserProfile = () => {
 		useUserProfile();
 	const [openMessageMenu, setOpenMessageMenu] = useState(false);
 
-	const fetchChats = () => useFetchUserChats({ token, chatId });
+	const fetchUserChats = async () => {
+		const endpoint = process.env.NEXT_PUBLIC_GET_MESSAGES.replace(
+			"{chatId}",
+			chatId
+		);
+		try {
+			const res = await fetch(endpoint, {
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			return res.json();
+		} catch (error) {
+			console.log("Error fetching data", error);
+		}
+	};
 
 	const { data, isLoading, isError } = useQuery({
 		queryKey: ["all_messages"],
-		queryFn: fetchChats,
+		queryFn: fetchUserChats,
 		staleTime: 300000,
 		cacheTime: 300000,
 	});
@@ -67,16 +82,18 @@ const FullWidthUserProfile = () => {
 							return (
 								<div
 									key={chat?._id}
-									className={`flex ${isMe ? "justify-end" : "justify-start"
-										} mt-[2px] relative cursor-pointer`}
+									className={`flex ${
+										isMe ? "justify-end" : "justify-start"
+									} mt-[2px] relative cursor-pointer`}
 									onClick={() => {
-										setOpenMessageMenu(true)
-										setActiveMessage(chat?.content?.text)
-										setMessageId(chat?._id)
+										setOpenMessageMenu(true);
+										setActiveMessage(chat?.content?.text);
+										setMessageId(chat?._id);
 									}}>
 									<div
-										className={`py-[3px] flex space-y-1 px-2 rounded-lg break-words w-auto max-w-[65%] shadow-2xl ${isMe ? "bg-[#7304af] text-white" : "bg-white text-black"
-											}`}
+										className={`py-[3px] flex space-y-1 px-2 rounded-lg break-words w-auto max-w-[65%] shadow-2xl ${
+											isMe ? "bg-[#7304af] text-white" : "bg-white text-black"
+										}`}
 										onClick={() => setMyMessage(isMe)}>
 										<p className={`text-sm text-start ${nunito.className}`}>
 											{message}
@@ -85,8 +102,9 @@ const FullWidthUserProfile = () => {
 										<div className="flex justify-end items-end space-x-1 mt-[1px] text-[9px] ml-4 shrink-0">
 											{chat?.starredBy?.includes(userId) && (
 												<FaStar
-													className={`text-[10px] mb-[2px] cursor-pointer ${isMe ? "text-white" : "text-[#7304af]"
-														}`}
+													className={`text-[10px] mb-[2px] cursor-pointer ${
+														isMe ? "text-white" : "text-[#7304af]"
+													}`}
 													onClick={(e) => {
 														e.stopPropagation();
 														fetch(process.env.NEXT_PUBLIC_UNSTAR_MESSAGE, {
@@ -102,8 +120,9 @@ const FullWidthUserProfile = () => {
 											)}
 
 											<p
-												className={`${isMe ? "text-gray-300" : "text-gray-500"
-													} font-semibold`}>
+												className={`${
+													isMe ? "text-gray-300" : "text-gray-500"
+												} font-semibold`}>
 												{new Date(createdAt).toLocaleTimeString([], {
 													hour: "2-digit",
 													minute: "2-digit",
