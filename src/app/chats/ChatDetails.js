@@ -13,8 +13,8 @@ const nunito = Nunito({
 	subsets: ["latin"],
 	weight: ["400", "500", "700", "1000", "900"],
 });
-import { useFetchUserChats } from "@/hooks/useFetchUserChats";
 import Spinner from "@/Spinner";
+import { useQuery } from "@tanstack/react-query";
 
 const ChatDetails = () => {
 	// useEffect connect to the web socket
@@ -26,17 +26,13 @@ const ChatDetails = () => {
 	const [typing, setTyping] = useState(false);
 	// Use chatId from activeUser if available, otherwise generate one
 	const chatId = activeUser?.chatId || generateChatId(userId, activeUser?._id);
-	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
-	const messagesEndpoint = backendBase
-		? `${backendBase}/api/messages`
-		: "/api/messages";
 
 	useEffect(() => {
 		if (!socket || !chatId) return;
 
 		socket.on("message_sent", (data) => {
 			setMessageStatus("sent");
-			setMessages(data?.message);
+			setMessages(data.message);
 		});
 
 		socket.on("message_delivered", ({ messageId }) => {
@@ -44,15 +40,15 @@ const ChatDetails = () => {
 		});
 
 		socket.on("new_message", (data) => {
-			setMessages(data?.message);
+			setMessages(data.message);
 		});
 
 		socket.on("message_read", () => {
 			setMessageStatus("read");
 		});
 
-		socket.on("user_typing", () => {
-			setTyping(typing);
+		socket.on("user_typing", ({ isTyping }) => {
+			setTyping(isTyping);
 		});
 
 		return () => {
@@ -62,32 +58,38 @@ const ChatDetails = () => {
 			socket.off("message_read");
 			socket.off("user_typing");
 		};
-	}, [chatId, setMessages, setMessageStatus, typing]);
+	}, [chatId, setMessages, setMessageStatus]);
 
-	const fetchChats = useFetchUserChats({ token, chatId });
-
-	const loadChats = async () => {
+	const fetchUserChats = async () => {
+		const endpoint = process.env.NEXT_PUBLIC_GET_MESSAGES.replace(
+			"{chatId}",
+			chatId
+		);
 		try {
-			if (openMessage) {
-				return await fetchChats();
-			}
+			const res = await fetch(endpoint, {
+				method: "GET",
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			return res.json();
 		} catch (error) {
-			console.log(error);
+			console.log("Error fetching data", error);
 		}
 	};
 
-	const { data, isLoading, isError } = useQuery({
-		queryKey: ["chat_messages"],
-		queryFn: loadChats,
-		staleTime: 300000,
-		cacheTime: 500000,
+	const { data, isLoading } = useQuery({
+		queryKey: ["chat_messages", chatId],
+		queryFn: fetchUserChats,
+		staleTime: 50,
+		cacheTime: 50,
 	});
 
 	useEffect(() => {
 		if (data?.data) {
 			setMessages(data?.data);
 		}
-	});
+	}, [data]);
 
 	return (
 		<>

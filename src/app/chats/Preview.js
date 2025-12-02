@@ -5,7 +5,7 @@ const Preview = ({ previewUrl, fileType, onClear }) => {
     if (!previewUrl) return null;
 
     return (
-        <div className="absolute bottom-10 left-0 w-full bg-white p-2 border-t border-gray-200 flex flex-col gap-2 z-10">
+        <div className="absolute bottom-12 left-0 w-full bg-white p-2 border-t border-gray-200 flex flex-col gap-2 z-10">
             <div className="relative w-fit">
                 {fileType === "image" ? (
                     <img

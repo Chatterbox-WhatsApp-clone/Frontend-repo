@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Poppins } from "next/font/google";
 import {
@@ -8,8 +8,7 @@ import {
 	useClickedStore,
 } from "@/zustand";
 import Image from "next/image";
-import { CiStar } from "react-icons/ci";
-import { IoMdStar } from "react-icons/io";
+
 import { IoIosArrowForward } from "react-icons/io";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
@@ -34,12 +33,6 @@ const Starred = ({ setActiveTab }) => {
 		staleTime: 10000,
 		cacheTime: 30000,
 	});
-
-	useEffect(() => {
-		if (data) {
-			console.log(data);
-		}
-	}, [data]);
 
 	return (
 		<div className="h-full relative flex flex-col justify-start items-center overflow-y-auto w-full">

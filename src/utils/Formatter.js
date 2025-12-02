@@ -1,32 +1,32 @@
-export default function formatLastSeen(dateString) {
-	const date = new Date(dateString);
+const formatLastSeen = (lastSeen) => {
+	const last = new Date(lastSeen);
 	const now = new Date();
+	const diffInSeconds = (now - last) / 1000;
 
-	const isToday = date.toDateString() === now.toDateString();
-
-	const yesterday = new Date();
-	yesterday.setDate(now.getDate() - 1);
-	const isYesterday = date.toDateString() === yesterday.toDateString();
-
-	const time = date.toLocaleTimeString([], {
-		hour: "2-digit",
-		minute: "2-digit",
-	});
-
-	const month = date.toLocaleString("en-US", { month: "short" }); // Oct, Nov, Dec…
-
-	// TODAY
-	if (isToday) {
-		return `today at ${time}`;
+	// User is online if lastSeen was within 60 seconds
+	if (diffInSeconds <= 60) {
+		return "Online";
 	}
 
-	// YESTERDAY
-	if (isYesterday) {
-		return `yesterday at ${time}`;
-	} 
+	// If within today, return time
+	if (last.toDateString() === now.toDateString()) {
+		return `today at ${last.toLocaleTimeString([], {
+			hour: "2-digit",
+			minute: "2-digit",
+		})}`;
+	}
 
-	// OTHER DAYS -> “Oct 30, 2025”
-	const formattedDate = `${month} ${date.getDate()}, ${date.getFullYear()}`;
+	// Yesterday
+	const yesterday = new Date();
+	yesterday.setDate(now.getDate() - 1);
+	if (last.toDateString() === yesterday.toDateString()) {
+		return "yesterday";
+	}
 
-	return `${formattedDate}`;
-}
+	// Otherwise return full date
+	return last.toLocaleDateString([], {
+		day: "2-digit",
+		month: "short",
+		year: "numeric",
+	});
+};

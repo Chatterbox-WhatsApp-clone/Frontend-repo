@@ -65,11 +65,8 @@ const TopOfChats = () => {
 								{activeUser?.username || activeChat?.user?.fullName}
 							</p>
 							<p className="text-[12px] text-[#7304af]">
-								{activeUser?.isOnline
-									? "Online"
-									: activeChat?.user?.isOnline
-									? "Online"
-									: activeChat?.user?.lastSeen
+								{
+									 activeChat?.user?.lastSeen
 									? `Last seen ${formatLastSeen(activeChat.user.lastSeen)}`
 									: "Last seen a long time ago"}
 							</p>

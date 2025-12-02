@@ -28,7 +28,7 @@ const Page = () => {
 		router.push("/");
 	}
 	function toUploadImagePage() {
-		router.push("verification");
+		router.push("/uploadImage");
 	}
 	// for routing
 

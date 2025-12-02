@@ -16,6 +16,8 @@ const nunito = Nunito({
 	subsets: ["latin"],
 	weight: ["400", "500", "700", "1000", "900"],
 });
+import Image from "next/image";
+import ShowImages from "@/utils/ShowImages";
 
 const FullWidthUserProfile = () => {
 	const { token, userId } = useAuthenticatedStore();
@@ -42,11 +44,15 @@ const FullWidthUserProfile = () => {
 	};
 
 	const { data, isLoading, isError } = useQuery({
-		queryKey: ["all_messages"],
+		queryKey: ["all_messages", chatId],
 		queryFn: fetchUserChats,
-		staleTime: 300000,
-		cacheTime: 300000,
+		staleTime: 50,
+		cacheTime: 50,
 	});
+
+	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
+	const [showImage, setShowImage] = useState(false);
+	const [currentImage, setCurrentImage] = useState("");
 
 	return (
 		<>
@@ -72,12 +78,15 @@ const FullWidthUserProfile = () => {
 						<p className="text-gray-500 text-lg font-medium">No chats found.</p>
 					</div>
 				) : (
-					<div className="flex flex-col gap-[6px]">
+					<div className="flex flex-col gap-[5px]">
 						{data?.data?.map((chat) => {
 							const isMe = chat?.sender?._id === userId;
 							const message = chat?.content?.text;
 							const createdAt = chat?.createdAt;
 							const status = chat?.status;
+							const media = chat?.content?.media?.url
+								? `${backendBase}${chat?.content?.media?.url}`
+								: "";
 
 							return (
 								<div
@@ -91,13 +100,32 @@ const FullWidthUserProfile = () => {
 										setMessageId(chat?._id);
 									}}>
 									<div
-										className={`py-[3px] flex space-y-1 px-2 rounded-lg break-words w-auto max-w-[65%] shadow-2xl ${
+										className={`py-[3px] space-y-1 rounded-md  break-words shadow-2xl ${
 											isMe ? "bg-[#7304af] text-white" : "bg-white text-black"
-										}`}
-										onClick={() => setMyMessage(isMe)}>
-										<p className={`text-sm text-start ${nunito.className}`}>
-											{message}
-										</p>
+										} ${
+											media
+												? "py-1 px-1 flex flex-col space-y-1 w-[80%] h-[245px]"
+												: "flex px-2 w-auto max-w-[65%]"
+										}`}>
+										{media ? (
+											<Image
+												src={media}
+												width={100}
+												height={100}
+												alt="Image"
+												onClick={() => {
+													setShowImage(true);
+													setCurrentImage(media);
+												}}
+												className={`w-full h-56 object-cover object-center shrink-0 rounded-md ${nunito.className}`}
+											/>
+										) : (
+											<p
+												className={`text-sm text-start ${nunito.className}`}
+												onClick={() => setMyMessage(isMe)}>
+												{message}
+											</p>
+										)}
 
 										<div className="flex justify-end items-end space-x-1 mt-[1px] text-[9px] ml-4 shrink-0">
 											{chat?.starredBy?.includes(userId) && (
@@ -153,6 +181,13 @@ const FullWidthUserProfile = () => {
 
 			{openMessageMenu && (
 				<MessageActions setOpenMessageMenu={setOpenMessageMenu} />
+			)}
+			{showImage && (
+				<ShowImages
+					image={currentImage}
+					setShowImage={setShowImage}
+					showImage={showImage}
+				/>
 			)}
 		</>
 	);

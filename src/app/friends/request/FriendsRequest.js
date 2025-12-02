@@ -12,18 +12,16 @@ const poppins = Poppins({
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useAuthenticatedStore } from "@/zustand";
-const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 import AcceptFriendButton from "./AcceptFriendButton";
 import RejectFriendButton from "./RejectFriendButton";
 import { IoIosArrowForward } from "react-icons/io";
 import { useRouter } from "next/navigation";
 
 const FriendsRequest = () => {
-	const router = useRouter()
+	const router = useRouter();
 	const { token } = useAuthenticatedStore();
-	const onlineEndpoint =
-		process.env.NEXT_PUBLIC_GET_FRIEND_REQUEST ||
-		`${backendBase}/api/friends/requests`;
+	const onlineEndpoint = process.env.NEXT_PUBLIC_GET_FRIEND_REQUEST;
+	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 	const fetchUsers = async () => {
 		const res = await fetch(onlineEndpoint, {
 			method: "GET",

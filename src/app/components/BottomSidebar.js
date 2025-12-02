@@ -42,7 +42,7 @@ const BottomSidebar = () => {
 		cacheTime: 300000,
 	});
 
-	const backendBase = "http://localhost:5001";
+	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 	const profilePicture = data?.data?.profilePicture
 		? `${backendBase}${data.data.profilePicture}`
 		: "/assets/images/userImage.jpg";

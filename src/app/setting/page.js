@@ -78,7 +78,9 @@ const Page = () => {
 	// function to copy link
 	const handleCopyLink = async () => {
 		try {
-			await navigator.clipboard.writeText("https://yourapp.com/invite");
+			await navigator.clipboard.writeText(
+				"https://frontend-repo-rho.vercel.app/"
+			);
 			setLinkCopied(true);
 			setTimeout(() => setLinkCopied(false), 2000);
 		} catch (err) {

@@ -12,6 +12,12 @@ import {
 } from "@/zustand";
 import { IoIosArrowForward } from "react-icons/io";
 import Image from "next/image";
+import {
+	FaRegImage,
+	FaRegFileVideo,
+	FaRegFileAudio,
+	FaRegFile,
+} from "react-icons/fa";
 const AllChats = () => {
 	const { token } = useAuthenticatedStore();
 	const router = useRouter();
@@ -35,6 +41,24 @@ const AllChats = () => {
 		staleTime: 100000,
 		cacheTime: 300000,
 	});
+
+	const getMediaPreview = (mimeType, filename) => {
+		if (!mimeType) return { icon: <FaRegFile />, label: filename || "File" };
+
+		if (mimeType.startsWith("image/")) {
+			return { icon: <FaRegImage />, label: "Image" };
+		}
+
+		if (mimeType.startsWith("video/")) {
+			return { icon: <FaRegFileVideo />, label: "Video" };
+		}
+
+		if (mimeType.startsWith("audio/")) {
+			return { icon: <FaRegFileAudio />, label: "Audio" };
+		}
+
+		return { icon: <FaRegFile />, label: filename || "File" };
+	};
 
 	return (
 		<div className="h-full relative flex justify-center items-center overflow-y-auto w-full">
@@ -60,6 +84,11 @@ const AllChats = () => {
 						const profilePicture = chat?.user?.profilePicture
 							? `${backendBase}${chat?.user?.profilePicture}`
 							: "/assets/images/friendImage.jpg";
+						const media = chat?.lastMessage?.content?.media;
+						const mime = media?.mimeType;
+						const filename = media?.filename;
+
+						const preview = getMediaPreview(mime, filename);
 
 						return (
 							<div
@@ -96,8 +125,8 @@ const AllChats = () => {
 											<div className="flex flex-row justify-between items-center w-full">
 												<p
 													className={`${poppins.className} font-medium text-[13.5px]`}>
-													{chat?.user?.username?.length > 15
-														? chat?.user?.username.slice(0, 15) + "..."
+													{chat?.user?.username?.length > 18
+														? chat?.user?.username.slice(0, 18) + "..."
 														: chat?.user?.username}
 												</p>
 												<div className="flex flex-col space-y-1">
@@ -131,17 +160,26 @@ const AllChats = () => {
 													)}
 												</div>
 											</div>
-
-											<p
-												className={`${
-													poppins.className
-												} text-gray-700 text-[12px] ${
-													chat?.unreadCount > 1 ? "-mt-2" : ""
-												}`}>
-												{chat?.lastMessage?.content?.text?.length > 30
-													? chat.lastMessage.content.text.slice(0, 30) + "..."
-													: chat?.lastMessage?.content?.text}
-											</p>
+											{mime ? (
+												<p
+													className={`flex items-center space-x-2 
+														${poppins.className}
+													 text-gray-700 text-[12px]`}>
+													{preview.icon}
+													<span>{preview.label}</span>
+												</p>
+											) : (
+												<p
+													className={`${
+														poppins.className
+													} text-gray-700 text-[12px] ${
+														chat?.unreadCount > 1 ? "-mt-2" : ""
+													}`}>
+													{chat?.lastMessage?.content?.text?.length > 30
+														? chat.lastMessage.content.text.slice(0, 30) + "..."
+														: chat?.lastMessage?.content?.text}
+												</p>
+											)}
 										</div>
 									</div>
 								</div>
