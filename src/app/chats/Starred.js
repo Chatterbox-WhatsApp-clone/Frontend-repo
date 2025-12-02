@@ -31,9 +31,15 @@ const Starred = ({ setActiveTab }) => {
 	const { data } = useQuery({
 		queryKey: ["users-starred"],
 		queryFn: fetchUsers,
-		staleTime: 100000,
-		cacheTime: 300000,
+		staleTime: 10000,
+		cacheTime: 30000,
 	});
+
+	useEffect(() => {
+		if (data) {
+			console.log(data);
+		}
+	}, [data]);
 
 	return (
 		<div className="h-full relative flex flex-col justify-start items-center overflow-y-auto w-full">
@@ -55,76 +61,77 @@ const Starred = ({ setActiveTab }) => {
 				</div>
 			) : (
 				<div className="flex flex-col h-full justify-start items-center w-full mt-1 px-1">
-					{data?.data?.map((chat) => {
-						// For favorites endpoint, chat.user is the other person
-						let sender = chat?.user || chat?.sender;
-						let type = chat?.type || (chat?.image ? "image" : "text");
-						let content = chat?.content || chat?.message || "";
-						let createdAt = chat?.createdAt || chat?.lastMessageTime;
+					{data?.data?.map((item) => {
+						const messages = item?.messages || [];
+						const message = messages[0]; // FIRST message
+						const type = message?.type;
+						const content = message?.content;
+						const createdAt = message?.createdAt;
+						const sender = item?.user;
 
-						// Handle Favorite Chats structure (has lastMessage)
-						if (chat.lastMessage) {
-							const msg = chat.lastMessage;
-							type = msg.type;
-							createdAt = msg.createdAt;
+						const username =
+							sender?.username || sender?.phoneNumber || "Unknown";
 
-							// Content
-							if (type === "text") {
-								content = msg.content?.text || "";
-							} else if (msg.content?.media) {
-								content = msg.content.media.filename || "Media";
-							}
+						// PREVIEW
+						let preview = "";
+						let mediaUrl = null;
+
+						if (type === "text") {
+							preview = content?.text || "";
+						} else if (type === "image") {
+							mediaUrl = `${backendBase}${content?.media?.url}`;
+							preview = "Image";
+						} else if (
+							type === "video" ||
+							type === "audio" ||
+							type === "voice"
+						) {
+							preview = type.toUpperCase();
 						}
-
-						const username = sender?.username || sender?.phone || "Unknown";
-
-						// Determine content type label
-						let typeLabel = "Text";
-						if (type === "image") typeLabel = "Image";
-						if (type === "audio" || type === "voice") typeLabel = "Voice Note";
-						if (type === "video") typeLabel = "Video";
 
 						return (
 							<div
-								className={`w-full py-2 px-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 flex flex-row justify-between items-start overflow-hidden`}
-								key={chat?._id || chat?.chatId}
+								className="w-full py-2 px-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 flex flex-row justify-between items-start overflow-hidden"
+								key={item.chatId}
 								onClick={() => {
 									setOpenMessage(true);
-									setActiveUser(chat);
+									setActiveUser({
+										...item,
+										jumpToMessageId: message?._id, // first message id
+									});
 								}}>
-
-								{/* Left Div: Username & Content Type */}
+								{/* LEFT SIDE */}
 								<div className="flex flex-col justify-start items-start gap-1 max-w-[70%]">
-									<p className={`${poppins.className} font-bold text-sm text-gray-900 truncate w-full`}>
+									<p className="font-bold text-sm text-gray-900 truncate">
 										{username}
 									</p>
-									<p className={`${poppins.className} text-[12px] text-gray-500`}>
-										{typeLabel}
-									</p>
+
+									{type === "image" ? (
+										<p className="text-[12px] text-gray-500">{preview}</p>
+									) : (
+										<p className="text-[14px] text-gray-800 truncate">
+											{preview?.length > 25
+												? preview.slice(0, 25) + "..."
+												: preview}
+										</p>
+									)}
 								</div>
 
-								{/* Right Div: Item & Date */}
+								{/* RIGHT SIDE */}
 								<div className="flex flex-col justify-end items-end gap-1">
-									{/* Item itself */}
-									<div className="flex justify-end">
-										{type === "image" ? (
-											<div className="w-7 h-7 relative">
-												<Image
-													src={`${backendBase}${content}`}
-													alt="Starred Image"
-													fill
-													className="rounded-md object-cover"
-												/>
-											</div>
-										) : (
-											<p className={`${poppins.className} text-[12px] text-gray-600 line-clamp-1 max-w-[100px] text-right`}>
-												{content}
-											</p>
-										)}
-									</div>
-
-									{/* Date */}
-									<p className="text-[11px] text-gray-400">
+									{/* IMAGE PREVIEW */}
+									{type === "image" && mediaUrl && (
+										<div className="w-7 h-7 relative">
+											<Image
+												src={mediaUrl}
+												alt="Starred"
+												fill
+												className="rounded-md object-cover"
+											/>
+										</div>
+									)}
+									{/* DATE */}
+									<p className="text-[11px] text-gray-800">
 										{new Date(createdAt).toLocaleDateString([], {
 											month: "short",
 											day: "numeric",

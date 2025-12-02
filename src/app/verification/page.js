@@ -37,19 +37,18 @@ const VerificationCodeInput = ({ length = 6, onChange }) => {
 
 	const handleKeyDown = (e, index) => {
 		if (e.key === "Backspace") {
-			e.preventDefault(); // prevent default behavior
+			e.preventDefault();
 			const newValues = [...values];
 
 			if (values[index]) {
-				// If current input has a value, just clear it
 				newValues[index] = "";
 			} else if (index > 0) {
-				// If current is empty, clear previous and focus
 				newValues[index - 1] = "";
 				inputsRef.current[index - 1].focus();
 			}
 
 			setValues(newValues);
+			onChange(newValues.join(""));
 		}
 	};
 
@@ -125,6 +124,7 @@ const Page = () => {
 	const verifyPhoneNumber = async (e) => {
 		e.preventDefault();
 		if (!checkForAllFields()) return;
+
 		try {
 			const res = await fetch(verifyCode, {
 				method: "POST",
@@ -134,7 +134,6 @@ const Page = () => {
 				},
 				body: JSON.stringify({ code: code }),
 			});
-
 			const data = await res.json();
 			if (!res.ok) {
 				setStatus(data.message);
@@ -157,8 +156,9 @@ const Page = () => {
 		<>
 			{status && (
 				<div
-					className={`fixed top-4 inset-x-0 mx-auto text-center text-white py-2 px-4 rounded-md w-fit z-50 ${success ? "bg-green-600" : "bg-red-600"
-						}`}>
+					className={`fixed top-4 inset-x-0 mx-auto text-center text-white py-2 px-4 rounded-md w-fit z-50 ${
+						success ? "bg-green-600" : "bg-red-600"
+					}`}>
 					{status}
 				</div>
 			)}
@@ -183,12 +183,12 @@ const Page = () => {
 							<IoPhonePortraitOutline className="text-white text-6xl" />
 							<p
 								className={`text-2xl mt-7 font-bold text-white ${nunito.className}`}>
-								Verify Phone Number
+								Verify Email
 							</p>
 							<button
 								onClick={sendVerificationCode}
 								className={`bg-white text-black h-10 rounded-3xl mt-5 w-full font-bold  ${poppins.className}`}>
-								Click to verify phone number
+								Click to verify Email
 							</button>
 							<p
 								className={`text-white mt-5 text-sm ${poppins.className}`}
@@ -208,7 +208,7 @@ const Page = () => {
 						<main className="bg-white/10 backdrop-blur-md h-auto w-full sm:w-[450px] sm:px-10 flex flex-col justify-center items-center mx-auto mt-3 px-3 py-4 shadow-lg border border-white/20 rounded-md">
 							<h1
 								className={`font-bold text-2xl mt-3 text-gray-200 ${nunito.className}`}>
-								Verify Phone Number
+								Verify Email
 							</h1>
 
 							<p
@@ -217,7 +217,11 @@ const Page = () => {
 							</p>
 
 							<form className="w-full mt-4 space-y-3">
-								<VerificationCodeInput length={6} onChange={setCode} />
+								<VerificationCodeInput
+									length={6}
+									onChange={setCode}
+									code={code}
+								/>
 							</form>
 
 							<button
@@ -229,7 +233,7 @@ const Page = () => {
 							<p
 								className="text-white mt-5 flex items-center gap-1 underline cursor-pointer text-sm"
 								onClick={() => router.push("/signup")}>
-								<FaArrowLeft className="text-sm mt-[2px]" /> Back to Signup
+								Back to Signup
 							</p>
 						</main>
 					)}

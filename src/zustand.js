@@ -98,7 +98,7 @@ export const useUserProfile = create((set) => ({
 	myMessage: null,
 	setMyMessage: (value) => set({ myMessage: value }),
 
-	messageId: null,
+	messageId: "",
 	setMessageId: (value) => set({ messageId: value }),
 
 	isEditing: false,

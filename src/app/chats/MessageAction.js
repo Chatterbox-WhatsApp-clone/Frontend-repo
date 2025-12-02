@@ -26,7 +26,7 @@ const MessageActions = ({ setOpenMessageMenu, fetchMessages }) => {
 
 	const handleCopy = async () => {
 		try {
-			await navigator.clipboard.writeText(message?.content);
+			await navigator.clipboard.writeText(activeMessage);
 			setSuccess(true);
 			setStatus("Message copied!");
 
@@ -63,7 +63,6 @@ const MessageActions = ({ setOpenMessageMenu, fetchMessages }) => {
 
 	const handleEdit = async () => {
 		setIsEditing(true);
-		setActiveMessage(message); // Ensure activeMessage is set to the one being edited
 		setOpenMessageMenu(false);
 	};
 

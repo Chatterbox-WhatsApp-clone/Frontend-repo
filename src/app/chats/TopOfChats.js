@@ -53,10 +53,10 @@ const TopOfChats = () => {
 						<FaArrowLeft className="text-lg md:hidden" onClick={endSocket} />
 
 						<Image
-							className="w-12 h-12 rounded-full shrink-0"
+							className="w-12 h-12 rounded-full object-cover"
 							src={profilePicture}
-							width={100}
-							height={100}
+							width={190}
+							height={190}
 							alt="profilePicture"
 						/>
 

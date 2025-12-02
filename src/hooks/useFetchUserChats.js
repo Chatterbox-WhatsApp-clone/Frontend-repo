@@ -7,7 +7,6 @@ export const useFetchUserChats = async ({ token, chatId }) => {
 				Authorization: `Bearer ${token}`,
 			},
 		});
-
 		return res.json();
 	} catch (error) {
 		console.log("Error fetching data", error);
