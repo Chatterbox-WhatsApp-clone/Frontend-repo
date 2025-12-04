@@ -98,7 +98,7 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 			<div ref={ref}>
 				<div
 					className="hidden md:block fixed bottom-8 left-5 z-[999] w-[500px] bg-white rounded-xl shadow-2xl overflow-y-auto max-h-[80vh] p-5"
-					style={{ scrollbarWidth: "none" }}>
+					>
 					<div className="border-b border-gray-300 pb-3">
 						<h1 className={`${nunito.className} font-bold text-2xl`}>
 							Settings
@@ -185,13 +185,13 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 								</p>
 								<button
 									onClick={handleCopyLink}
-									className="text-[#3a0657] font-bold cursor-pointer underline z-50">
+									className="text-[#3a0657] font-bold cursor-pointer underline z-50 w-44">
 									{linkCopied ? "Link Copied!" : "Copy Link"}
 								</button>
 							</div>
 
 							{/* Delete Account */}
-							<DeleteAccount />
+							<DeleteAccount setShowDesktopSetting={setShowDesktopSetting} />
 						</>
 					)}
 				</div>
