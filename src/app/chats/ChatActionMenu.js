@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { TbUserCancel } from "react-icons/tb";
+import { TbUserCancel, TbUserCheck } from "react-icons/tb";
 import { RiUserUnfollowLine } from "react-icons/ri";
 import { HiOutlineTrash } from "react-icons/hi";
 import { IoIosHeartEmpty, IoIosHeart } from "react-icons/io";
@@ -17,17 +17,20 @@ const nunito = Nunito({
 });
 
 import BlockUser from "@/utils/BlockUser";
+import UnblockUser from "@/utils/UnblockUser";
 import UnfriendUser from "@/utils/UnfriendUser";
 
 const ChatActionMenu = ({ setActionMenu }) => {
 	const [showBlock, setBlockModal] = useState(false);
+	const [showUnblock, setUnblockModal] = useState(false);
 	const [showUnfriend, setUnfriendModal] = useState(false);
 	const [clearMessages, setClearMessages] = useState(false);
 	const [deleteChat, setDeleteChat] = useState(false);
 
 	const dropdownRef = useRef(null);
 
-	const { chatId, isFavourites, setIsFavourites } = useUserProfile();
+	const { chatId, isFavourites, setIsFavourites, activeChat, isBlocked } =
+		useUserProfile();
 	const { token } = useAuthenticatedStore();
 
 	const [status, setStatus] = useState("");
@@ -79,7 +82,6 @@ const ChatActionMenu = ({ setActionMenu }) => {
 		setLoading(true);
 		if (!chatId) return;
 
-		
 		const addEndpoint = process.env.NEXT_PUBLIC_ADD_FAVORITE_CHAT;
 		const endpoint = `${addEndpoint}/${chatId}`;
 
@@ -129,10 +131,10 @@ const ChatActionMenu = ({ setActionMenu }) => {
 
 	const chatActions = [
 		{
-			id: "block",
-			label: "Block Contact",
-			icon: <TbUserCancel />,
-			onClick: () => setBlockModal(true),
+			id: isBlocked ? "unblock" : "block",
+			label: isBlocked ? "Unblock Contact" : "Block Contact",
+			icon: isBlocked ? <TbUserCheck /> : <TbUserCancel />,
+			onClick: () => (isBlocked ? setUnblockModal(true) : setBlockModal(true)),
 		},
 		{
 			id: "unfriend",
@@ -160,18 +162,26 @@ const ChatActionMenu = ({ setActionMenu }) => {
 		},
 	];
 
-	// --------------------------
-	// CLOSE DROPDOWN ON OUTSIDE CLICK
-	// --------------------------
 	useEffect(() => {
 		function handleClickOutside(event) {
-			if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+			if (!dropdownRef.current) return;
+
+			// Only close if the click is outside AND inside the chat screen container
+			const chatArea = document.getElementById("chat-screen");
+
+			if (
+				chatArea &&
+				chatArea.contains(event.target) && // click happened inside chat area
+				!dropdownRef.current.contains(event.target) // but not on menu
+			) {
 				setActionMenu(false);
 			}
 		}
+
 		document.addEventListener("mousedown", handleClickOutside);
 		return () => document.removeEventListener("mousedown", handleClickOutside);
 	}, [setActionMenu]);
+
 
 	return (
 		<>
@@ -179,35 +189,43 @@ const ChatActionMenu = ({ setActionMenu }) => {
 			{status && (
 				<div
 					className={`fixed top-4 left-1/2 -translate-x-1/2 text-white 
-            h-10 flex justify-center items-center w-[310px] 
-            z-50 text-base mx-auto rounded-md 
-            ${!success ? "bg-red-600" : "bg-green-600"}`}>
+                    h-10 flex justify-center items-center w-[310px] 
+                    z-50 text-base mx-auto rounded-md 
+                    ${!success ? "bg-red-600" : "bg-green-600"}`}>
 					{status}
 				</div>
 			)}
 
-			<div className="fixed inset-0 bg-transparent z-40"></div>
-
-			{/* ACTION MENU */}
-			<div
-				ref={dropdownRef}
-				className="fixed right-3 top-14 md:top-12 z-50 bg-gray-100 shadow rounded-md p-1 flex flex-col space-y-2 w-auto">
-				{chatActions.map((action) => (
-					<button
-						key={action.id}
-						className={`flex items-center space-x-2 px-2 py-2 rounded-md hover:bg-gray-200 w-full ${action.id === "delete" ? "text-red-600 hover:bg-red-200" : ""
-							}`}
-						onClick={action.onClick}>
-						<span className="text-lg">{action.icon}</span>
-						<span className={`${nunito.className} text-[14px] font-medium`}>
-							{action.label}
-						</span>
-					</button>
-				))}
+			{/* MAIN ACTION MENU - WHATSAPP STYLE */}
+			<div className="fixed right-3 top-14 md:top-12 z-50">
+				<div
+					ref={dropdownRef}
+					className="bg-gray-100 shadow rounded-md p-1 flex flex-col space-y-2 w-auto">
+					{chatActions.map((action) => (
+						<button
+							key={action.id}
+							className={`flex items-center space-x-2 px-2 py-2 rounded-md hover:bg-gray-100 w-full 
+                                ${
+																	action.id === "delete"
+																		? "text-red-600 hover:bg-red-100"
+																		: ""
+																}`}
+							onClick={(e) => {
+								e.stopPropagation();
+								action.onClick();
+							}}>
+							<span className="text-lg">{action.icon}</span>
+							<span className={`${nunito.className} text-[14px] font-medium`}>
+								{action.label}
+							</span>
+						</button>
+					))}
+				</div>
 			</div>
 
 			{/* MODALS */}
 			{showBlock && <BlockUser setBlockModal={setBlockModal} />}
+			{showUnblock && <UnblockUser setUnblockModal={setUnblockModal} />}
 			{showUnfriend && <UnfriendUser setUnfriendModal={setUnfriendModal} />}
 			{clearMessages && <ClearMessages setClearMessages={setClearMessages} />}
 			{deleteChat && <DeleteChat setDeleteChat={setDeleteChat} />}

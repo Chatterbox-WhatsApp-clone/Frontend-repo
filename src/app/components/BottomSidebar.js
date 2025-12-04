@@ -60,44 +60,6 @@ const BottomSidebar = () => {
 		<>
 			<div className="flex flex-col justify-start items-start w-full h-fit">
 				<div className="flex flex-col justify-start items-start space-y-7 w-full border-b border-gray-200">
-					<Link
-						href={"/dashboard/lockchats"}
-						className={`${
-							pathname === "/dashboard/lockchats"
-								? "navigation w-full"
-								: "w-full"
-						} flex justify-start items-center `}>
-						{locked ? (
-							<>
-								<VscLock
-									className="text-[18px] font-extrabold text-black ml-2 "
-									strokeWidth={0.6}
-									onClick={(e) => setLocked(false)}
-								/>
-								<span
-									className={`text-sm ml-2 ${poppins.className} ${
-										clicked ? "flex" : "hidden"
-									} `}>
-									Locked Chats
-								</span>
-							</>
-						) : (
-							<>
-								<VscUnlock
-									className="text-[18px] font-extrabold text-black ml-2"
-									strokeWidth={0.6}
-									onClick={(e) => setLocked(true)}
-								/>
-								<span
-									className={`text-sm ml-2 ${poppins.className} ${
-										clicked ? "flex" : "hidden"
-									} `}>
-									Locked Chats
-								</span>
-							</>
-						)}
-					</Link>
-
 					<div
 						className="ml-1 flex justify-start items-center cursor-pointer"
 						onClick={(e) => setShowDesktopSetting(true)}>

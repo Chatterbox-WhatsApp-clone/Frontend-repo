@@ -22,7 +22,7 @@ const NewCallLinkIcon = () => (
 
 const CallActionButton = ({ label, icon, onClick }) => (
 	<button
-		onClick={onClick}
+		// onClick={onClick}
 		className="border border-gray-300 rounded-md py-4 px-5 flex flex-col items-center justify-center gap-4 text-gray-800 hover:bg-gray-100 transition-colors">
 		<span className="flex items-center justify-center text-3xl text-[#8f45b7]">
 			{icon}
@@ -68,7 +68,7 @@ const Page = () => {
 								<CallActionButton
 									label={action.label}
 									icon={action.icon}
-									onClick={action.onClick}
+									// onClick={action.onClick}
 								/>
 							</div>
 						))}

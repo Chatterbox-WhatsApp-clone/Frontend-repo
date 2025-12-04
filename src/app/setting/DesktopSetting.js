@@ -11,7 +11,7 @@ import {
 import Spinner from "@/Spinner";
 import { createPortal } from "react-dom";
 import { MdOutlinePrivacyTip } from "react-icons/md";
-import DeleteAccount from "./DeleteAccount";
+import DeleteAccount from "../components/DeleteAccount";
 import EmailSection from "./EmailSection";
 import AccountSection from "./AccountSection";
 import PhoneSection from "./PhoneSection";
@@ -83,7 +83,9 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 	// handle invite copy
 	const handleCopyLink = async () => {
 		try {
-			await navigator.clipboard.writeText("https://yourapp.com/invite");
+			await navigator.clipboard.writeText(
+				"https://frontend-repo-rho.vercel.app/"
+			);
 			setLinkCopied(true);
 			setTimeout(() => setLinkCopied(false), 2000);
 		} catch (err) {

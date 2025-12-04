@@ -63,10 +63,11 @@ const Unread = ({ searchQuery = "", setActiveTab }) => {
 
 						return (
 							<div
-								className={`h-[70px] w-full py-1 shrink-0 cursor-pointer ${activeUser?.chatId === chat?.chatId
+								className={`h-[70px] w-full py-1 shrink-0 cursor-pointer ${
+									activeUser?.chatId === chat?.chatId
 										? "bg-gray-200"
 										: "bg-transparent"
-									} hover:bg-gray-200 px-1 cursor-pointer`}
+								} hover:bg-gray-200 px-1 cursor-pointer`}
 								key={chat?.chatId}
 								onClick={() => {
 									setOpenMessage(true);
@@ -83,54 +84,52 @@ const Unread = ({ searchQuery = "", setActiveTab }) => {
 												alt="profilePicture"
 												className="w-full h-full rounded-full object-cover"
 											/>
-											{chat?.unreadCount > 0 && (
-												<div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-													{chat.unreadCount > 99
-														? "99+"
-														: chat.unreadCount}
-												</div>
-											)}
 										</div>
 
 										<div className="flex flex-col justify-center items-start w-full gap-1">
 											<div className="flex flex-row justify-between items-center w-full">
 												<p
 													className={`${poppins.className} font-medium text-[13.5px]`}>
-													{chat?.user?.username?.length > 15
-														? chat?.user?.username.slice(0, 15) + "..."
+													{chat?.user?.username?.length > 18
+														? chat?.user?.username.slice(0, 18) + "..."
 														: chat?.user?.username}
 												</p>
-												<p className="text-[10px] text-normal">
-													{(() => {
-														const date = new Date(chat?.lastMessageTime);
-														const now = new Date();
-														const diffInMs = now - date;
-														const diffInHours =
-															diffInMs / (1000 * 60 * 60);
+												<div className="flex flex-col space-y-1">
+													<p className="text-[10.5px] text-normal">
+														{(() => {
+															const date = new Date(chat?.lastMessageTime);
+															const now = new Date();
+															const diffInMs = now - date;
+															const diffInHours = diffInMs / (1000 * 60 * 60);
 
-														if (diffInHours < 24) {
-															return date.toLocaleTimeString([], {
-																hour: "2-digit",
-																minute: "2-digit",
-															});
-														} else if (diffInHours < 48) {
-															return "Yesterday";
-														} else {
-															return date.toLocaleDateString([], {
-																day: "2-digit",
-																month: "2-digit",
-																year: "numeric",
-															});
-														}
-													})()}
-												</p>
+															if (diffInHours < 24) {
+																return date.toLocaleTimeString([], {
+																	hour: "2-digit",
+																	minute: "2-digit",
+																});
+															} else if (diffInHours < 48) {
+																return "Yesterday";
+															} else {
+																return "";
+															}
+														})()}
+													</p>
+													{chat?.unreadCount > 0 && (
+														<span className="w-[14px] h-[14px] rounded-full bg-[#7304af] text-[11px] font-bold text-white flex justify-center items-center ml-auto">
+															{chat?.unreadCount}
+														</span>
+													)}
+												</div>
 											</div>
 
 											<p
-												className={`${poppins.className} text-gray-700 text-[12px]`}>
+												className={`${
+													poppins.className
+												} text-gray-700 text-[12px] ${
+													chat?.unreadCount > 0 ? "-mt-2" : ""
+												}`}>
 												{chat?.lastMessage?.content?.text?.length > 30
-													? chat.lastMessage.content.text.slice(0, 30) +
-													"..."
+													? chat.lastMessage.content.text.slice(0, 30) + "..."
 													: chat?.lastMessage?.content?.text}
 											</p>
 										</div>

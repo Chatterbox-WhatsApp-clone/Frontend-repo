@@ -16,14 +16,20 @@ const nunito = Nunito({
 import Spinner from "@/Spinner";
 import { useQuery } from "@tanstack/react-query";
 
+import MessageActions from "./MessageAction";
+
 const ChatDetails = () => {
 	// useEffect connect to the web socket
 	const { messages, setMessages, setMessageStatus, messageStatus } =
 		useMessagesStore();
 	const { userId, token } = useAuthenticatedStore();
 	// handle typing
-	const { activeUser } = useUserProfile();
+	const { activeUser, setActiveMessage, setMyMessage, setMessageId } = useUserProfile();
 	const [typing, setTyping] = useState(false);
+
+	const [openMessageMenu, setOpenMessageMenu] = useState(false);
+	const [selectedMessageId, setSelectedMessageId] = useState(null);
+
 	// Use chatId from activeUser if available, otherwise generate one
 	const chatId = activeUser?.chatId || generateChatId(userId, activeUser?._id);
 
@@ -79,21 +85,24 @@ const ChatDetails = () => {
 	};
 
 	const { data, isLoading } = useQuery({
-		queryKey: ["chat_messages", chatId],
+		queryKey: ["chat_messages"],
 		queryFn: fetchUserChats,
 		staleTime: 50,
 		cacheTime: 50,
 	});
 
-	useEffect(() => {
-		if (data?.data) {
-			setMessages(data?.data);
-		}
-	}, [data]);
+	const handleContextMenu = (e, msg) => {
+		e.preventDefault();
+		setActiveMessage(msg);
+		setMyMessage(msg.sender._id === userId);
+		setMessageId(msg._id);
+		setSelectedMessageId(msg._id);
+		setOpenMessageMenu(true);
+	};
 
 	return (
 		<>
-			<div className="px-3 w-full flex flex-col gap-1 overflow-y-auto mt-2">
+			<div className="px-3 w-full flex flex-col gap-1 overflow-y-auto mt-2 ">
 				{isLoading ? (
 					<div className="absolute inset-0 bg-white bg-opacity-80 flex flex-col items-center justify-center z-50">
 						<Spinner className="w-12 h-12 animate-spin text-blue-500 mb-4" />
@@ -102,50 +111,54 @@ const ChatDetails = () => {
 						</p>
 					</div>
 				) : (
-					messages?.map((msg) => {
+					data?.data?.map((msg) => {
 						return (
 							<div
-								className={`flex ${
-									msg.sender._id === userId ? "justify-end" : "justify-start"
-								}  mt-[2px]`}
-								key={`${msg._id}`}>
+								className={`flex ${msg?.sender?._id === userId ? "justify-end" : "justify-start"
+									}  mt-[2px]`}
+								key={`${msg?.content?.text}`}>
 								<div
-									className={`py-[3px] flex space-y-1 px-2 rounded-lg break-words w-auto md:max-w-[65%] shadow-2xl ${
-										msg.sender._id === userId
+									onContextMenu={(e) => handleContextMenu(e, msg)}
+									className={`relative py-[3px] flex space-y-1 px-2 rounded-lg break-words w-auto md:max-w-[65%] shadow-2xl ${msg?.sender?._id === userId
 											? "bg-[#7304af] text-white"
 											: "bg-white text-black"
-									}
+										}
 								`}>
 									<p className={`text-sm text-start ${nunito.className}`}>
-										{msg.content?.text}
+										{msg?.content?.text}
 									</p>
 
 									<div className="flex justify-end items-end space-x-1 mt-[1px] text-[9px] ml-4 shrink-0">
 										<p
-											className={`${
-												msg.sender._id === userId
+											className={`${msg?.sender?._id === userId
 													? "text-gray-300"
 													: "text-gray-500"
-											}font-semibold`}>
-											{new Date(msg.createdAt).toLocaleTimeString([], {
+												}font-semibold`}>
+											{new Date(msg?.createdAt).toLocaleTimeString([], {
 												hour: "2-digit",
 												minute: "2-digit",
 											})}
 										</p>
-										{msg.sender._id === userId && (
+										{msg?.sender?._id === userId && (
 											<div>
-												{messageStatus === "sent" && (
+												{msg?.status === "sent" && (
 													<p className="text-gray-300">✓</p>
 												)}
-												{messageStatus === "delivered" && (
+												{msg?.status === "delivered" && (
 													<p className="text-gray-300">✓✓</p>
 												)}
-												{messageStatus === "read" && (
+												{msg?.status === "read" && (
 													<p className="text-white">✓✓</p>
 												)}
 											</div>
 										)}
 									</div>
+
+									{openMessageMenu && selectedMessageId === msg._id && (
+										<div className="absolute top-full right-0 z-50">
+											<MessageActions setOpenMessageMenu={setOpenMessageMenu} />
+										</div>
+									)}
 								</div>
 							</div>
 						);

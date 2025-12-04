@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Poppins } from "next/font/google";
-import { useRouter } from "next/navigation";
+
 import {
 	useAuthenticatedStore,
 	useUserProfile,
@@ -11,6 +11,7 @@ import {
 import { IoIosArrowForward } from "react-icons/io";
 import Image from "next/image";
 import { MdFavorite } from "react-icons/md";
+
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 const Favourites = ({ setActiveTab }) => {
@@ -97,7 +98,7 @@ const Favourites = ({ setActiveTab }) => {
 													<p className="text-[10px] text-normal">
 														{(() => {
 															const date = new Date(
-																chat?.lastMessage.createdAt
+																chat?.lastMessage?.createdAt
 															);
 															const now = new Date();
 															const diffInMs = now - date;

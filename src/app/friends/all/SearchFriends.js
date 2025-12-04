@@ -71,7 +71,7 @@ const SearchFriends = ({ input }) => {
 				<div className="flex flex-col justify-center items-center mt-36 md:mt-20 gap-3">
 					<Spinner />
 					<p className={`${poppins.className} text-sm text-gray-600`}>
-						Please wait while we fetch your results...
+						Fetching your results...
 					</p>
 				</div>
 			) : data?.friends?.length === 0 ? (

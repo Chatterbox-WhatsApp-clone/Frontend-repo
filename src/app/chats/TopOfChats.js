@@ -7,6 +7,7 @@ const nunito = Nunito({
 	subsets: ["latin"],
 	weight: ["400", "500", "700", "1000", "900"],
 });
+import { FaTimes } from "react-icons/fa";
 import { IoCallOutline } from "react-icons/io5";
 import { CiVideoOn } from "react-icons/ci";
 import { RxDotsVertical } from "react-icons/rx";
@@ -42,7 +43,7 @@ const TopOfChats = () => {
 		<>
 			<div className="w-full bg-white h-[65px] md:h-auto py-1 rounded-b-md md:rounded-none shadow-md z-[99]">
 				{pathname !== "/" && (
-					<AiOutlineMinus
+					<FaTimes
 						className="text-xl hidden md:block ml-auto mr-2"
 						onClick={endSocket}
 					/>
@@ -69,7 +70,7 @@ const TopOfChats = () => {
 									 activeChat?.user?.lastSeen
 									? `Last seen ${formatLastSeen(activeChat.user.lastSeen)}`
 									: "Last seen a long time ago"}
-							</p>
+							</p> 
 						</div>
 					</div>
 					{/* first div */}

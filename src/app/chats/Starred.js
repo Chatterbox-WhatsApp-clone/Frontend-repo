@@ -11,11 +11,17 @@ import Image from "next/image";
 
 import { IoIosArrowForward } from "react-icons/io";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
+import {
+	FaRegImage,
+	FaRegFileVideo,
+	FaRegFile,
+} from "react-icons/fa";
 
 const Starred = ({ setActiveTab }) => {
 	const { token, userId } = useAuthenticatedStore();
-	const { setActiveUser } = useUserProfile();
-	const { setOpenMessage } = useClickedStore();
+		const { setActiveChat, setChatId } =
+			useUserProfile();
+		const { setOpenMessage } = useClickedStore();
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 	const onlineEndpoint = process.env.NEXT_PUBLIC_GET_STARRED_MESSAGE;
 
@@ -33,6 +39,20 @@ const Starred = ({ setActiveTab }) => {
 		staleTime: 10000,
 		cacheTime: 30000,
 	});
+
+	const getMediaPreview = (mimeType, filename) => {
+		if (!mimeType) return { icon: <FaRegFile />, label: filename || "File" };
+
+		if (mimeType.startsWith("image/")) {
+			return { icon: <FaRegImage />, label: "Image" };
+		}
+
+		if (mimeType.startsWith("video/")) {
+			return { icon: <FaRegFileVideo />, label: "Video" };
+		}
+
+		return { icon: <FaRegFile />, label: filename || "File" };
+	};
 
 	return (
 		<div className="h-full relative flex flex-col justify-start items-center overflow-y-auto w-full">
@@ -53,45 +73,32 @@ const Starred = ({ setActiveTab }) => {
 					</p>
 				</div>
 			) : (
-				<div className="flex flex-col h-full justify-start items-center w-full mt-1 px-1">
+				<div className="flex flex-col h-full justify-start items-center w-full mt-1 px-1 ">
 					{data?.data?.map((item) => {
-						const messages = item?.messages || [];
-						const message = messages[0]; // FIRST message
-						const type = message?.type;
-						const content = message?.content;
-						const createdAt = message?.createdAt;
+						const messages = item?.content;
+						const message = messages?.text;
+						const media = messages?.media;
+						const type = media?.mimeType;
+						const fileName = media?.filename;
+						const url = item?.content?.media?.url
+							? `${backendBase}${item.content.media.url}`
+							: "";
+
+						const createdAt = item?.createdAt;
 						const sender = item?.user;
 
 						const username =
-							sender?.username || sender?.phoneNumber || "Unknown";
+							sender?.username || sender?.phoneNumber || sender?.fullName;
 
-						// PREVIEW
-						let preview = "";
-						let mediaUrl = null;
-
-						if (type === "text") {
-							preview = content?.text || "";
-						} else if (type === "image") {
-							mediaUrl = `${backendBase}${content?.media?.url}`;
-							preview = "Image";
-						} else if (
-							type === "video" ||
-							type === "audio" ||
-							type === "voice"
-						) {
-							preview = type.toUpperCase();
-						}
-
+						const preview = getMediaPreview(type, fileName);
 						return (
 							<div
-								className="w-full py-2 px-3 border-b border-gray-100 cursor-pointer hover:bg-gray-50 flex flex-row justify-between items-start overflow-hidden"
-								key={item.chatId}
+								className="w-full h-auto py-2 px-3 border-b border-b-gray-200 cursor-pointer hover:bg-gray-50 flex flex-row justify-between items-start overflow-y-auto"
+								key={item._id}
 								onClick={() => {
 									setOpenMessage(true);
-									setActiveUser({
-										...item,
-										jumpToMessageId: message?._id, // first message id
-									});
+									setActiveChat(item);
+									setChatId(item?.chatId);
 								}}>
 								{/* LEFT SIDE */}
 								<div className="flex flex-col justify-start items-start gap-1 max-w-[70%]">
@@ -99,30 +106,36 @@ const Starred = ({ setActiveTab }) => {
 										{username}
 									</p>
 
-									{type === "image" ? (
-										<p className="text-[12px] text-gray-500">{preview}</p>
+									{url ? (
+										<p
+											className={`flex items-center space-x-2 
+														${poppins.className}
+													 text-[12px] text-gray-800 truncate`}>
+											{preview.icon}
+											<span>{preview.label}</span>
+										</p>
 									) : (
-										<p className="text-[14px] text-gray-800 truncate">
-											{preview?.length > 25
-												? preview.slice(0, 25) + "..."
-												: preview}
+										<p
+											className={`text-[12px] text-gray-800 truncate ${poppins.className}`}>
+											{message?.length > 25
+												? message.slice(0, 25) + "..."
+												: message}
 										</p>
 									)}
 								</div>
 
 								{/* RIGHT SIDE */}
 								<div className="flex flex-col justify-end items-end gap-1">
-									{/* IMAGE PREVIEW */}
-									{type === "image" && mediaUrl && (
-										<div className="w-7 h-7 relative">
-											<Image
-												src={mediaUrl}
-												alt="Starred"
-												fill
-												className="rounded-md object-cover"
-											/>
-										</div>
+									{url && (
+										<Image
+											src={url}
+											width={100}
+											height={100}
+											alt="Starred"
+											className="w-[60px] h-[60px] rounded-md object-cover object-center"
+										/>
 									)}
+
 									{/* DATE */}
 									<p className="text-[11px] text-gray-800">
 										{new Date(createdAt).toLocaleDateString([], {

@@ -40,7 +40,7 @@ const CallList = () => {
 		}
 	};
 
-	const { data, isLoading } = useQuery({
+	const { data, isLoading, isError } = useQuery({
 		queryKey: ["calls"],
 		queryFn: loadChats,
 		staleTime: 300000,

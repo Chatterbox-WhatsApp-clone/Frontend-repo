@@ -16,9 +16,9 @@ import EditStatus from "./EditStatus";
 import AccountSection from "./AccountSection";
 import EmailSection from "./EmailSection";
 import PhoneSection from "./PhoneSection";
-import DeleteAccount from "./DeleteAccount";
 import BackgroundImage from "./BackgroundImage";
 import ImageSettingsSection from "./ImageSettingsSection";
+import DeleteAccount from "../components/DeleteAccount";
 
 const nunito = Nunito({
 	subsets: ["latin"],

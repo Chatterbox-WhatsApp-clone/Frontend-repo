@@ -106,6 +106,9 @@ export const useUserProfile = create((set) => ({
 
 	isFavourites: null,
 	setIsFavourites: (value) => set({ isFavourites: value }),
+
+	isBlocked: null,
+	setIsBlocked: (value) => set({ isBlocked: value }),
 }));
 
 export const useUserData = create((set) => ({

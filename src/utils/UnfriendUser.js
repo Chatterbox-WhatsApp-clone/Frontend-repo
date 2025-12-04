@@ -7,19 +7,20 @@ import {
 	useUpdateUserStore,
 } from "@/zustand";
 import Modal from "@/app/components/Modal";
+import { useQueryClient } from "@tanstack/react-query";
 const UnfriendUser = ({ setUnfriendModal }) => {
 	const { activeUser, setActiveUser } = useUserProfile();
 	const { setUserUpdated } = useUpdateUserStore();
-
-	const userId = activeUser?._id;
+	const friendId = activeUser?._id;
 	const endpoint = process.env.NEXT_PUBLIC_REMOVE_FRIEND.replace(
 		"{friendId}",
-		userId
+		friendId
 	);
 	const { token } = useAuthenticatedStore();
 	const [loading, setLoading] = useState(false);
 	const [status, setStatus] = useState("");
 	const [success, setSuccess] = useState(false);
+	const queryClient = useQueryClient();
 	// function to block
 
 	const unFriendUser = async () => {
@@ -28,20 +29,16 @@ const UnfriendUser = ({ setUnfriendModal }) => {
 			const res = await fetch(endpoint, {
 				method: "DELETE",
 				headers: {
-					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
 			});
 
-			const data = await res.json();
-
 			if (res.ok) {
 				setSuccess(true);
-				setStatus(
-					data?.message ||
-						`${activeUser?.username} has been removed as your friend`
-				);
-
+				setStatus(`${activeUser?.username} has been removed as your friend`);
+				queryClient.invalidateQueries({ queryKey: ["all_messages"] });
+				queryClient.invalidateQueries({ queryKey: ["users-chat"] });
+				queryClient.invalidateQueries({ queryKey: ["chat_messages"] });
 				setTimeout(() => setUnfriendModal(false), 5000);
 				setActiveUser(null);
 				setUserUpdated(true);
@@ -59,7 +56,7 @@ const UnfriendUser = ({ setUnfriendModal }) => {
 		<>
 			{status && (
 				<div
-					className={`top-2 right-0 left-0 fixed inset-0 text-center text-white h-10 flex justify-center items-center w-full sm:w-[310px] z-50 text-base mx-auto ${
+					className={`top-2 right-0 left-0 fixed inset-0 text-center text-white h-10 flex justify-center items-center w-full max-w-[400px] z-50 text-base mx-auto ${
 						!success ? "bg-red-600" : "bg-green-600 px-3 py-3 rounded-md"
 					}`}>
 					{status}
@@ -84,7 +81,7 @@ const UnfriendUser = ({ setUnfriendModal }) => {
 							onClick={unFriendUser}
 							id="blockBtn"
 							className="flex-1 bg-red-600 text-white rounded-md py-2 font-semibold hover:bg-red-700">
-							{loading ? <PulseLoader /> : "Unfriend"}
+							{loading ? <PulseLoader size={3} /> : "Unfriend"}
 						</button>
 					</div>
 				</div>

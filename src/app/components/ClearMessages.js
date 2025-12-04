@@ -7,33 +7,40 @@ import {
 	useUpdateUserStore,
 } from "@/zustand";
 import Modal from "@/app/components/Modal";
+import { useQueryClient } from "@tanstack/react-query";
 
 const ClearMessages = ({ setClearMessages }) => {
-	const { activeUser, setActiveUser, chatId } = useUserProfile();
+	const { setActiveUser, chatId } = useUserProfile();
 	const { setUserUpdated } = useUpdateUserStore();
 	const { token } = useAuthenticatedStore();
 	const [loading, setLoading] = useState(false);
 	const [status, setStatus] = useState("");
 	const [success, setSuccess] = useState(false);
+	const queryClient = useQueryClient();
+	const endpoint = process.env.NEXT_PUBLIC_CLEAR_MESSAGES.replace(
+		"{chatId}",
+		chatId
+	);
 
 	const clearChat = async () => {
 		setLoading(true);
-		if (!activeChat) return;
-		const endpoint = `${process.env.NEXT_PUBLIC_CLEAR_MESSAGES}${chatId}`;
+		if (!chatId) return;
 		try {
 			const res = await fetch(endpoint, {
 				method: "DELETE",
 				headers: {
-					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
 			});
 			if (res.ok) {
 				setSuccess(true);
-				setStatus('All messages have been cleared');
-				setTimeout(() => setClearMessages(false), 8000);
+				setStatus("All messages have been cleared");
+				setTimeout(() => setClearMessages(false), 5000);
 				setActiveUser(null);
 				setUserUpdated(true);
+				queryClient.invalidateQueries({ queryKey: ["all_messages"] });
+				queryClient.invalidateQueries({ queryKey: ["users-chat"] });
+				queryClient.invalidateQueries({ queryKey: ["chat_messages"] });
 			} else {
 				console.error("Failed to clear messages");
 				setSuccess(false);
@@ -56,22 +63,20 @@ const ClearMessages = ({ setClearMessages }) => {
 			)}
 
 			<Modal>
-				<div className="flex flex-col items-center bg-white shadow-lg shadow-gray-400 p-6 rounded-xl max-w-sm w-[90%]">
+				<div className="flex flex-col items-center bg-white shadow-lg shadow-gray-400 p-6 rounded-xl max-w-sm w-[90%] z-50">
 					<p className="text-gray-800 text-center mb-4 font-medium">
 						Are you sure you want to clear messages in this chat?.
 					</p>
 					<div className="flex flex-row justify-between w-full gap-3">
 						<button
-							onClick={() => setDeleteChat(false)}
-							id="cancelBtn"
+							onClick={() => setClearMessages(false)}
 							className="flex-1 bg-gray-200 text-gray-800 rounded-md py-2 font-semibold hover:bg-gray-300">
 							Cancel
 						</button>
 						<button
 							onClick={clearChat}
-							id="blockBtn"
 							className="flex-1 bg-red-600 text-white rounded-md py-2 font-semibold hover:bg-red-700">
-							{loading ? <PulseLoader /> : "Clear Chat"}
+							{loading ? <PulseLoader size={3} /> : "Clear Chat"}
 						</button>
 					</div>
 				</div>

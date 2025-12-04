@@ -4,11 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { Poppins } from "next/font/google";
 import { useRouter } from "next/navigation";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
-// import { useState, useEffect } from "react";
 import {
 	useAuthenticatedStore,
 	useUserProfile,
 	useClickedStore,
+	useUpdateUserStore,
 } from "@/zustand";
 import { IoIosArrowForward } from "react-icons/io";
 import Image from "next/image";
@@ -21,9 +21,16 @@ import {
 const AllChats = () => {
 	const { token } = useAuthenticatedStore();
 	const router = useRouter();
-	const { activeChat, setActiveChat, setChatId, setIsFavourites } =
-		useUserProfile();
+	const {
+		activeChat,
+		setActiveChat,
+		setChatId,
+		setIsFavourites,
+		setActiveUser,
+		setIsBlocked
+	} = useUserProfile();
 	const { setOpenMessage } = useClickedStore();
+
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 	// fetch online users
 	const onlineEndpoint = process.env.NEXT_PUBLIC_GET_USER_CHATS_ENDPOINT;
@@ -67,7 +74,8 @@ const AllChats = () => {
 					<p
 						className={`${poppins.className}  text-wrap text-center text-sm font-mono`}>
 						You haven't sent or received any messages. Your list of messages
-						will appear here.
+						will appear here. Send messages on friends page for them to appear
+						here
 					</p>
 					<button
 						onClick={(e) => router.push("/friends")}
@@ -103,6 +111,8 @@ const AllChats = () => {
 									setActiveChat(chat);
 									setChatId(chat?.chatId);
 									setIsFavourites(chat?.isFavourite);
+									setIsBlocked(chat?.isBlocked)
+									setActiveUser(chat?.user);
 								}}>
 								<div className="h-[60px] w-full flex justify-between items-center flex-row  cursor-pointer">
 									<div className="flex justify-center items-center flex-row space-x-4 md:space-x-2 lg:space-x-3 w-full">
@@ -114,11 +124,6 @@ const AllChats = () => {
 												alt="profilePicture"
 												className="w-full h-full rounded-full object-cover"
 											/>
-											{chat?.unreadCount > 0 && (
-												<div className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-													{chat.unreadCount > 99 ? "99+" : chat.unreadCount}
-												</div>
-											)}
 										</div>
 
 										<div className="flex flex-col justify-center items-start w-full gap-1">
@@ -145,15 +150,11 @@ const AllChats = () => {
 															} else if (diffInHours < 48) {
 																return "Yesterday";
 															} else {
-																return date.toLocaleDateString([], {
-																	day: "2-digit",
-																	month: "2-digit",
-																	year: "numeric",
-																});
+																return "";
 															}
 														})()}
 													</p>
-													{chat?.unreadCount > 1 && (
+													{chat?.unreadCount > 0 && (
 														<span className="w-[14px] h-[14px] rounded-full bg-[#7304af] text-[11px] font-bold text-white flex justify-center items-center ml-auto">
 															{chat?.unreadCount}
 														</span>
@@ -173,7 +174,7 @@ const AllChats = () => {
 													className={`${
 														poppins.className
 													} text-gray-700 text-[12px] ${
-														chat?.unreadCount > 1 ? "-mt-2" : ""
+														chat?.unreadCount > 0 ? "-mt-2" : ""
 													}`}>
 													{chat?.lastMessage?.content?.text?.length > 30
 														? chat.lastMessage.content.text.slice(0, 30) + "..."

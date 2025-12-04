@@ -13,17 +13,17 @@ import Modal from "@/app/components/Modal";
 const BlockUser = ({ setBlockModal }) => {
 	const { activeUser, setActiveUser, activeChat } = useUserProfile();
 	const { setUserUpdated } = useUpdateUserStore();
-	const userId = activeUser?._id;
 	const { token } = useAuthenticatedStore();
 	const [loading, setLoading] = useState(false);
 	const [status, setStatus] = useState("");
 	const [success, setSuccess] = useState(false);
+	const id = activeUser?._id;
 	// function to block
 
 	const blockUser = async () => {
 		setLoading(true);
-		if (!userId) return;
-		const endpoint = `${process.env.NEXT_PUBLIC_BLOCK_USER}${userId}`;
+		if (!activeUser) return;
+		const endpoint = process.env.NEXT_PUBLIC_BLOCK_USER.replace("{id}", id);
 		try {
 			const res = await fetch(endpoint, {
 				method: "POST",
@@ -36,8 +36,8 @@ const BlockUser = ({ setBlockModal }) => {
 
 			if (res.ok) {
 				setSuccess(true);
-				setStatus(data?.message || `${activeUser?.username} has been blocked`);
-				setTimeout(() => setBlockModal(false), 8000);
+				setStatus(`${activeUser?.username} has been blocked`);
+				setTimeout(() => setBlockModal(false), 5000);
 				setActiveUser(null);
 				setUserUpdated(true);
 			} else {
@@ -67,7 +67,8 @@ const BlockUser = ({ setBlockModal }) => {
 			<Modal>
 				<div className="flex flex-col items-center bg-white shadow-lg shadow-gray-400 p-6 rounded-xl max-w-sm w-[90%]">
 					<p className="text-gray-800 text-center mb-4 font-medium">
-						Are you sure you want to block {activeUser?.username ?? activeChat?.user?.username}. They won't be
+						Are you sure you want to block{" "}
+						{activeUser?.username ?? activeChat?.user?.username}. They won't be
 						able to see you or contact you anymore.
 					</p>
 					<div className="flex flex-row justify-between w-full gap-3">
@@ -81,7 +82,7 @@ const BlockUser = ({ setBlockModal }) => {
 							onClick={blockUser}
 							id="blockBtn"
 							className="flex-1 bg-red-600 text-white rounded-md py-2 font-semibold hover:bg-red-700">
-							{loading ? <PulseLoader /> : "Block"}
+							{loading ? <PulseLoader size={3} /> : "Block"}
 						</button>
 					</div>
 				</div>

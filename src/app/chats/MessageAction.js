@@ -10,13 +10,21 @@ const nunito = Nunito({
 import { CiEdit } from "react-icons/ci";
 import { MdOutlineContentCopy } from "react-icons/md";
 import { MdOutlineDelete } from "react-icons/md";
+import { useQueryClient } from "@tanstack/react-query";
 
-const MessageActions = ({ setOpenMessageMenu, fetchMessages }) => {
+const MessageActions = ({ setOpenMessageMenu }) => {
 	const dropdownRef = useRef(null);
 	const [status, setStatus] = useState("");
 	const [success, setSuccess] = useState(true);
-	const { activeMessage, myMessage, messageId, setIsEditing, setActiveMessage } = useUserProfile();
+	const {
+		activeMessage,
+		myMessage,
+		messageId,
+		setIsEditing,
+		setActiveMessage,
+	} = useUserProfile();
 	const { token } = useAuthenticatedStore();
+	const queryClient = useQueryClient();
 
 	const FIFTEEN_MINUTES = 15 * 60 * 1000;
 
@@ -29,8 +37,10 @@ const MessageActions = ({ setOpenMessageMenu, fetchMessages }) => {
 			await navigator.clipboard.writeText(activeMessage);
 			setSuccess(true);
 			setStatus("Message copied!");
-
-			setTimeout(() => setStatus(""), 2000);
+			setTimeout(() => {
+				setStatus("");
+				setOpenMessageMenu(false);
+			}, 2000);
 		} catch (err) {
 			setSuccess(false);
 			setStatus("Copy failed!");
@@ -50,11 +60,15 @@ const MessageActions = ({ setOpenMessageMenu, fetchMessages }) => {
 
 			if (!res.ok) throw new Error("Failed");
 
-			setSuccess(true);
-			setStatus("Message starred!");
-			setTimeout(() => setStatus(""), 2000);
+			if (res.ok) {
+				setSuccess(true);
+				setStatus("Message starred!");
 
-			if (fetchMessages) fetchMessages();
+				setTimeout(() => {
+					setStatus("");
+					setOpenMessageMenu(false);
+				}, 2000);
+			}
 		} catch (err) {
 			setSuccess(false);
 			setStatus("Failed to star message!");
@@ -75,6 +89,7 @@ const MessageActions = ({ setOpenMessageMenu, fetchMessages }) => {
 				),
 				{
 					method: "DELETE",
+					headers: { Authorization: `Bearer ${token}` },
 				}
 			);
 
@@ -82,9 +97,13 @@ const MessageActions = ({ setOpenMessageMenu, fetchMessages }) => {
 
 			setSuccess(true);
 			setStatus("Message deleted!");
-			setTimeout(() => setStatus(""), 2000);
+			setTimeout(() => {
+				setStatus("");
+				setOpenMessageMenu(false);
+			}, 2000);
 
-			if (fetchMessages) fetchMessages();
+			queryClient.invalidateQueries({ queryKey: ["all_messages"] });
+			queryClient.invalidateQueries({ queryKey: ["chat_messages"] });
 		} catch (err) {
 			setSuccess(false);
 			setStatus("Failed to delete!");
@@ -107,8 +126,9 @@ const MessageActions = ({ setOpenMessageMenu, fetchMessages }) => {
 			{/* STATUS NOTIFICATION */}
 			{status && (
 				<div
-					className={`top-2 right-0 left-0 fixed inset-0 text-center text-white h-10 flex justify-center items-center w-full sm:w-[310px] z-50 text-base mx-auto ${!success ? "bg-red-600" : "bg-green-600 px-3 py-3 rounded-md"
-						}`}>
+					className={`top-2 right-0 left-0 fixed inset-0 text-center text-white h-10 flex justify-center items-center w-full sm:w-[310px] z-50 text-base mx-auto ${
+						!success ? "bg-red-600" : "bg-green-600 px-3 py-3 rounded-md"
+					}`}>
 					{status}
 				</div>
 			)}
@@ -116,12 +136,18 @@ const MessageActions = ({ setOpenMessageMenu, fetchMessages }) => {
 			{/* MENU */}
 			<div className="fixed inset-0 flex">
 				<div
-					className={`absolute top-0 z-50 bg-gray-100 shadow rounded-md p-2 flex flex-col space-y-2 w-32 ${myMessage ? "right-auto" : "ml"
-						}`}
+					className={`absolute z-50 right-1/2 top-14 bg-gray-100 shadow rounded-md p-3 flex flex-col space-y-3 w-52`}
 					ref={dropdownRef}>
+					{/* MESSAGE PREVIEW BOX */}
+					<div className="border-4 border-purple-700 rounded-lg bg-gray-50 p-1">
+						<p className={`text-[14px] text-gray-800 ${nunito.className}`}>
+							{activeMessage}
+						</p>
+					</div>
+
 					{/* STAR */}
 					<div
-						className="flex flex-row items-center space-x-5 px-2 py-2 rounded-md hover:bg-gray-200 w-full"
+						className="flex flex-row items-center space-x-4 px-2 py-2 rounded-md hover:bg-gray-200 w-full"
 						onClick={handleStar}>
 						{activeMessage?.isStarred ? (
 							<FaStar className="text-lg" />
@@ -135,7 +161,7 @@ const MessageActions = ({ setOpenMessageMenu, fetchMessages }) => {
 
 					{/* COPY */}
 					<div
-						className="flex flex-row items-center space-x-5 px-2 py-2 rounded-md hover:bg-gray-200 w-full"
+						className="flex flex-row items-center space-x-4 px-2 py-2 rounded-md hover:bg-gray-200 w-full"
 						onClick={handleCopy}>
 						<MdOutlineContentCopy className="text-lg" />
 						<span className={`text-[15px] font-medium ${nunito.className}`}>
@@ -146,7 +172,7 @@ const MessageActions = ({ setOpenMessageMenu, fetchMessages }) => {
 					{/* EDIT */}
 					{myMessage && isEditable && (
 						<div
-							className="flex flex-row items-center space-x-5 px-2 py-2 rounded-md hover:bg-gray-200 w-full"
+							className="flex flex-row items-center space-x-4 px-2 py-2 rounded-md hover:bg-gray-200 w-full"
 							onClick={handleEdit}>
 							<CiEdit className="text-[22px]" />
 							<span className={`text-[15px] font-medium ${nunito.className}`}>
@@ -157,7 +183,7 @@ const MessageActions = ({ setOpenMessageMenu, fetchMessages }) => {
 
 					{/* DELETE */}
 					<div
-						className="flex flex-row items-center space-x-5 px-2 py-2 rounded-md hover:bg-gray-200 w-full"
+						className="flex flex-row items-center space-x-4 px-2 py-2 rounded-md hover:bg-gray-200 w-full"
 						onClick={handleDelete}>
 						<MdOutlineDelete className="text-[22px] text-red-600" />
 						<span className={`text-[15px] font-medium ${nunito.className}`}>

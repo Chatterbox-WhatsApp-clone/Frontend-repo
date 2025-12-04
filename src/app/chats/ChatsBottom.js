@@ -267,7 +267,7 @@ const ChatsBottom = () => {
 	 * UI
 	 *********************************/
 	return (
-		<div className="fixed pt-[2px] bottom-0 w-full flex flex-row items-end justify-center pb-1 md:pb-0 md:pt-0 bg-transparent bg-opacity-70 backdrop-blur-md md:bg-white rounded-sm">
+		<div className="absolute pt-[2px] bottom-0 w-full flex flex-row items-end justify-center pb-1 md:pb-0 md:pt-0 bg-transparent bg-opacity-70 backdrop-blur-md md:bg-white rounded-sm">
 			{/* FILE PREVIEW */}
 			<Preview
 				previewUrl={previewUrl}
@@ -364,19 +364,20 @@ const ChatsBottom = () => {
 							) : (
 								<>
 									{/* NORMAL SEND / VOICE BUTTON */}
-									{input.trim().length > 0 || previewUrl ? (
-										<div
-											className="h-10 w-10 flex justify-center items-center rounded-full hover:bg-gray-200 cursor-pointer"
-											onClick={handleSend}>
-											<IoMdSend className="text-2xl text-purple-700" />
-										</div>
+									{/* {input.trim().length > 0 || previewUrl ? (
+										
 									) : (
 										<div
 											className="h-10 w-10 flex justify-center items-center rounded-full hover:bg-gray-200 cursor-pointer"
 											onClick={startRecording}>
 											<MdOutlineKeyboardVoice className="text-2xl text-purple-700" />
 										</div>
-									)}
+									)} */}
+									<div
+										className="h-10 w-10 flex justify-center items-center rounded-full hover:bg-gray-200 cursor-pointer"
+										onClick={handleSend}>
+										<IoMdSend className="text-2xl text-purple-700" />
+									</div>
 								</>
 							)}
 						</>

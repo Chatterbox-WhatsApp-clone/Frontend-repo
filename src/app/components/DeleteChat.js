@@ -7,37 +7,47 @@ import {
 	useUpdateUserStore,
 } from "@/zustand";
 import Modal from "@/app/components/Modal";
+import { useQueryClient } from "@tanstack/react-query";
 
 const DeleteChat = ({ setDeleteChat }) => {
-	const { activeUser, setActiveUser, chatId } = useUserProfile();
+	const { setActiveUser, chatId } = useUserProfile();
 	const { setUserUpdated } = useUpdateUserStore();
 	const { token } = useAuthenticatedStore();
 	const [loading, setLoading] = useState(false);
 	const [status, setStatus] = useState("");
 	const [success, setSuccess] = useState(false);
+	const queryClient = useQueryClient();
 
 	const deleteChat = async () => {
 		setLoading(true);
-		if (!activeChat) return;
-		const endpoint = `${process.env.NEXT_PUBLIC_CLEAR_USER_CHATS_ENDPOINT}${chatId}`;
+		if (!chatId) return;
+		const endpoint = process.env.NEXT_PUBLIC_CLEAR_USER_CHATS_ENDPOINT.replace(
+			"{chatId}",
+			chatId
+		);
 		try {
 			const res = await fetch(endpoint, {
 				method: "DELETE",
 				headers: {
-					"Content-Type": "application/json",
 					Authorization: `Bearer ${token}`,
 				},
 			});
+			const data = res.json()
 
 			if (res.ok) {
 				setSuccess(true);
-				setStatus('Chat deleted successfully');
+				setStatus("Chat deleted successfully");
 				setTimeout(() => setDeleteChat(false), 8000);
 				setActiveUser(null);
 				setUserUpdated(true);
+				queryClient.invalidateQueries({ queryKey: ["all_messages"] });
+				queryClient.invalidateQueries({ queryKey: ["users-chat"] });
 			} else {
+				setSuccess(true);
+				setStatus(data?.message);
+				setTimeout(() => setDeleteChat(false), 4000);
 				console.error("Failed to delete chat");
-				setSuccess(false);
+				
 			}
 		} catch (err) {
 			console.error("Error sending request:", err);
@@ -75,7 +85,7 @@ const DeleteChat = ({ setDeleteChat }) => {
 							onClick={deleteChat}
 							id="blockBtn"
 							className="flex-1 bg-red-600 text-white rounded-md py-2 font-semibold hover:bg-red-700">
-							{loading ? <PulseLoader /> : "Delete Chat"}
+							{loading ? <PulseLoader size={3} /> : "Delete Chat"}
 						</button>
 					</div>
 				</div>

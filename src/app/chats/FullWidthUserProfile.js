@@ -56,7 +56,9 @@ const FullWidthUserProfile = () => {
 
 	return (
 		<>
-			<div className="h-[87vh] md:h-[83vh] flex flex-col overflow-y-auto noscroll px-2 pt-3 pb-10 z-0 ">
+			<div
+				className="h-[87vh] md:h-[83vh] flex flex-col overflow-y-auto noscroll px-2 pt-3 pb-10 z-0 "
+				id="chat-screen">
 				{isLoading ? (
 					<div className="absolute inset-0 bg-white bg-opacity-80 flex flex-col items-center justify-center z-50">
 						<Spinner className="w-12 h-12 animate-spin text-blue-500 mb-4" />
@@ -104,7 +106,7 @@ const FullWidthUserProfile = () => {
 											isMe ? "bg-[#7304af] text-white" : "bg-white text-black"
 										} ${
 											media
-												? "py-1 px-1 flex flex-col space-y-1 w-[80%] h-[245px]"
+												? "py-1 px-1 flex flex-col space-y-1 w-auto max-w-[350px] h-[245px]"
 												: "flex px-2 w-auto max-w-[65%]"
 										}`}>
 										{media ? (
@@ -117,7 +119,7 @@ const FullWidthUserProfile = () => {
 													setShowImage(true);
 													setCurrentImage(media);
 												}}
-												className={`w-full h-56 object-cover object-center shrink-0 rounded-md ${nunito.className}`}
+												className={`w-full h-56 object-contain object-center shrink-0 rounded-md ${nunito.className}`}
 											/>
 										) : (
 											<p

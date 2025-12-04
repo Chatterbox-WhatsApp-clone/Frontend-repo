@@ -18,6 +18,7 @@ import Starred from "./Starred";
 import AllChats from "./AllChats";
 import PageWrapper from "./PageWrapper";
 import Messages from "./Messages";
+import SearchFriends from "../friends/all/SearchFriends";
 
 const Page = () => {
 	const { setClicked } = useClickedStore();
@@ -118,10 +119,11 @@ const Page = () => {
 							{chatTabs.map((chatTab) => (
 								<button
 									onClick={(e) => setActiveTab(chatTab)}
-									className={`h-6 w-full flex justify-center items-center rounded-full px-2 ${activeTab === chatTab
+									className={`h-6 w-full flex justify-center items-center rounded-full px-2 ${
+										activeTab === chatTab
 											? "bg-[#c2b6ca] border border-gray-400"
 											: "border border-gray-400"
-										}`}
+									}`}
 									key={chatTab}>
 									<span className={`text-[12px] ${poppins.className}`}>
 										{chatTab}
@@ -133,11 +135,12 @@ const Page = () => {
 					{/* for chats naviagation*/}
 
 					{/* rendering components */}
-					<div className="mt-3 w-full overflow-y-auto">{renderChats()}</div>
+					<div className="mt-3 w-full overflow-y-auto">
+						{input?.length > 0 ? <SearchFriends input={input} /> : renderChats()}
+					</div>
 					{/* rendering components */}
 				</PageWrapper>
 				<Messages />
-
 			</div>
 
 			{showMobileInput && (
