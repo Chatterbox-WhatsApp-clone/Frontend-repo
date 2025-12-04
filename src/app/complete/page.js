@@ -92,10 +92,10 @@ const Page = () => {
 			} else {
 				setStatus("Profile Updated");
 				setSuccess(true);
-				setTimeout(() => setStatus(""), 10000);
+				setTimeout(() => setStatus(""), 1000);
 				setTimeout(() => {
 					toUploadImagePage();
-				}, 5000);
+				}, 2000);
 			}
 		} catch (error) {
 			console.error("Error sending details to the backend:", error);

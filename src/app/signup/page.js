@@ -105,11 +105,11 @@ const Page = () => {
 			} else {
 				setStatus("Account successfully created");
 				setSuccess(true);
-				setTimeout(() => setStatus(""), 10000);
+				setTimeout(() => setStatus(""), 1000);
 				setToken(data?.data?.token);
 				setTimeout(() => {
 					toUploadImagePage();
-				}, 5000);
+				}, 2000);
 			}
 		} catch (error) {
 			console.error("Error sending details to the backend:", error);

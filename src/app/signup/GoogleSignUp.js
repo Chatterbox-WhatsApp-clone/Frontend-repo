@@ -44,7 +44,7 @@ const GoogleSignUp = () => {
 			if (!res.ok) {
 				setStatus(data.message || "Error creating profile");
 				setSuccess(false);
-				setTimeout(() => setStatus(""), 10000);
+				setTimeout(() => setStatus(""), 3000);
 				toSignUpPage();
 				throw new Error(data?.message);
 			} else {

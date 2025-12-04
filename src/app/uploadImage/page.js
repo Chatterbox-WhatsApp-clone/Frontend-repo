@@ -74,10 +74,10 @@ const Page = () => {
 
 				setStatus(data.message || "Profile photo successfully uploaded");
 				setSuccess(true);
-				setTimeout(() => setStatus(""), 10000);
+				setTimeout(() => setStatus(""), 1000);
 				setTimeout(() => {
 					router.push("/signup/congratulations");
-				}, 3000);
+				}, 2000);
 			}
 		} catch (error) {
 			console.error("Error sending details to the backend:", error);
