@@ -19,7 +19,7 @@ const MobileNavbar = () => {
 		pathname.includes("/friends/all");
 
 	return (
-		<nav className="fixed z-50 bottom-0 left-0 right-0 flex flex-row justify-evenly w-full items-center md:hidden bg-white h-16 shadow-[6px_0_8px_-2px_rgba(0,0,0,0.2)] rounded-t-2xl">
+		<nav className="fixed z-50 bottom-0 left-0 right-0 flex flex-row justify-evenly w-full items-center md:hidden bg-white h-14 shadow-[6px_0_8px_-2px_rgba(0,0,0,0.2)] rounded-t-2xl">
 			<div className="flex flex-row justify-evenly items-center w-full">
 				{/* Chats */}
 				<Link

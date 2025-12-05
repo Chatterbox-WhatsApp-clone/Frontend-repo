@@ -48,7 +48,7 @@ const AllFriends = () => {
 
 	return (
 		<>
-			<div className="flex flex-col flex-1 w-full h-full overflow-y-auto pb-10 noscroll">
+			<div className="flex flex-col flex-1 w-full h-full overflow-y-auto pb-14 md:pb-5 noscroll">
 				<SearchEngine input={input} setInput={setInput} />
 
 				{input?.length > 0 ? (

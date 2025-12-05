@@ -1,24 +1,24 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 
 const TermsOfService = ({ termsOpen, setTermsOpen, accepted, setAccepted }) => {
-	const handleAccept = () => {
-		setAccepted(true);
-	};
-
-	// if (!termsOpen) return null; // hide component if termsOpen is false
+	if (!termsOpen) return null; // hide component if termsOpen is false
 
 	return (
-		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-auto py-6 px-4 w-full">
-			<div className="bg-white max-w-3xl w-full rounded-lg shadow-lg p-6 relative">
-				<h1 className="text-2xl font-bold mb-3 mt-2">Welcome to ChatterBox!</h1>
-				<p className="mb-3">
-					By creating an account or using ChatterBox, you agree to the terms
-					below. Please read them carefully.
-				</p>
+		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4 py-6 ">
+			<div className="bg-white max-w-3xl w-full rounded-lg shadow-lg flex flex-col overflow-hidden h-[90vh]">
+				{/* Header */}
+				<div className="p-6 border-b">
+					<h1 className="text-2xl font-bold mb-2">Welcome to ChatterBox!</h1>
+					<p className="text-sm text-gray-600">
+						By creating an account or using ChatterBox, you agree to the terms
+						below. Please read them carefully.
+					</p>
+				</div>
 
-				<div className="max-h-[70vh] overflow-y-auto mb-4 space-y-4 ">
+				{/* Scrollable Terms */}
+				<div className="px-6 py-4 overflow-y-auto max-h-[70vh] space-y-4">
 					<ol className="list-decimal list-inside space-y-2 text-sm">
 						<li>
 							<strong>Acceptance of Terms:</strong> By accessing or using
@@ -101,14 +101,14 @@ const TermsOfService = ({ termsOpen, setTermsOpen, accepted, setAccepted }) => {
 					</ol>
 				</div>
 
-				{/* Checkbox to accept */}
-				<div className="flex items-center gap-2 mt-4">
+				{/* Checkbox */}
+				<div className="px-6 py-3 flex items-center gap-2">
 					<input
 						type="checkbox"
 						id="acceptTerms"
 						checked={accepted}
-						onChange={handleAccept}
-						disabled={!termsOpen} // disable if termsOpen is false
+						onChange={() => setAccepted(true)}
+						disabled={!termsOpen}
 						className={`w-5 h-5 rounded border-gray-400 ${
 							accepted ? "bg-purple-700" : "bg-white"
 						}`}
@@ -117,12 +117,13 @@ const TermsOfService = ({ termsOpen, setTermsOpen, accepted, setAccepted }) => {
 						I have read and agree to the Terms of Service
 					</label>
 				</div>
-				<div className="flex justify-center">
-					<button disabled={!accepted}
-						onClick={() => {
-							setTermsOpen(false);
-						}}
-						className={`text-center mt-3 w-40 h-8 rounded-3xl cursor-pointer font-extrabold text-white flex justify-center items-center ${
+
+				{/* Close Button */}
+				<div className="px-6 py-4 flex justify-center ">
+					<button
+						disabled={!accepted}
+						onClick={() => setTermsOpen(false)}
+						className={`text-center w-40 h-8 rounded-3xl cursor-pointer font-extrabold text-white flex justify-center items-center ${
 							accepted
 								? "bg-purple-700 shadow-md hover:shadow-lg"
 								: "bg-gray-300 shadow-inner cursor-not-allowed"
