@@ -62,7 +62,7 @@ const Page = () => {
 
 	return (
 		<>
-			<div className="w-full h-full flex flex-col md:flex-row bg-gray-50 rounded-tl-2xl px-2 ">
+			<div className="w-full h-full flex flex-col md:flex-row bg-gray-50 rounded-tl-2xl px-2 overflow-y-auto">
 				<PageWrapper>
 					{/* top of the chats page */}
 					<div className=" h-10 md:h-20 md:pt-2 w-full">

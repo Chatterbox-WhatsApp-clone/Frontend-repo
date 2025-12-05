@@ -37,7 +37,7 @@ const Favourites = ({ setActiveTab }) => {
 	});
 
 	return (
-		<div className="h-full relative flex flex-col justify-start items-center overflow-y-auto w-full ">
+		<div className="h-full relative flex flex-col justify-start items-center overflow-y-auto w-full noscroll">
 			<div className="w-full hidden md:flex flex-row items-center justify-start gap-2 p-2 border-b border-gray-200">
 				<IoIosArrowForward
 					className="text-xl cursor-pointer rotate-180"
@@ -46,7 +46,7 @@ const Favourites = ({ setActiveTab }) => {
 				<h2 className={`${poppins.className} font-bold text-lg`}>Favorites</h2>
 			</div>
 			{data?.data?.length === 0 ? (
-				<div className="flex flex-col justify-center items-center gap-3 relative mt-32 md:mt-44">
+				<div className="flex flex-col justify-center items-center gap-3 relative mt-44">
 					<p
 						className={`${poppins.className}  text-wrap text-center text-sm font-mono`}>
 						You have no favorite chats. Mark chats as favorites to see them
@@ -58,7 +58,7 @@ const Favourites = ({ setActiveTab }) => {
 					{data?.data?.map((chat) => {
 						const profilePicture = chat?.user?.profilePicture
 							? `${backendBase}${chat?.user?.profilePicture}`
-							:    "/assets/images/friendImage.jpg";
+							: "/assets/images/friendImage.jpg";
 
 						return (
 							<div
@@ -89,8 +89,7 @@ const Favourites = ({ setActiveTab }) => {
 												<p
 													className={`${poppins.className} font-medium text-[13.5px]`}>
 													{chat?.user?.username?.length > 15
-														? chat?.user?.username.slice(0, 15) +
-														  "..."
+														? chat?.user?.username.slice(0, 15) + "..."
 														: chat?.user?.username}
 												</p>
 												<div className="flex items-center gap-2">

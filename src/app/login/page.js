@@ -172,7 +172,7 @@ const Page = () => {
 							onClick={sendUserDetailsToBackend}
 							className={`text-center bg-white h-10 rounded-3xl w-80 mx-2 gap-2 font-bold cursor-pointer ${poppins.className}`}
 							type="submit">
-							Login
+							Log In
 						</button>
 						<p className="or text-white mt-5 font-bold">or Login with</p>
 						<GoogleLogIn />

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Nunito, Poppins } from "next/font/google";
 import Image from "next/image";
 const nunito = Nunito({
@@ -9,6 +9,7 @@ const nunito = Nunito({
 import { useRouter } from "next/navigation";
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 import { useAuthenticatedStore } from "@/zustand";
+import TermsOfService from "../components/TermsOfService";
 
 export default function Home() {
 	const { authenticated } = useAuthenticatedStore();
@@ -18,6 +19,8 @@ export default function Home() {
 		router.push("/signup");
 	}
 	// function to signuppage
+	const [termsOpen, setTermsOpen] = useState(false);
+	const [accepted, setAccepted] = useState(false);
 
 	return (
 		<>
@@ -49,14 +52,28 @@ export default function Home() {
 							</span>{" "}
 						</h1>
 
-						<div className="space-y-2 mt-3">
-							<p className="text-center text-sm text-gray-300">
-								Tap Agree & Continue <br /> to accept the Terms of Service
-							</p>
+						<div className="space-y-2 mt-3 flex flex-col justify-center items-center">
+							<div className="space-y-3 flex flex-col justify-center items-center">
+								<p
+									className="text-white text-[15px] underline font-medium"
+									onClick={() => setTermsOpen(true)}>
+									Terms Of Service
+								</p>
+								<p className="text-center text-sm text-gray-300">
+									By continuing, you agree to our Terms of Service.
+								</p>
+							</div>
+
 							<button
-								className="bg-white text-center mt-3 w-54 h-9 rounded-3xl text-[#3a0657] cursor-pointer font-extrabold"
+								disabled={!accepted}
+								className={`text-center mt-3 w-54 h-9 rounded-3xl text-[#3a0657] cursor-pointer font-extrabold 
+   										 ${
+													accepted
+														? "bg-white shadow-md hover:shadow-lg"
+														: "bg-gray-600 shadow-inner cursor-not-allowed"
+												}`}
 								onClick={toSignUpPage}>
-								Agree & Continue
+								Continue
 							</button>
 						</div>
 					</main>
@@ -65,6 +82,14 @@ export default function Home() {
 						From Velora
 					</p>
 				</div>
+			)}
+			{termsOpen && (
+				<TermsOfService
+					termsOpen={termsOpen}
+					setTermsOpen={setTermsOpen}
+					setAccepted={setAccepted}
+					accepted={accepted}
+				/>
 			)}
 		</>
 	);

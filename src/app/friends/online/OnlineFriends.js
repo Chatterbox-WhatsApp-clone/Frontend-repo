@@ -49,7 +49,7 @@ const OnlineFriends = () => {
 	}, [userUpdated, refetch]);
 	return (
 		<div
-			className="w-full h-full flex flex-col gap-2 py-2 overflow-y-auto"
+			className="w-full h-full flex flex-col gap-2 py-2 overflow-y-auto noscroll"
 			style={{ scrollbarWidth: "none" }}>
 			{Array.isArray(data?.data) && data?.data?.length === 0 ? (
 				<div className="flex items-center justify-center mt-36 w-full">

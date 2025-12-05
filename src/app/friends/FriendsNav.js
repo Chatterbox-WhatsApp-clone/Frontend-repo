@@ -46,7 +46,7 @@ const FriendsNav = () => {
 		<nav className="w-full md:w-[280px] md:h-full md:border-r md:border-gray-300 md:shadow-[3px_0_4px_-1px_rgba(0,0,0,0.1)] shadow-gray-200 px-1 sm:px-2 py-2">
 			<h1 className={`text-2xl font-bold  ${nunito.className}`}>Friends</h1>
 			<p className={`${poppins.className} text-wrap text-sm mt-1 font-light `}>
-				Friendship made simple one tap to connect endless conversations ahead.
+				Your next conversation is just one tap away
 			</p>
 
 			<FriendsNavigation />

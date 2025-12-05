@@ -57,7 +57,7 @@ export default Messages;
 
 {
 	/**{"success":true,"data":[{"chatId":"6902025d7cb761fc698ea42b","user":{"_id":"68de686222485ad8bf8b1a9b","username":"Chibueze Obodo","profilePicture":"/uploads/profilePics/1759440259776-399507133.jpg","isOnline":false,"lastSeen":"2025-10-30T21:53:30.069Z","totalContacts":0,"totalBlocked":0,"fullName":"Chibueze Obodo","id":"68de686222485ad8bf8b1a9b"},"lastMessage":{"_id":"6903e765be57427fd5477fa4","content":{"media":{},"location":{},"contact":{},"text":"Bro? Why you no dey reply me?"},"type":"text","sender":{"_id":"68c1b5fc7773252c43b20472","username":"Chibueze","profilePicture":"/uploads/profilePics/1757525564319-542298099.jpg","totalContacts":0,"totalBlocked":0,"fullName":"Chibueze","id":"68c1b5fc7773252c43b20472"},"createdAt":"2025-10-30T22:32:05.717Z"},"lastMessageTime":"2025-10-30T22:32:05.717Z","unreadCount":0,"isActive":true,"createdAt":"2025-10-29T12:02:37.681Z","updatedAt":"2025-10-30T22:32:06.039Z"}],"pagination":{"currentPage":1,"totalPages":1,"totalChats":1,"hasNextPage":false,"hasPrevPage":false}} */
-	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OGMxYjVmYzc3NzMyNTJjNDNiMjA0NzIiLCJpYXQiOjE3NjI0MzA1MzR9.W8j1nGs_TyIuGTFqbI1gLS84a888-kG_YUPsk34W6zI";
+	"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTMyMzIzMmJlNWJhYWUyZjU4NmE1MDAiLCJpYXQiOjE3NjQ4OTczMzN9.OI4Bcgnxe1rbmYsJR8YkDPvNel4c7r2Vw15daCD0t1k";
 }
 
 // {}

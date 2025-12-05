@@ -55,7 +55,7 @@ const Starred = ({ setActiveTab }) => {
 	};
 
 	return (
-		<div className="h-full relative flex flex-col justify-start items-center overflow-y-auto w-full">
+		<div className="h-full relative flex flex-col justify-start items-center overflow-y-auto w-full noscroll">
 			<div className="w-full hidden md:flex flex-row items-center justify-start gap-2 p-2 border-b border-gray-200 ">
 				<IoIosArrowForward
 					className="text-xl cursor-pointer rotate-180"
@@ -66,7 +66,7 @@ const Starred = ({ setActiveTab }) => {
 				</h2>
 			</div>
 			{data?.data?.length === 0 ? (
-				<div className="flex flex-col justify-center items-center gap-3 relative mt-32 md:mt-44 ">
+				<div className="flex flex-col justify-center items-center gap-3 relative mt-44 ">
 					<p
 						className={`${poppins.className}  text-wrap text-center text-sm font-mono`}>
 						You have no starred messages. Star messages to see them here.

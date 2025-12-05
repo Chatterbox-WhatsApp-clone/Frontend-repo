@@ -13,7 +13,7 @@ const RemoveFriendButton = ({ user }) => {
 	const [status, setStatus] = useState("Remove");
 	const endpoint = process.env.NEXT_PUBLIC_TEMPREMOVE_FRIEND.replace(
 		"{friendId}",
-		String(user?._id)
+		(user?._id)
 	);
 	const { setRemoved } = useRemovedStore();
 	const { getLocalStatus } = useFriendsStore();

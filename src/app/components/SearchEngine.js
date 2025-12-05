@@ -7,7 +7,7 @@ const SearchEngine = ({ input, setInput }) => {
 	const [clicked, setClicked] = useState(false);
 	return (
 		<>
-			<div className="top-10 fixed right-2 ml-auto  md:hidden ">
+			<div className="top-3 fixed right-2 ml-auto  md:hidden">
 				{clicked ? (
 					<form
 						className={` ${

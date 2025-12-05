@@ -48,7 +48,7 @@ const AllFriends = () => {
 
 	return (
 		<>
-			<div className="flex flex-col flex-1 w-full h-full">
+			<div className="flex flex-col flex-1 w-full h-full overflow-y-auto pb-10 noscroll">
 				<SearchEngine input={input} setInput={setInput} />
 
 				{input?.length > 0 ? (
@@ -63,7 +63,7 @@ const AllFriends = () => {
 								: "/assets/images/userImage.jpg";
 
 							return (
-								<React.Fragment key={user._id}>
+								<React.Fragment key={user?._id}>
 									{/* Small screens */}
 									<div className="h-[90px] w-full flex justify-start items-center flex-row space-x-4 sm:hidden">
 										<div className="h-[90px] w-[90px] flex-shrink-0">
@@ -82,7 +82,7 @@ const AllFriends = () => {
 											</p>
 											<div className="flex flex-row gap-1 w-full">
 												<AddFriendButton user={user} />
-												<RemoveFriendButton suser={user} />
+												<RemoveFriendButton user={user} />
 											</div>
 										</div>
 									</div>

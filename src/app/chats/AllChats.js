@@ -70,7 +70,7 @@ const AllChats = () => {
 	return (
 		<div className="h-full relative flex justify-center items-center overflow-y-auto w-full">
 			{data?.data?.length === 0 ? (
-				<div className="flex flex-col justify-center items-center gap-3 relative mt-32">
+				<div className="flex flex-col justify-center items-center gap-3 relative mt-36">
 					<p
 						className={`${poppins.className}  text-wrap text-center text-sm font-mono`}>
 						You haven't sent or received any messages. Your list of messages

@@ -37,8 +37,8 @@ const Unread = ({ searchQuery = "", setActiveTab }) => {
 	// Filter chats with unread messages and apply search filter
 
 	return (
-		<div className="h-full relative flex flex-col justify-start items-center overflow-y-auto w-full">
-			<div className="w-full hidden md:flex flex-row items-center justify-start gap-2 p-2 border-b border-gray-200">
+		<div className="h-full relative flex flex-col justify-start items-center overflow-y-auto w-full noscroll">
+			<div className="w-full hidden md:flex flex-row items-center justify-start gap-2 p-2 border-b border-gray-200 mt-32">
 				<IoIosArrowForward
 					className="text-xl cursor-pointer rotate-180"
 					onClick={() => setActiveTab("All")}
@@ -48,7 +48,7 @@ const Unread = ({ searchQuery = "", setActiveTab }) => {
 				</h2>
 			</div>
 			{data?.data?.length === 0 ? (
-				<div className="flex flex-col justify-center items-center gap-3 relative mt-32 md:mt-44">
+				<div className="flex flex-col justify-center items-center gap-3 relative mt-44">
 					<p
 						className={`${poppins.className}  text-wrap text-center text-sm font-mono`}>
 						You have no unread messages. All caught up!

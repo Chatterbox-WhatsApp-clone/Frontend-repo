@@ -10,8 +10,8 @@ const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "700"] });
 
 const Navbar = () => {
 	return (
-		<nav className="h-9 shrink-0 w-full bg-gray-200 flex flex-col px-4">
-			<div className="flex flex-row gap-2 items-center mt-1">
+		<nav className="h-10 w-full bg-gray-200 flex flex-col px-4">
+			<nav className="flex flex-row gap-2 items-center mt-1">
 				<Image
 					src={"/assets/images/chatterbox-logo.png"}
 					className="w-5 h-5 object-cover mt-1"
@@ -23,7 +23,7 @@ const Navbar = () => {
 					className={`text-[13px] mt-[3px] right-0 text-[#3a0657] ${poppins.className}`}>
 					Chatterbox
 				</p>
-			</div>
+			</nav>
 		</nav>
 	);
 };

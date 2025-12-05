@@ -51,7 +51,7 @@ const MyFriends = () => {
 	return (
 		<>
 			<div
-				className="w-full h-full flex flex-col gap-2 py-2 overflow-y-auto"
+				className="w-full h-full flex flex-col gap-2 py-2 overflow-y-auto noscroll"
 				style={{ scrollbarWidth: "none" }}>
 				{data?.friends?.length === 0 ? (
 					<div className="flex items-center justify-center mt-36 w-full">
@@ -104,7 +104,6 @@ const MyFriends = () => {
 													alt="friend profile picture"
 													className="w-full h-full rounded-full object-cover"
 												/>
-												
 											</div>
 
 											<div className="flex flex-col justify-center items-start w-full gap-1">
