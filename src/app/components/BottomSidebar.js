@@ -44,7 +44,7 @@ const BottomSidebar = () => {
 
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 	const profilePicture = data?.data?.profilePicture
-		? `${backendBase}${data.data.profilePicture}`
+		? `${data.data.profilePicture}`
 		: "/assets/images/userImage.jpg";
 
 	// set Data to become the user in zustand
@@ -74,9 +74,8 @@ const BottomSidebar = () => {
 						</div>
 
 						<span
-							className={`text-sm ml-[6px] ${poppins.className} ${
-								clicked ? "flex" : "hidden"
-							} `}>
+							className={`text-sm ml-[6px] ${poppins.className} ${clicked ? "flex" : "hidden"
+								} `}>
 							Profile
 						</span>
 					</div>

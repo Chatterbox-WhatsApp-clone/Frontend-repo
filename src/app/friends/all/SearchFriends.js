@@ -23,7 +23,7 @@ const SearchFriends = ({ input }) => {
 	const { token } = useAuthenticatedStore();
 	const { activeUser, setActiveUser } = useUserProfile();
 	const [debounced, setDebounced] = useState("");
-    const searchTerm = input;
+	const searchTerm = input;
 
 	// defounced funtion
 	useEffect(() => {
@@ -82,7 +82,7 @@ const SearchFriends = ({ input }) => {
 							We couldn’t find any friends with that name. Try searching with a
 							different name
 						</p>
-						
+
 						<button
 							onClick={() => router.push("/friends")}
 							className="rainbow-hover bg-[#7e5497] h-10 px-5 flex flex-row items-center justify-center rounded-2xl text-white cursor-pointer">
@@ -97,16 +97,15 @@ const SearchFriends = ({ input }) => {
 				<>
 					{data?.friends?.map((friend) => {
 						const profilePicture = friend?.profilePicture
-							? `${backendBase}${friend.profilePicture}`
+							? `${friend.profilePicture}`
 							: "/assets/images/friendImage.jpg";
 
 						return (
 							<div
-								className={`h-[70px] w-full py-1 ${
-									activeUser?._id === friend._id
+								className={`h-[70px] w-full py-1 ${activeUser?._id === friend._id
 										? "bg-gray-200"
 										: "bg-transparent"
-								} hover:bg-gray-200 px-1 cursor-pointer`}
+									} hover:bg-gray-200 px-1 cursor-pointer`}
 								key={friend._id}>
 								<div
 									className="h-[60px] w-full flex justify-between items-center flex-row  cursor-pointer"

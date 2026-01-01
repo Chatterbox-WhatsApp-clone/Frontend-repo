@@ -89,7 +89,7 @@ const SearchedUsers = ({ input }) => {
 					<div className="flex-1 w-full h-full flex flex-col gap-2 sm:grid sm:grid-cols-3 lg:grid-cols-4 sm:gap-2 py-2 px-1 md:px-1">
 						{data?.data?.map((user) => {
 							const profilePicture = user?.profilePicture
-								? `${backendBase}${user.profilePicture}`
+								? `${user.profilePicture}`
 								: "/assets/images/userImage.jpg";
 
 							return (

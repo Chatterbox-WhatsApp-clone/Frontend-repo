@@ -49,9 +49,8 @@ const UserSearch = ({ onUserClick }) => {
 
 		if (diffInMinutes < 1) return "last seen just now";
 		if (diffInMinutes < 60)
-			return `last seen ${diffInMinutes} minute${
-				diffInMinutes > 1 ? "s" : ""
-			} ago`;
+			return `last seen ${diffInMinutes} minute${diffInMinutes > 1 ? "s" : ""
+				} ago`;
 		if (diffInHours < 24)
 			return `last seen ${diffInHours} hour${diffInHours > 1 ? "s" : ""} ago`;
 		if (diffInDays < 30)
@@ -99,7 +98,7 @@ const UserSearch = ({ onUserClick }) => {
 				) : searchQuery ? (
 					filteredUsers.map((user) => {
 						const profilePicture = user?.profilePicture
-							? `${backendBase}${user.profilePicture}`
+							? `${user.profilePicture}`
 							: "/assets/images/userImage.jpg";
 
 						return (

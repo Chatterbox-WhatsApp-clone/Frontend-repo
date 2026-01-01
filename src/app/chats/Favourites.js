@@ -57,17 +57,16 @@ const Favourites = ({ setActiveTab }) => {
 				<div className="flex flex-col h-full justify-start items-center w-full mt-1 px-1">
 					{data?.data?.map((chat) => {
 						const profilePicture = chat?.user?.profilePicture
-							? `${backendBase}${chat?.user?.profilePicture}`
+							? `${chat?.user?.profilePicture}`
 							: "/assets/images/friendImage.jpg";
 
 						return (
 							<div
 								key={chat?.chatId}
-								className={`h-[70px] w-full py-1 shrink-0 cursor-pointer ${
-									activeUser?.chatId === chat?.chatId
+								className={`h-[70px] w-full py-1 shrink-0 cursor-pointer ${activeUser?.chatId === chat?.chatId
 										? "bg-gray-200"
 										: "bg-transparent"
-								} hover:bg-gray-200 px-1 cursor-pointer`}
+									} hover:bg-gray-200 px-1 cursor-pointer`}
 								onClick={() => {
 									setActiveUser(chat);
 									setOpenMessage(true);

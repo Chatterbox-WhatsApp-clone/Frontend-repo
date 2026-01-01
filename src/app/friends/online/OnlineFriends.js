@@ -78,16 +78,15 @@ const OnlineFriends = () => {
 					{Array.isArray(data?.data) &&
 						data?.data?.map((friend) => {
 							const profilePicture = friend?.profilePicture
-								? `${backendBase}${friend.profilePicture}`
+								? `${friend.profilePicture}`
 								: "/assets/images/friendImage.jpg";
 
 							return (
 								<div
-									className={`h-[70px] w-full py-1 ${
-										activeUser?._id === friend._id
+									className={`h-[70px] w-full py-1 ${activeUser?._id === friend._id
 											? "bg-gray-200"
 											: "bg-transparent"
-									} hover:bg-gray-200 px-1 cursor-pointer`}
+										} hover:bg-gray-200 px-1 cursor-pointer`}
 									key={friend._id}>
 									<div
 										className="h-[60px] w-full flex justify-between items-center flex-row  cursor-pointer"

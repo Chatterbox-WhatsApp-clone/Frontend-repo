@@ -21,7 +21,7 @@ const RecentlyAdded = () => {
 				<div className="grid grid-cols lg:grid-cols-2 gap-1 md:gap-2 place-content-center">
 					{activeUser?.friends?.recentFriends?.map((friend) => {
 						const profilePicture = friend?.profilePicture
-							? `${backendBase}${friend?.profilePicture}`
+							? `${friend?.profilePicture}`
 							: "/assets/images/userImage.jpg";
 
 						return (

@@ -13,6 +13,11 @@ const nextConfig = {
 				hostname: "backend-repo-d2mj.onrender.com",
 				pathname: "/**",
 			},
+			{
+				protocol: "https",
+				hostname: "res.cloudinary.com",
+				pathname: "/**",
+			},
 		],
 	},
 };

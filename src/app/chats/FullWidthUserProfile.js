@@ -87,28 +87,25 @@ const FullWidthUserProfile = () => {
 							const createdAt = chat?.createdAt;
 							const status = chat?.status;
 							const media = chat?.content?.media?.url
-								? `${backendBase}${chat?.content?.media?.url}`
+								? `${chat?.content?.media?.url}`
 								: "";
 
 							return (
 								<div
 									key={chat?._id}
-									className={`flex ${
-										isMe ? "justify-end" : "justify-start"
-									} mt-[2px] relative cursor-pointer`}
+									className={`flex ${isMe ? "justify-end" : "justify-start"
+										} mt-[2px] relative cursor-pointer`}
 									onClick={() => {
 										setOpenMessageMenu(true);
 										setActiveMessage(chat?.content?.text);
 										setMessageId(chat?._id);
 									}}>
 									<div
-										className={`py-[3px] space-y-1 rounded-md  break-words shadow-2xl ${
-											isMe ? "bg-[#7304af] text-white" : "bg-white text-black"
-										} ${
-											media
+										className={`py-[3px] space-y-1 rounded-md  break-words shadow-2xl ${isMe ? "bg-[#7304af] text-white" : "bg-white text-black"
+											} ${media
 												? "py-1 px-1 flex flex-col space-y-1 w-auto max-w-[350px] h-[245px]"
 												: "flex px-2 w-auto max-w-[65%]"
-										}`}>
+											}`}>
 										{media ? (
 											<Image
 												src={media}
@@ -132,9 +129,8 @@ const FullWidthUserProfile = () => {
 										<div className="flex justify-end items-end space-x-1 mt-[1px] text-[9px] ml-4 shrink-0">
 											{chat?.starredBy?.includes(userId) && (
 												<FaStar
-													className={`text-[10px] mb-[2px] cursor-pointer ${
-														isMe ? "text-white" : "text-[#7304af]"
-													}`}
+													className={`text-[10px] mb-[2px] cursor-pointer ${isMe ? "text-white" : "text-[#7304af]"
+														}`}
 													onClick={(e) => {
 														e.stopPropagation();
 														fetch(process.env.NEXT_PUBLIC_UNSTAR_MESSAGE, {
@@ -150,9 +146,8 @@ const FullWidthUserProfile = () => {
 											)}
 
 											<p
-												className={`${
-													isMe ? "text-gray-300" : "text-gray-500"
-												} font-semibold`}>
+												className={`${isMe ? "text-gray-300" : "text-gray-500"
+													} font-semibold`}>
 												{new Date(createdAt).toLocaleTimeString([], {
 													hour: "2-digit",
 													minute: "2-digit",

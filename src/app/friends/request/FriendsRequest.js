@@ -60,7 +60,7 @@ const FriendsRequest = () => {
 					{data?.requests?.map((request) => {
 						const user = request.sender;
 						const profilePicture = user?.profilePicture
-							? `${backendBase}${user.profilePicture}`
+							? `${user.profilePicture}`
 							: "/assets/images/userImage.jpg";
 
 						return (

@@ -52,7 +52,7 @@ const OnlineChats = () => {
 				<div className="flex flex-row place-items-center w-full">
 					{onlineUsers?.data?.map((onlineUser) => {
 						const profilePicture = onlineUser?.profilePicture
-							? `${backendBase}${onlineUser.profilePicture}`
+							? `${onlineUser.profilePicture}`
 							: "/assets/images/userImage.jpg";
 
 						return (

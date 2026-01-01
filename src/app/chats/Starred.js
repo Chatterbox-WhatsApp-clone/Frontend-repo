@@ -19,9 +19,9 @@ import {
 
 const Starred = ({ setActiveTab }) => {
 	const { token, userId } = useAuthenticatedStore();
-		const { setActiveChat, setChatId } =
-			useUserProfile();
-		const { setOpenMessage } = useClickedStore();
+	const { setActiveChat, setChatId } =
+		useUserProfile();
+	const { setOpenMessage } = useClickedStore();
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 	const onlineEndpoint = process.env.NEXT_PUBLIC_GET_STARRED_MESSAGE;
 
@@ -81,7 +81,7 @@ const Starred = ({ setActiveTab }) => {
 						const type = media?.mimeType;
 						const fileName = media?.filename;
 						const url = item?.content?.media?.url
-							? `${backendBase}${item.content.media.url}`
+							? `${item.content.media.url}`
 							: "";
 
 						const createdAt = item?.createdAt;

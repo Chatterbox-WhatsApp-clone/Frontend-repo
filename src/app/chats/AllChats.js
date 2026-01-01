@@ -90,7 +90,7 @@ const AllChats = () => {
 				<div className="flex flex-col h-full justify-center items-center w-full mt-1 px-1">
 					{data?.data?.map((chat) => {
 						const profilePicture = chat?.user?.profilePicture
-							? `${backendBase}${chat?.user?.profilePicture}`
+							? `${chat?.user?.profilePicture}`
 							: "/assets/images/friendImage.jpg";
 						const media = chat?.lastMessage?.content?.media;
 						const mime = media?.mimeType;
@@ -100,11 +100,10 @@ const AllChats = () => {
 
 						return (
 							<div
-								className={`h-[70px] w-full py-1 shrink-0 cursor-pointer ${
-									activeChat?.chatId === chat?.chatId
+								className={`h-[70px] w-full py-1 shrink-0 cursor-pointer ${activeChat?.chatId === chat?.chatId
 										? "bg-gray-200"
 										: "bg-transparent"
-								} hover:bg-gray-200 px-1 cursor-pointer`}
+									} hover:bg-gray-200 px-1 cursor-pointer`}
 								key={chat?.chatId}
 								onClick={() => {
 									setOpenMessage(true);
@@ -171,11 +170,9 @@ const AllChats = () => {
 												</p>
 											) : (
 												<p
-													className={`${
-														poppins.className
-													} text-gray-700 text-[12px] ${
-														chat?.unreadCount > 0 ? "-mt-2" : ""
-													}`}>
+													className={`${poppins.className
+														} text-gray-700 text-[12px] ${chat?.unreadCount > 0 ? "-mt-2" : ""
+														}`}>
 													{chat?.lastMessage?.content?.text?.length > 30
 														? chat.lastMessage.content.text.slice(0, 30) + "..."
 														: chat?.lastMessage?.content?.text}

@@ -28,10 +28,8 @@ const TopOfChats = () => {
 	const { setOpenMessage } = useClickedStore();
 
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
-	const profilePicture =
-		`${backendBase}${
-			activeUser?.profilePicture ?? activeChat?.user?.profilePicture
-		}` || "/assets/images/userImage.jpg";
+	const pic = activeUser?.profilePicture ?? activeChat?.user?.profilePicture;
+	const profilePicture = pic ? `${pic}` : "/assets/images/userImage.jpg";
 
 	// function to close or disconnect socket connection
 
@@ -67,16 +65,16 @@ const TopOfChats = () => {
 							</p>
 							<p className="text-[12px] text-[#7304af]">
 								{
-									 activeChat?.user?.lastSeen
-									? `Last seen ${formatLastSeen(activeChat.user.lastSeen)}`
-									: "Last seen a long time ago"}
-							</p> 
+									activeChat?.user?.lastSeen
+										? `Last seen ${formatLastSeen(activeChat.user.lastSeen)}`
+										: "Last seen a long time ago"}
+							</p>
 						</div>
 					</div>
 					{/* first div */}
 
 					{/* second div */}
-									{/** */}
+					{/** */}
 					<div className="space-x-3 flex flex-row items-center justify-center overflow-hidden pt-1  cursor-pointer">
 						{/* <div className="flex flex-row divide-x divide-gray-300 border-[1.5px] rounded-md border-gray-200 py-2 px-3">
 							<div className="pr-3">

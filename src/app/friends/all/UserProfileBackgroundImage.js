@@ -19,10 +19,10 @@ const UserProfileBackgroundImage = ({ activeTab, setActiveTab }) => {
 
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 	const profilePicture = activeUser?.profilePicture
-		? `${backendBase}${activeUser?.profilePicture}`
+		? `${activeUser?.profilePicture}`
 		: "/assets/images/userImage.jpg";
 
-	const backgroundImage = `${backendBase}${activeUser.backgroundImage}`;
+	const backgroundImage = activeUser?.backgroundImage ? `${activeUser.backgroundImage}` : "";
 
 	// show image.
 	const [showImage, setShowImage] = useState(false);

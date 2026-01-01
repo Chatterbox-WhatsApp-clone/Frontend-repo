@@ -62,7 +62,7 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 		}
 	}, [userUpdated, refetch, setUserUpdated]);
 
-	
+
 	// handle outside click for settings modal
 	useEffect(() => {
 		const handleClickOutside = (e) => {
@@ -77,7 +77,7 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 	// profile picture URL
 	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 	const profilePicture = data?.data?.profilePicture
-		? `${backendBase}${data.data.profilePicture}`
+		? `${data.data.profilePicture}`
 		: "/assets/images/userImage.jpg";
 
 	// handle invite copy
@@ -98,7 +98,7 @@ const DesktopSetting = forwardRef(({ setShowDesktopSetting }, ref) => {
 			<div ref={ref}>
 				<div
 					className="hidden md:block fixed bottom-8 left-5 z-[999] w-[500px] bg-white rounded-xl shadow-2xl overflow-y-auto max-h-[80vh] p-5"
-					>
+				>
 					<div className="border-b border-gray-300 pb-3">
 						<h1 className={`${nunito.className} font-bold text-2xl`}>
 							Settings

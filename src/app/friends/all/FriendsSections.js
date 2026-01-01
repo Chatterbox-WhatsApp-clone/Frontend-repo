@@ -24,20 +24,18 @@ const FriendsSections = () => {
 			<div className="flex space-x-10">
 				<button
 					onClick={() => setActiveTab("all")}
-					className={`${poppins.className} cursor-pointer ${
-						activeTab === "all"
+					className={`${poppins.className} cursor-pointer ${activeTab === "all"
 							? "bg-gray-200 py-2 px-3 rounded-md font-semibold"
 							: ""
-					}`}>
+						}`}>
 					All Friends
 				</button>
 				<button
 					onClick={() => setActiveTab("recent")}
-					className={`${poppins.className} cursor-pointer ${
-						activeTab === "recent"
+					className={`${poppins.className} cursor-pointer ${activeTab === "recent"
 							? "bg-gray-200 py-2 px-3 rounded-md font-semibold"
 							: ""
-					}`}>
+						}`}>
 					Recently Added
 				</button>
 			</div>
@@ -53,7 +51,7 @@ const FriendsSections = () => {
 						<div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-3">
 							{activeUser?.nonMutualFriends?.map((friend) => {
 								const profilePicture = friend?.profilePicture
-									? `${backendBase}${friend.profilePicture}`
+									? `${friend.profilePicture}`
 									: "/assets/images/userImage.jpg";
 
 								return (

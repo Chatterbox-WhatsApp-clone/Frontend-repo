@@ -70,7 +70,7 @@ const Page = () => {
 
 	// url for image
 	const profilePicture = data?.data?.profilePicture
-		? `${backendBase}${data.data.profilePicture}`
+		? `${data.data.profilePicture}`
 		: "/assets/images/userImage.jpg";
 
 	// url for image

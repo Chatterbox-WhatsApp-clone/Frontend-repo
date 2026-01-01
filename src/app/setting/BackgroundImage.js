@@ -51,9 +51,8 @@ const BackgroundImage = () => {
 	};
 
 	// url for image
-	const backendBase = process.env.NEXT_PUBLIC_BACKEND_BASE;
 	const userBackgroundImage = user?.data?.backgroundImage
-		? `${backendBase}${user.data.backgroundImage}`
+		? `${user.data.backgroundImage}`
 		: "/assets/images/userImage.jpg";
 	// url for image
 

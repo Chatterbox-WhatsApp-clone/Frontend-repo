@@ -72,7 +72,7 @@ const SentRequest = ({ modalOnClose }) => {
 								{data?.requests?.map((request) => {
 									const user = request.receiver;
 									const profilePicture = request?.receiver?.profilePicture
-										? `${backendBase}${user.profilePicture}`
+										? `${user.profilePicture}`
 										: "/assets/images/userImage.jpg";
 
 									return (
